@@ -7,23 +7,68 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libplatform", "libplatform\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BouncingBallApp", "BouncingBallApp\BouncingBallApp.vcxproj", "{43F8050E-472D-42A8-A766-EB88FA0E3640}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmath", "libmath\libmath.vcxproj", "{4092AEB5-00BB-49D6-A073-D4834EB3A9BC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libballs2d", "libballs2d\libballs2d.vcxproj", "{CBFFAD09-E44B-46B7-B356-92B242CD0DBD}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PoolTableApp", "PoolTableApp\PoolTableApp.vcxproj", "{E7897A7C-6FDA-461E-9D0B-BBFFFEEC6D0E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{6E1D27C7-BA78-46C4-96BE-B14D026DBB96}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "apps", "apps", "{21CEA395-9553-4B17-AC17-135454C4D4FA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B12702AD-ABFB-343A-A199-8E24837244A3}.Debug|x64.ActiveCfg = Debug|x64
 		{B12702AD-ABFB-343A-A199-8E24837244A3}.Debug|x64.Build.0 = Debug|x64
+		{B12702AD-ABFB-343A-A199-8E24837244A3}.Debug|x86.ActiveCfg = Debug|x64
 		{B12702AD-ABFB-343A-A199-8E24837244A3}.Release|x64.ActiveCfg = Release|x64
 		{B12702AD-ABFB-343A-A199-8E24837244A3}.Release|x64.Build.0 = Release|x64
+		{B12702AD-ABFB-343A-A199-8E24837244A3}.Release|x86.ActiveCfg = Release|x64
 		{43F8050E-472D-42A8-A766-EB88FA0E3640}.Debug|x64.ActiveCfg = Debug|x64
 		{43F8050E-472D-42A8-A766-EB88FA0E3640}.Debug|x64.Build.0 = Debug|x64
+		{43F8050E-472D-42A8-A766-EB88FA0E3640}.Debug|x86.ActiveCfg = Debug|x64
 		{43F8050E-472D-42A8-A766-EB88FA0E3640}.Release|x64.ActiveCfg = Release|x64
 		{43F8050E-472D-42A8-A766-EB88FA0E3640}.Release|x64.Build.0 = Release|x64
+		{43F8050E-472D-42A8-A766-EB88FA0E3640}.Release|x86.ActiveCfg = Release|x64
+		{4092AEB5-00BB-49D6-A073-D4834EB3A9BC}.Debug|x64.ActiveCfg = Debug|x64
+		{4092AEB5-00BB-49D6-A073-D4834EB3A9BC}.Debug|x64.Build.0 = Debug|x64
+		{4092AEB5-00BB-49D6-A073-D4834EB3A9BC}.Debug|x86.ActiveCfg = Debug|Win32
+		{4092AEB5-00BB-49D6-A073-D4834EB3A9BC}.Debug|x86.Build.0 = Debug|Win32
+		{4092AEB5-00BB-49D6-A073-D4834EB3A9BC}.Release|x64.ActiveCfg = Release|x64
+		{4092AEB5-00BB-49D6-A073-D4834EB3A9BC}.Release|x64.Build.0 = Release|x64
+		{4092AEB5-00BB-49D6-A073-D4834EB3A9BC}.Release|x86.ActiveCfg = Release|Win32
+		{4092AEB5-00BB-49D6-A073-D4834EB3A9BC}.Release|x86.Build.0 = Release|Win32
+		{CBFFAD09-E44B-46B7-B356-92B242CD0DBD}.Debug|x64.ActiveCfg = Debug|x64
+		{CBFFAD09-E44B-46B7-B356-92B242CD0DBD}.Debug|x64.Build.0 = Debug|x64
+		{CBFFAD09-E44B-46B7-B356-92B242CD0DBD}.Debug|x86.ActiveCfg = Debug|Win32
+		{CBFFAD09-E44B-46B7-B356-92B242CD0DBD}.Debug|x86.Build.0 = Debug|Win32
+		{CBFFAD09-E44B-46B7-B356-92B242CD0DBD}.Release|x64.ActiveCfg = Release|x64
+		{CBFFAD09-E44B-46B7-B356-92B242CD0DBD}.Release|x64.Build.0 = Release|x64
+		{CBFFAD09-E44B-46B7-B356-92B242CD0DBD}.Release|x86.ActiveCfg = Release|Win32
+		{CBFFAD09-E44B-46B7-B356-92B242CD0DBD}.Release|x86.Build.0 = Release|Win32
+		{E7897A7C-6FDA-461E-9D0B-BBFFFEEC6D0E}.Debug|x64.ActiveCfg = Debug|x64
+		{E7897A7C-6FDA-461E-9D0B-BBFFFEEC6D0E}.Debug|x64.Build.0 = Debug|x64
+		{E7897A7C-6FDA-461E-9D0B-BBFFFEEC6D0E}.Debug|x86.ActiveCfg = Debug|x64
+		{E7897A7C-6FDA-461E-9D0B-BBFFFEEC6D0E}.Release|x64.ActiveCfg = Release|x64
+		{E7897A7C-6FDA-461E-9D0B-BBFFFEEC6D0E}.Release|x64.Build.0 = Release|x64
+		{E7897A7C-6FDA-461E-9D0B-BBFFFEEC6D0E}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B12702AD-ABFB-343A-A199-8E24837244A3} = {6E1D27C7-BA78-46C4-96BE-B14D026DBB96}
+		{43F8050E-472D-42A8-A766-EB88FA0E3640} = {21CEA395-9553-4B17-AC17-135454C4D4FA}
+		{4092AEB5-00BB-49D6-A073-D4834EB3A9BC} = {6E1D27C7-BA78-46C4-96BE-B14D026DBB96}
+		{CBFFAD09-E44B-46B7-B356-92B242CD0DBD} = {6E1D27C7-BA78-46C4-96BE-B14D026DBB96}
+		{E7897A7C-6FDA-461E-9D0B-BBFFFEEC6D0E} = {21CEA395-9553-4B17-AC17-135454C4D4FA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {91011195-4D0F-4F2F-955A-15AD60D455D1}
