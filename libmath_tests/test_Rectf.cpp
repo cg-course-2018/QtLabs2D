@@ -17,7 +17,7 @@ TEST_CLASS(test_RectF)
 public:
 	TEST_METHOD(Default_construction)
 	{
-		Rect2F r;
+		RectF r;
 		Assert::AreEqual(r.origin.x, 0.f, TOLERANCE);
 		Assert::AreEqual(r.origin.y, 0.f, TOLERANCE);
 		Assert::AreEqual(r.size.x, 0.f, TOLERANCE);
@@ -26,7 +26,7 @@ public:
 
 	TEST_METHOD(Custom_construction)
 	{
-		Rect2F r(1, 2, 3, 4);
+		RectF r(1, 2, 3, 4);
 		Assert::AreEqual(r.origin.x, 1.f, TOLERANCE);
 		Assert::AreEqual(r.origin.y, 2.f, TOLERANCE);
 		Assert::AreEqual(r.size.x, 3.f, TOLERANCE);
@@ -35,7 +35,7 @@ public:
 
 	TEST_METHOD(Construct_from_vectors)
 	{
-		Rect2F r(Vector2f(1, 2), Vector2f(3, 4));
+		RectF r(Vector2f(1, 2), Vector2f(3, 4));
 		Assert::AreEqual(r.origin.x, 1.f, TOLERANCE);
 		Assert::AreEqual(r.origin.y, 2.f, TOLERANCE);
 		Assert::AreEqual(r.size.x, 3.f, TOLERANCE);
@@ -44,7 +44,7 @@ public:
 
 	TEST_METHOD(Edges)
 	{
-		Rect2F r(Vector2f(5, 6), Vector2f(7, 8));
+		RectF r(Vector2f(5, 6), Vector2f(7, 8));
 
 		Assert::AreEqual(r.leftEdge(), 5.f, TOLERANCE);
 		Assert::AreEqual(r.rightEdge(), 12.f, TOLERANCE);
