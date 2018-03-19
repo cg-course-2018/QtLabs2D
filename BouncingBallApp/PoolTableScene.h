@@ -8,7 +8,7 @@
 class PoolTableScene : public platform::IGraphicsScene
 {
 public:
-	PoolTableScene(const RectF &bounds);
+	PoolTableScene(const Rect2F &bounds);
 
 	void update(float deltaSeconds) final;
 	void redraw(QPainter &painter) final;
@@ -16,6 +16,6 @@ public:
 private:
 	Vector2f m_ballPosition;
 	const Vector2f m_ballSize;
-	const RectF m_bounds;
+	const Rect2F m_bounds;
 	float m_time = 0;
 };

@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 	platform::RenderWindowOptions opts = { 800, 600 };
 
 	platform::RenderWindow window(opts);
-	auto scene = std::make_unique<PoolTableScene>(RectF(0, 0, opts.width, opts.height));
+	auto scene = std::make_unique<PoolTableScene>(Rect2F(0, 0, opts.width, opts.height));
 
 	window.setScene(std::move(scene));
 	window.show();
