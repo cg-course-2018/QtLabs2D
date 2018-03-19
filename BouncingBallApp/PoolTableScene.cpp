@@ -11,7 +11,7 @@ constexpr float PI = 3.14159265358f; // Приближение числа π.
 const Vector2f BALL_START_POSITION = { 0, 150 }; // Период синусоиды, секунд.
 } // namespace
 
-PoolTableScene::PoolTableScene(const RectF &bounds)
+PoolTableScene::PoolTableScene(const Rect2F &bounds)
 	: m_bounds(bounds)
 	, m_ballSize(BALL_SIZE, BALL_SIZE)
 	, m_ballPosition(BALL_START_POSITION)
