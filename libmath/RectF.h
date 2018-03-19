@@ -2,11 +2,11 @@
 #include "Vector2f.h"
 
 // —труктура RectF представл€ет пр€моугольник, стороны которого параллельны ос€м координат.
-struct Rect2F
+struct RectF
 {
-	Rect2F() = default;
-	Rect2F(float x, float y, float width, float height);
-	Rect2F(Vector2f topLeft, Vector2f sz);
+	RectF() = default;
+	RectF(float x, float y, float width, float height);
+	RectF(Vector2f topLeft, Vector2f sz);
 
 	// ѕозици€ левого верхнего угла.
 	Vector2f origin;
