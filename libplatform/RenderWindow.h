@@ -49,7 +49,7 @@ private:
 	bool m_isAnimating = true;
 	QElapsedTimer m_updateTimer;
 	QOpenGLContext *m_context = nullptr;
-	std::unique_ptr<QOpenGLPaintm_device = nullptr;
+	std::unique_ptr<QOpenGLPaintDevice> m_device = nullptr;
 	std::unique_ptr<IGraphicsScene> m_scene;
 };
 
