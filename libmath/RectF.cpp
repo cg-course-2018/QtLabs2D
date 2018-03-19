@@ -1,32 +1,32 @@
 #include "stdafx.h"
 #include "RectF.h"
 
-Rect2F::Rect2F(float x, float y, float width, float height)
+RectF::RectF(float x, float y, float width, float height)
 	: origin(x, y), size(width, height)
 {
 }
 
-Rect2F::Rect2F(Vector2f topLeft, Vector2f sz)
+RectF::RectF(Vector2f topLeft, Vector2f sz)
 	: origin(topLeft), size(sz)
 {
 }
 
-float Rect2F::leftEdge() const
+float RectF::leftEdge() const
 {
 	return origin.x;
 }
 
-float Rect2F::rightEdge() const
+float RectF::rightEdge() const
 {
 	return origin.x + size.x;
 }
 
-float Rect2F::topEdge() const
+float RectF::topEdge() const
 {
 	return origin.y;
 }
 
-float Rect2F::bottomEdge() const
+float RectF::bottomEdge() const
 {
 	return origin.y + size.y;
 }
