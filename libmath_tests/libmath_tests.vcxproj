@@ -163,6 +163,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="test_Color4f.cpp" />
+    <ClCompile Include="test_Rectf.cpp" />
     <ClCompile Include="unittest1.cpp" />
   </ItemGroup>
   <ItemGroup>
