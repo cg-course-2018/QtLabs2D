@@ -101,10 +101,18 @@ void RenderWindow::renderNow()
 		m_context = new QOpenGLContext(this);
 		m_context->setFormat(requestedFormat());
 		m_context->create();
+		m_context->makeCurrent(this);
+
+		if (m_scene)
+		{
+			m_scene->initialize();
+		}
+	}
+	else
+	{
+		m_context->makeCurrent(this);
 	}
 
-	// Привязываем контекст OpenGL к текущему потоку (для надёжности).
-	m_context->makeCurrent(this);
 	if (m_scene)
 	{
 		updateScene();
