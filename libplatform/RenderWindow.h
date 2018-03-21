@@ -47,8 +47,9 @@ private:
 	void updateScene();
 	void renderScene();
 
-	std::unique_ptr<IRenderScene> m_scene;
 	RenderWindowOptions m_options;
+	QSurfaceFormat m_surfaceFormat;
+	std::unique_ptr<IRenderScene> m_scene;
 	bool m_isAnimating = true;
 	QElapsedTimer m_updateTimer;
 	QOpenGLContext *m_context = nullptr;

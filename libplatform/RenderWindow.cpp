@@ -1,5 +1,6 @@
 ﻿#include "RenderWindow.h"
 #include "GraphicsSceneAdapter.h"
+#include <QtCore/QDebug>
 
 namespace platform
 {
@@ -9,6 +10,32 @@ namespace
 //  чтобы избежать скачков симуляции при переводе часов.
 constexpr float MAX_ELAPSED_SECONDS = 0.1f;
 
+QString formatProfile(QSurfaceFormat::OpenGLContextProfile profile)
+{
+	switch (profile)
+	{
+	default:
+	case QSurfaceFormat::NoProfile:
+		return "no profile";
+	case QSurfaceFormat::CoreProfile:
+		return "core profile";
+	case QSurfaceFormat::CompatibilityProfile:
+		return "compatibility profile";
+	}
+}
+
+QString formatSurfaceFormat(const QSurfaceFormat& format)
+{
+	QString result;
+	result += formatProfile(format.profile());
+	result += QLatin1Literal(", version = ");
+	result += QString::number(format.majorVersion());
+	result += QLatin1Literal(".");
+	result += QString::number(format.minorVersion());
+
+	return result;
+}
+
 QSurfaceFormat buildFormat(const RenderWindowOptions &options)
 {
 	QSurfaceFormat format;
@@ -16,6 +43,7 @@ QSurfaceFormat buildFormat(const RenderWindowOptions &options)
 	{
 		format.setVersion(3, 3);
 		format.setProfile(QSurfaceFormat::CoreProfile);
+		format.setRenderableType(QSurfaceFormat::RenderableType::OpenGL);
 	}
 
 	return format;
@@ -25,6 +53,7 @@ QSurfaceFormat buildFormat(const RenderWindowOptions &options)
 RenderWindow::RenderWindow(const RenderWindowOptions &options, QWindow *parent)
 	: QWindow(parent)
 	, m_options(options)
+	, m_surfaceFormat(buildFormat(options))
 {
 	// Устанавливаем минимальные размеры.
 	setMinimumSize(QSize(options.width, options.height));
@@ -33,7 +62,8 @@ RenderWindow::RenderWindow(const RenderWindowOptions &options, QWindow *parent)
 	setSurfaceType(QWindow::OpenGLSurface);
 
 	// Уставливаем параметры контекста OpenGL.
-	setFormat(buildFormat(options));
+	setFormat(m_surfaceFormat);
+	QSurfaceFormat::setDefaultFormat(m_surfaceFormat);
 
 	// Совершаем первый сброс таймера обновления симуляции.
 	m_updateTimer.start();
@@ -99,9 +129,12 @@ void RenderWindow::renderNow()
 	if (!m_context)
 	{
 		m_context = new QOpenGLContext(this);
-		m_context->setFormat(requestedFormat());
+		m_context->setFormat(m_surfaceFormat);
 		m_context->create();
 		m_context->makeCurrent(this);
+
+		QSurfaceFormat actualFormat = m_context->format();
+		qDebug() << formatSurfaceFormat(actualFormat);
 
 		if (m_scene)
 		{
