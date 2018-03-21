@@ -1,11 +1,10 @@
 #include "stdafx.h"
 #include "Ball.h"
 
-
-Ball::Ball()
+Ball::Ball(float r, Vector2f center, Vector2f speed, Color4f color)
+	: m_radius{ r }, m_center{ center }, m_speed{ speed }, m_color{ color }, m_remainingTime{ 10.f }
 {
 }
-
 
 Ball::~Ball()
 {

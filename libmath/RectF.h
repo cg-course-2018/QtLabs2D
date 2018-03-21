@@ -17,4 +17,7 @@ struct RectF
 	float rightEdge() const;
 	float topEdge() const;
 	float bottomEdge() const;
+
+	float width() const;
+	float height() const;
 };

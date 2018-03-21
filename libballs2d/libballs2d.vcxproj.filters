@@ -27,12 +27,24 @@
     <ClInclude Include="Ball.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IBallPool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BallPool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Ball.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IBallPool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BallPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

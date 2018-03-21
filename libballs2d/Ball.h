@@ -2,11 +2,10 @@
 #include "IBall.h"
 #include <libmath/Color4f.h>
 
-class Ball :
-	public IBall
+class Ball : public IBall
 {
 public:
-	Ball();
+	Ball(float r, Vector2f center, Vector2f speed = Vector2f{}, Color4f color = Color4f(0xFA/255.f, 0xFE/255.f, 0x78/255.f));
 	~Ball();
 	RectF bbox() override;
 	Color4f color() override;
@@ -14,7 +13,7 @@ public:
 	float mass() const;
 	float energy() const;
 	Vector2f impulse() const;
-
+	
 	void setRadius(float r) { m_radius = r; }
 	float radius() const { return m_radius; }
 

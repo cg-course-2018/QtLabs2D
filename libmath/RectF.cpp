@@ -30,3 +30,13 @@ float RectF::bottomEdge() const
 {
 	return origin.y + size.y;
 }
+
+float RectF::width() const
+{
+	return size.x;
+}
+
+float RectF::height() const
+{
+	return size.y;
+}
