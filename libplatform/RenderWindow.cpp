@@ -1,23 +1,41 @@
-#include "RenderWindow.h"
+п»ї#include "RenderWindow.h"
+#include "GraphicsSceneAdapter.h"
 
 namespace platform
 {
-
-// Интервал не может быть больше указанного,
-//  чтобы избежать скачков симуляции при переводе часов.
+namespace
+{
+// РРЅС‚РµСЂРІР°Р» РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ СѓРєР°Р·Р°РЅРЅРѕРіРѕ,
+//  С‡С‚РѕР±С‹ РёР·Р±РµР¶Р°С‚СЊ СЃРєР°С‡РєРѕРІ СЃРёРјСѓР»СЏС†РёРё РїСЂРё РїРµСЂРµРІРѕРґРµ С‡Р°СЃРѕРІ.
 constexpr float MAX_ELAPSED_SECONDS = 0.1f;
+
+QSurfaceFormat buildFormat(const RenderWindowOptions &options)
+{
+	QSurfaceFormat format;
+	if (options.useCoreProfile)
+	{
+		format.setVersion(3, 3);
+		format.setProfile(QSurfaceFormat::CoreProfile);
+	}
+
+	return format;
+}
+} // namespace
 
 RenderWindow::RenderWindow(const RenderWindowOptions &options, QWindow *parent)
 	: QWindow(parent)
 	, m_options(options)
 {
-	// Устанавливаем минимальные размеры.
+	// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РјРёРЅРёРјР°Р»СЊРЅС‹Рµ СЂР°Р·РјРµСЂС‹.
 	setMinimumSize(QSize(options.width, options.height));
 
-	// Используем OpenGL как средство рендеринга.
+	// РСЃРїРѕР»СЊР·СѓРµРј OpenGL РєР°Рє СЃСЂРµРґСЃС‚РІРѕ СЂРµРЅРґРµСЂРёРЅРіР°.
 	setSurfaceType(QWindow::OpenGLSurface);
 
-	// Совершаем первый сброс таймера обновления симуляции.
+	// РЈСЃС‚Р°РІР»РёРІР°РµРј РїР°СЂР°РјРµС‚СЂС‹ РєРѕРЅС‚РµРєСЃС‚Р° OpenGL.
+	setFormat(buildFormat(options));
+
+	// РЎРѕРІРµСЂС€Р°РµРј РїРµСЂРІС‹Р№ СЃР±СЂРѕСЃ С‚Р°Р№РјРµСЂР° РѕР±РЅРѕРІР»РµРЅРёСЏ СЃРёРјСѓР»СЏС†РёРё.
 	m_updateTimer.start();
 }
 
@@ -39,12 +57,18 @@ void RenderWindow::setAnimating(bool isAnimating)
 
 void RenderWindow::setScene(std::unique_ptr<IGraphicsScene> scene)
 {
+	m_scene = std::make_unique<GraphicsSceneAdapter>(std::move(scene));
+}
+
+void RenderWindow::setScene(std::unique_ptr<IRenderScene> scene)
+{
 	m_scene = std::move(scene);
 }
 
 bool RenderWindow::event(QEvent *event)
 {
-	if (event->type() == QEvent::UpdateRequest) {
+	if (event->type() == QEvent::UpdateRequest)
+	{
 		renderNow();
 		return true;
 	}
@@ -71,21 +95,30 @@ void RenderWindow::renderNow()
 		return;
 	}
 
-	// Лениво инициализируем контекст OpenGL.
-	if (!m_context) {
+	// Р›РµРЅРёРІРѕ РёРЅРёС†РёР°Р»РёР·РёСЂСѓРµРј РєРѕРЅС‚РµРєСЃС‚ OpenGL.
+	if (!m_context)
+	{
 		m_context = new QOpenGLContext(this);
 		m_context->setFormat(requestedFormat());
 		m_context->create();
+		m_context->makeCurrent(this);
+
+		if (m_scene)
+		{
+			m_scene->initialize();
+		}
+	}
+	else
+	{
+		m_context->makeCurrent(this);
 	}
 
-	// Привязываем контекст OpenGL к текущему потоку (для надёжности).
-	m_context->makeCurrent(this);
 	if (m_scene)
 	{
 		updateScene();
 		renderScene();
 	}
-	// Выполняем обмен буферами в рамках двойной буферизации рисования.
+	// Р’С‹РїРѕР»РЅСЏРµРј РѕР±РјРµРЅ Р±СѓС„РµСЂР°РјРё РІ СЂР°РјРєР°С… РґРІРѕР№РЅРѕР№ Р±СѓС„РµСЂРёР·Р°С†РёРё СЂРёСЃРѕРІР°РЅРёСЏ.
 	m_context->swapBuffers(this);
 
 	if (m_isAnimating)
@@ -98,7 +131,7 @@ void RenderWindow::updateScene()
 {
 	const float elapsedSeconds = float(m_updateTimer.elapsed()) / 1000.f;
 
-	// Пропуск обновления в случае, если таймер не успел засечь прошедшее время.
+	// РџСЂРѕРїСѓСЃРє РѕР±РЅРѕРІР»РµРЅРёСЏ РІ СЃР»СѓС‡Р°Рµ, РµСЃР»Рё С‚Р°Р№РјРµСЂ РЅРµ СѓСЃРїРµР» Р·Р°СЃРµС‡СЊ РїСЂРѕС€РµРґС€РµРµ РІСЂРµРјСЏ.
 	if (elapsedSeconds > 0)
 	{
 		m_updateTimer.restart();
@@ -108,18 +141,7 @@ void RenderWindow::updateScene()
 
 void RenderWindow::renderScene()
 {
-	QRect rect(0, 0, width(), height());
-
-	if (!m_device)
-	{
-		m_device = std::make_unique<QOpenGLPaintDevice>();
-	}
-	m_device->setSize(size());
-	QPainter painter(m_device.get());
-
-	painter.fillRect(0, 0, width(), height(), Qt::white);
-	m_scene->redraw(painter);
-	painter.end();
+	m_scene->redraw(width(), height());
 }
 
 } // namespace platform
