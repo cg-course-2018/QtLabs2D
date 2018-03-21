@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "apps", "apps", "{21CEA395-9
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmath_tests", "libmath_tests\libmath_tests.vcxproj", "{50811C8B-6766-4154-87E6-90C91E14714D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample05", "Sample05\Sample05.vcxproj", "{89D4DBD7-3856-434D-A272-1B47A69C7E37}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -69,6 +71,12 @@ Global
 		{50811C8B-6766-4154-87E6-90C91E14714D}.Release|x64.Build.0 = Release|x64
 		{50811C8B-6766-4154-87E6-90C91E14714D}.Release|x86.ActiveCfg = Release|Win32
 		{50811C8B-6766-4154-87E6-90C91E14714D}.Release|x86.Build.0 = Release|Win32
+		{89D4DBD7-3856-434D-A272-1B47A69C7E37}.Debug|x64.ActiveCfg = Debug|x64
+		{89D4DBD7-3856-434D-A272-1B47A69C7E37}.Debug|x64.Build.0 = Debug|x64
+		{89D4DBD7-3856-434D-A272-1B47A69C7E37}.Debug|x86.ActiveCfg = Debug|x64
+		{89D4DBD7-3856-434D-A272-1B47A69C7E37}.Release|x64.ActiveCfg = Release|x64
+		{89D4DBD7-3856-434D-A272-1B47A69C7E37}.Release|x64.Build.0 = Release|x64
+		{89D4DBD7-3856-434D-A272-1B47A69C7E37}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -80,6 +88,7 @@ Global
 		{CBFFAD09-E44B-46B7-B356-92B242CD0DBD} = {6E1D27C7-BA78-46C4-96BE-B14D026DBB96}
 		{E7897A7C-6FDA-461E-9D0B-BBFFFEEC6D0E} = {21CEA395-9553-4B17-AC17-135454C4D4FA}
 		{50811C8B-6766-4154-87E6-90C91E14714D} = {6E1D27C7-BA78-46C4-96BE-B14D026DBB96}
+		{89D4DBD7-3856-434D-A272-1B47A69C7E37} = {21CEA395-9553-4B17-AC17-135454C4D4FA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {91011195-4D0F-4F2F-955A-15AD60D455D1}
