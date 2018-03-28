@@ -2,16 +2,18 @@
 #include <QtWidgets/QMessageBox>
 #include <libplatform/libplatform.h>
 #include <iostream>
+#include "SimpleScene.h"
 
 int main(int argc, char *argv[])
 {
 	QApplication app(argc, argv);
+	//QApplication window;
 	try
 	{
 		// Окно размером 800x600, используем OpenGL Core Profile
 		platform::RenderWindowOptions opts = { 800, 600, true };
 		platform::RenderWindow window(opts);
-
+		window.setScene(std::make_unique<SimpleScene>());
 		window.show();
 		return app.exec();
 	}
@@ -23,5 +25,5 @@ int main(int argc, char *argv[])
 			QLatin1String("Sample05"),
 			QString::fromUtf8(ex.what()));
 	}
-	window.setScene(std::make_unique<SimpleScene>());
+	
 }
