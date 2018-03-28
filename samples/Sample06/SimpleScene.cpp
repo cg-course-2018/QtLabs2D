@@ -6,40 +6,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/vec2.hpp>
+#include <libplatform/ResourceLoader.h>
+#include <QtCore/qdebug.h>
 
 // Используем функции из gl32core, экспортированные библиотекой glbinding.
 using namespace gl32core;
-
-namespace
-{
-
-// Этот вершинный шейдер выполняет две задачи:
-//  1) передаёт цвет фрагментному шейдеру
-//  2) выполняет ортографическое проецирование вершины,
-//     по сути проецируя вершину на плоскость экрана.
-const char kVertexShaderCode[] = R"**(#version 110
-in vec2 i_position;
-in vec4 i_color;
-out vec4 v_color;
-uniform mat4 u_projection_matrix;
-void main()
-{
-    v_color = i_color;
-    gl_Position = u_projection_matrix * vec4(i_position, 0.0, 1.0);
-}
-)**";
-
-// Этот фрагментный шейдер устанавливает фрагменту переданный из
-//  вершинного шейдера цвет.
-static const char kFragmentShaderCode[] = R"**(#version 110
-in vec4 v_color;
-void main()
-{
-    gl_FragColor = v_color;
-}
-)**";
-
-} // anonymous namespace
 
 SimpleScene::SimpleScene() = default;
 
@@ -47,30 +18,25 @@ SimpleScene::~SimpleScene() = default;
 
 void SimpleScene::initialize()
 {
-	glcore::InitGLBinding();
+	glcore::initGLBinding();
 	initializeShaders();
 
-	m_vao = glcore::CreateVAO();
+	m_vao = glcore::createVAO();
 	glBindVertexArray(m_vao);
-
-	// Генерируем список вершин треугольников, представляющих круг,
-	//  каждый треугольник будет раскрашен в собственный цвет.
-	std::vector<VertexP2C4> verticies = tesselateCircle(50, { 350, 280 }, glm::vec4{ 1, 1, 0, 0 });
 
 	// Генерируем список вершин треугольников, представляющих пятиугольник,
 	//  добавляем его к списку вершин круга.
 	const std::vector<glm::vec2> convexPoints = {
-		{ 100, 200 },
-		{ 250, 210 },
-		{ 220, 290 },
-		{ 130, 300 },
-		{ 100, 250 },
+		{ 100 - 200, 200 - 250 },
+		{ 250 - 200, 210 - 250 },
+		{ 220 - 200, 290 - 250 },
+		{ 130 - 200, 300 - 250 },
+		{ 100 - 200, 250 - 250 },
 	};
-	const std::vector<VertexP2C4> convexVerticies = tesselateConvex(convexPoints, glm::vec4{ 0, 1, 0, 0 });
-	std::copy(convexVerticies.begin(), convexVerticies.end(), std::back_inserter(verticies));
+	std::vector<VertexP2C4> verticies = tesselateConvex(convexPoints, glm::vec4{ 0, 1, 0, 0 });
 
 	// Загружаем данные в вершинный буфер.
-	m_vbo = glcore::CreateStaticVBO(GL_ARRAY_BUFFER, verticies);
+	m_vbo = glcore::createStaticVBO(GL_ARRAY_BUFFER, verticies);
 
 	// Выполняем привязку вершинных данных в контексте текущего VAO и VBO.
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
@@ -81,7 +47,7 @@ void SimpleScene::initialize()
 
 void SimpleScene::update(float deltaSeconds)
 {
-	(void)deltaSeconds;
+	m_totalTime += deltaSeconds;
 }
 
 void SimpleScene::redraw(unsigned width, unsigned height)
@@ -92,6 +58,8 @@ void SimpleScene::redraw(unsigned width, unsigned height)
 
 	glClear(GL_COLOR_BUFFER_BIT);
 
+	updateTwisting();
+
 	// Устанавливаем матрицу ортографического проецирования.
 	setProjectionMatrix(width, height);
 
@@ -100,10 +68,12 @@ void SimpleScene::redraw(unsigned width, unsigned height)
 
 void SimpleScene::initializeShaders()
 {
+	platform::ResourceLoader loader;
+
 	std::vector<glcore::ShaderObject> shaders;
-	shaders.emplace_back(glcore::CompileShader(GL_VERTEX_SHADER, kVertexShaderCode));
-	shaders.emplace_back(glcore::CompileShader(GL_FRAGMENT_SHADER, kFragmentShaderCode));
-	m_program = glcore::LinkProgram(shaders);
+	shaders.emplace_back(glcore::compileShader(GL_VERTEX_SHADER, loader.loadAsString("draw2d.vert")));
+	shaders.emplace_back(glcore::compileShader(GL_FRAGMENT_SHADER, loader.loadAsString("draw2d.frag")));
+	m_program = glcore::linkProgram(shaders);
 }
 
 void SimpleScene::bindVertexData(const std::vector<VertexP2C4> &verticies)
@@ -127,8 +97,20 @@ void SimpleScene::bindVertexData(const std::vector<VertexP2C4> &verticies)
 void SimpleScene::setProjectionMatrix(unsigned width, unsigned height)
 {
 	// Вычисляем матрицу ортографического проецирования
-	const glm::mat4 mat = glm::ortho(0.f, float(width), float(height), 0.f);
+	const glm::mat4 mat = glm::ortho(-0.5f * float(width), 0.5f * float(width), -0.5f * float(height), 0.5f * float(height));
 
 	// Передаём матрицу как константу в графической программе
 	glUniformMatrix4fv(glGetUniformLocation(m_program, "u_projection_matrix"), 1, GL_FALSE, glm::value_ptr(mat));
+}
+
+void SimpleScene::updateTwisting()
+{
+	constexpr float kTwistingPeriodSec = 4.0f;
+	constexpr float kTwistingHalfPeriodSec = 0.5f * kTwistingPeriodSec;
+	constexpr float kTwistingAmplitude = 0.02f;
+
+	const float twistingPhase = std::abs(kTwistingHalfPeriodSec - fmodf(m_totalTime, kTwistingPeriodSec)) / kTwistingHalfPeriodSec;
+	const float twisting = kTwistingAmplitude * (twistingPhase - 0.25f * kTwistingPeriodSec);
+
+	glUniform1f(glGetUniformLocation(m_program, "u_twisting"), twisting);
 }

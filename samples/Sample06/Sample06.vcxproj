@@ -62,6 +62,9 @@
       <ExecutionDescription Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Rcc'ing %(Identity)...</ExecutionDescription>
       <OutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\qrc_%(Filename).cpp</OutputFile>
     </QtRcc>
+    <PreLinkEvent>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">copy_res.bat $(ProjectDir) $(OutDir)</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(QtMsBuild)'=='' or !Exists('$(QtMsBuild)\qt.targets')">
     <QtMsBuild>$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
@@ -123,6 +126,9 @@
       <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
       <OutputFile>.\GeneratedFiles\qrc_%(Filename).cpp</OutputFile>
     </QtRcc>
+    <PreLinkEvent>
+      <Command>copy_res.bat $(ProjectDir) $(OutDir)</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -147,6 +153,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="copy_res.bat" />
     <None Include="draw2d.frag" />
     <None Include="draw2d.vert" />
   </ItemGroup>

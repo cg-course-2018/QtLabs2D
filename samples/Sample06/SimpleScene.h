@@ -18,10 +18,12 @@ private:
 	void bindVertexData(const std::vector<VertexP2C4> &verticies);
 	void initializeShaders();
 	void setProjectionMatrix(unsigned width, unsigned height);
+	void updateTwisting();
 
 	glcore::ProgramObject m_program;
 	glcore::VBO m_vbo;
 	glcore::VAO m_vao;
 
 	size_t m_trianglesCount = 0;
+	float m_totalTime = 0;
 };
