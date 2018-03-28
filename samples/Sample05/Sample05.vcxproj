@@ -124,13 +124,13 @@
     <ClCompile Include="SimpleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\libplatform\libplatform.vcxproj">
-      <Project>{b12702ad-abfb-343a-a199-8e24837244a3}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="RandomColorGenerator.h" />
     <ClInclude Include="SimpleScene.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\libplatform\libplatform.vcxproj">
+      <Project>{b12702ad-abfb-343a-a199-8e24837244a3}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
