@@ -16,7 +16,7 @@ struct RenderWindowOptions
 {
 	unsigned width = 800;
 	unsigned height = 600;
-	bool useCoreProfile = false;
+	QSurfaceFormat format;
 	QColor clearColor = QColor(0xFF, 0xFF, 0xFF);
 };
 

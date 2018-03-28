@@ -24,7 +24,7 @@ QString formatProfile(QSurfaceFormat::OpenGLContextProfile profile)
 	}
 }
 
-QString formatSurfaceFormat(const QSurfaceFormat& format)
+QString formatSurfaceFormat(const QSurfaceFormat &format)
 {
 	QString result;
 	result += formatProfile(format.profile());
@@ -35,25 +35,12 @@ QString formatSurfaceFormat(const QSurfaceFormat& format)
 
 	return result;
 }
-
-QSurfaceFormat buildFormat(const RenderWindowOptions &options)
-{
-	QSurfaceFormat format;
-	if (options.useCoreProfile)
-	{
-		format.setVersion(3, 3);
-		format.setProfile(QSurfaceFormat::CoreProfile);
-		format.setRenderableType(QSurfaceFormat::RenderableType::OpenGL);
-	}
-
-	return format;
-}
 } // namespace
 
 RenderWindow::RenderWindow(const RenderWindowOptions &options, QWindow *parent)
 	: QWindow(parent)
 	, m_options(options)
-	, m_surfaceFormat(buildFormat(options))
+	, m_surfaceFormat(options.format)
 {
 	// Устанавливаем минимальные размеры.
 	setMinimumSize(QSize(options.width, options.height));
