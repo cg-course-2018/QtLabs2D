@@ -131,15 +131,24 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TesselateUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SimpleScene.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TesselateUtils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\libs\libglcore\libglcore.vcxproj">
+      <Project>{6e8fb4b9-b15f-4ab8-9162-49fae661f87c}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\libs\libplatform\libplatform.vcxproj">
       <Project>{b12702ad-abfb-343a-a199-8e24837244a3}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="draw2d.frag" />
+    <None Include="draw2d.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

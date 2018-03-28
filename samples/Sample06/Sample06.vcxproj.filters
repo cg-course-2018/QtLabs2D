@@ -26,6 +26,9 @@
     <Filter Include="scene">
       <UniqueIdentifier>{763fb8b1-9e54-4168-baf8-49495fc2b0bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{22557965-b323-4834-9337-01a80d4850df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -37,6 +40,9 @@
     <ClCompile Include="SimpleScene.cpp">
       <Filter>scene</Filter>
     </ClCompile>
+    <ClCompile Include="TesselateUtils.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -45,5 +51,16 @@
     <ClInclude Include="SimpleScene.h">
       <Filter>scene</Filter>
     </ClInclude>
+    <ClInclude Include="TesselateUtils.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="draw2d.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="draw2d.frag">
+      <Filter>shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

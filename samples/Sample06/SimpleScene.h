@@ -1,20 +1,10 @@
 #pragma once
-#include <QtGui/QOpenGLFunctions_3_3_Core>
-#include <QtGui/QOpenGLShader>
-#include <QtGui/QOpenGLShaderProgram>
-#include <glm/vec2.hpp>
-#include <glm/vec4.hpp>
+#include "TesselateUtils.h"
+#include <libglcore/libglcore.h>
 #include <libplatform/IRenderScene.h>
 
-struct VertexP2C4
-{
-	glm::vec2 xy;
-	glm::vec4 rgba;
-};
-
 class SimpleScene
-	: public platform::IRenderScene,
-	private QOpenGLFunctions_3_3_Core
+	: public platform::IRenderScene
 {
 public:
 	SimpleScene();
@@ -29,13 +19,9 @@ private:
 	void initializeShaders();
 	void setProjectionMatrix(unsigned width, unsigned height);
 
-	GLuint compileShader(GLenum type, const std::string& source);
-	GLuint linkProgram(const std::vector<GLuint>& shaders);
+	glcore::ProgramObject m_program;
+	glcore::VBO m_vbo;
+	glcore::VAO m_vao;
 
-	GLuint m_vertexShader = 0;
-	GLuint m_fragmentShader = 0;
-	GLuint m_program = 0;
-	GLuint m_vbo = 0;
-	GLuint m_vao = 0;
 	size_t m_trianglesCount = 0;
 };

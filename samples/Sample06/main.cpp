@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 		std::cerr << ex.what() << std::endl;
 		QMessageBox::warning(
 			nullptr,
-			QLatin1String("Sample06"),
+			QLatin1String("ERROR"),
 			QString::fromUtf8(ex.what()));
 	}
 }

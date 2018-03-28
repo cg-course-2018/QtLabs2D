@@ -29,8 +29,8 @@ private:
 	void initializeShaders();
 	void setProjectionMatrix(unsigned width, unsigned height);
 
-	GLuint compileShader(GLenum type, const std::string& source);
-	GLuint linkProgram(const std::vector<GLuint>& shaders);
+	GLuint compileShader(GLenum type, const std::string &source);
+	GLuint linkProgram(const std::vector<GLuint> &shaders);
 
 	GLuint m_vertexShader = 0;
 	GLuint m_fragmentShader = 0;

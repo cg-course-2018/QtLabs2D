@@ -2,9 +2,13 @@
 
 #include "SimpleScene.h"
 #include <algorithm>
+#include <glbinding/gl32core/gl.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/vec2.hpp>
+
+// Используем функции из gl32core, экспортированные библиотекой glbinding.
+using namespace gl32core;
 
 namespace
 {
@@ -35,97 +39,23 @@ void main()
 }
 )**";
 
-constexpr float PI = 3.1415926f;
-
-glm::vec2 euclidean(float radius, float angleRadians)
-{
-	return {
-		radius * sin(angleRadians),
-		radius * cos(angleRadians)
-	};
-}
-
-// Генерирует список вершин треугольников для выпуклого многоугольника, заданного вершинами и центром.
-//  @param center - геометрический центр многоугольника
-//  @param hullPoints - вершины многоугольника
-//  @param colorGen - генератор цвета полученных треугольников
-std::vector<VertexP2C4> tesselateConvexByCenter(const glm::vec2 &center, const std::vector<glm::vec2> &hullPoints, const glm::vec4 &fillColor)
-{
-	const size_t size = hullPoints.size();
-	std::vector<VertexP2C4> verticies;
-	verticies.reserve(3u * size);
-	for (size_t pointIndex = 0; pointIndex < size; ++pointIndex)
-	{
-		// Добавляем три вершины треугольника в список.
-		const size_t nextPointIndex = (pointIndex + 1) % size;
-		verticies.push_back({ hullPoints.at(pointIndex), fillColor });
-		verticies.push_back({ hullPoints.at(nextPointIndex), fillColor });
-		verticies.push_back({ center, fillColor });
-	}
-
-	return verticies;
-}
-
-// Генерирует список вершин треугольников для выпуклого многоугольника, заданного вершинами.
-std::vector<VertexP2C4> tesselateConvex(const std::vector<glm::vec2> &verticies, const glm::vec4 &fillColor)
-{
-	// Центр выпуклого многоугольника - это среднее арифметическое его вершин
-	const glm::vec2 center = std::accumulate(verticies.begin(), verticies.end(), glm::vec2()) / float(verticies.size());
-	return tesselateConvexByCenter(center, verticies, fillColor);
-}
-
-// Функция делит круг на треугольники,
-//  возвращает массив с вершинами треугольников.
-std::vector<VertexP2C4> tesselateCircle(float radius, const glm::vec2 &center, const glm::vec4 &fillColor)
-{
-	assert(radius > 0);
-
-	// Круг аппроксимируется с помощью треугольников.
-	// Внешняя сторона каждого треугольника имеет длину 2.
-	constexpr float step = 2;
-	// Число треугольников равно длине окружности, делённой на шаг по окружности.
-	const auto pointCount = static_cast<unsigned>(radius * 2 * PI / step);
-
-	// Вычисляем точки-разделители на окружности.
-	std::vector<glm::vec2> points(pointCount);
-	for (unsigned pi = 0; pi < pointCount; ++pi)
-	{
-		const auto angleRadians = static_cast<float>(2.f * PI * pi / pointCount);
-		points[pi] = center + euclidean(radius, angleRadians);
-	}
-
-	return tesselateConvexByCenter(center, points, fillColor);
-}
-
 } // anonymous namespace
 
-SimpleScene::SimpleScene()
-{
-}
+SimpleScene::SimpleScene() = default;
 
-SimpleScene::~SimpleScene()
-{
-	glDeleteBuffers(1, &m_vbo);
-	glDeleteVertexArrays(1, &m_vbo);
-}
+SimpleScene::~SimpleScene() = default;
 
 void SimpleScene::initialize()
 {
-	QOpenGLFunctions_3_3_Core::initializeOpenGLFunctions();
-
+	glcore::InitGLBinding();
 	initializeShaders();
 
-	glGenBuffers(1, &m_vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-
-	glGenVertexArrays(1, &m_vao);
-	glBindVertexArray(m_vao);
-
+	m_vao = glcore::CreateVAO();
 	glBindVertexArray(m_vao);
 
 	// Генерируем список вершин треугольников, представляющих круг,
 	//  каждый треугольник будет раскрашен в собственный цвет.
-	std::vector<VertexP2C4> verticies = tesselateCircle(50, { 350, 280 }, glm::vec4{1, 1, 0, 0});
+	std::vector<VertexP2C4> verticies = tesselateCircle(50, { 350, 280 }, glm::vec4{ 1, 1, 0, 0 });
 
 	// Генерируем список вершин треугольников, представляющих пятиугольник,
 	//  добавляем его к списку вершин круга.
@@ -139,7 +69,11 @@ void SimpleScene::initialize()
 	const std::vector<VertexP2C4> convexVerticies = tesselateConvex(convexPoints, glm::vec4{ 0, 1, 0, 0 });
 	std::copy(convexVerticies.begin(), convexVerticies.end(), std::back_inserter(verticies));
 
-	// Выполняем привязку вершинных данных в контексте текущего VAO.
+	// Загружаем данные в вершинный буфер.
+	m_vbo = glcore::CreateStaticVBO(GL_ARRAY_BUFFER, verticies);
+
+	// Выполняем привязку вершинных данных в контексте текущего VAO и VBO.
+	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 	bindVertexData(verticies);
 
 	m_trianglesCount = verticies.size();
@@ -166,9 +100,10 @@ void SimpleScene::redraw(unsigned width, unsigned height)
 
 void SimpleScene::initializeShaders()
 {
-	m_vertexShader = compileShader(GL_VERTEX_SHADER, kVertexShaderCode);
-	m_fragmentShader = compileShader(GL_FRAGMENT_SHADER, kFragmentShaderCode);
-	m_program = linkProgram({ m_vertexShader, m_fragmentShader });
+	std::vector<glcore::ShaderObject> shaders;
+	shaders.emplace_back(glcore::CompileShader(GL_VERTEX_SHADER, kVertexShaderCode));
+	shaders.emplace_back(glcore::CompileShader(GL_FRAGMENT_SHADER, kFragmentShaderCode));
+	m_program = glcore::LinkProgram(shaders);
 }
 
 void SimpleScene::bindVertexData(const std::vector<VertexP2C4> &verticies)
@@ -187,9 +122,6 @@ void SimpleScene::bindVertexData(const std::vector<VertexP2C4> &verticies)
 	const int posLocation = glGetAttribLocation(m_program, "i_position");
 	glEnableVertexAttribArray(posLocation);
 	glVertexAttribPointer(posLocation, glm::vec2().length(), GL_FLOAT, GL_FALSE, stride, posOffset);
-
-	// Загружаем данные в вершинный буфер.
-	glBufferData(GL_ARRAY_BUFFER, stride * verticies.size(), verticies.data(), GL_STATIC_DRAW);
 }
 
 void SimpleScene::setProjectionMatrix(unsigned width, unsigned height)
@@ -199,73 +131,4 @@ void SimpleScene::setProjectionMatrix(unsigned width, unsigned height)
 
 	// Передаём матрицу как константу в графической программе
 	glUniformMatrix4fv(glGetUniformLocation(m_program, "u_projection_matrix"), 1, GL_FALSE, glm::value_ptr(mat));
-}
-
-GLuint SimpleScene::compileShader(GLenum type, const std::string &source)
-{
-	// Выделяем ресурс шейдера
-	GLuint shader = glCreateShader(type);
-
-	// Передаём исходный код шейдера видеодрайверу
-	const auto length = static_cast<int>(source.length());
-	const char *sourceLine = source.data();
-	glShaderSource(shader, 1, (const GLchar **)&sourceLine, &length);
-
-	// Просим видеодрайвер скомпилировать шейдер и проверяем статус
-	glCompileShader(shader);
-
-	GLint ok = 0;
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &ok);
-	if (ok == GL_FALSE)
-	{
-		// При неудаче есть лог ошибок, который мы соберём
-		// и в первую очередь надо узнать длину лога.
-		GLint logLength = 0;
-		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &logLength);
-
-		// Зная длину, выделяем строку нужного размера и копируем в неё лог
-		std::string log(logLength, '\0');
-		GLsizei ignored = 0;
-		glGetShaderInfoLog(shader, log.size(), &ignored, (GLchar *)log.data());
-
-		// Бросаем исключение, прикрепив к нему лог
-		throw std::runtime_error("shader compilation failed: " + log);
-	}
-
-	return shader;
-}
-
-GLuint SimpleScene::linkProgram(const std::vector<GLuint> &shaders)
-{
-	// Запрашиваем у видеодрайера новый объект.
-	GLuint obj = glCreateProgram();
-
-	// Прикрепляем ранее скомпилированные шейдеры.
-	for (GLuint shader : shaders)
-	{
-		glAttachShader(obj, shader);
-	}
-
-	// Просим видеодрайвер выполнить компоновку и проверяем статус.
-	glLinkProgram(obj);
-
-	GLint status = 0;
-	glGetProgramiv(obj, GL_LINK_STATUS, &status);
-	if (status == GL_FALSE)
-	{
-		// При неудаче есть лог ошибок, который мы соберём
-		// и в первую очередь надо узнать длину лога.
-		GLint logLength = 0;
-		glGetProgramiv(obj, GL_INFO_LOG_LENGTH, &logLength);
-
-		// Зная длину, выделяем строку нужного размера и копируем в неё лог
-		std::string log(logLength, '\0');
-		GLsizei ignored = 0;
-		glGetProgramInfoLog(obj, log.size(), &ignored, (GLchar *)log.data());
-
-		// Бросаем исключение, прикрепив к нему лог
-		throw std::runtime_error("program linking failed " + log);
-	}
-
-	return obj;
 }
