@@ -1,5 +1,5 @@
 #pragma once
-#include <QtGui/QOpenGLFunctions_3_1>
+#include <QtGui/QOpenGLFunctions_3_3_Core>
 #include <QtGui/QOpenGLShader>
 #include <QtGui/QOpenGLShaderProgram>
 #include <glm/vec2.hpp>
@@ -14,7 +14,7 @@ struct VertexP2C4
 
 class SimpleScene
 	: public platform::IRenderScene,
-	  private QOpenGLFunctions_3_1
+	  private QOpenGLFunctions_3_3_Core
 {
 public:
 	SimpleScene();

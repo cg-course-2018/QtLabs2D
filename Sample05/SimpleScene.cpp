@@ -111,7 +111,7 @@ SimpleScene::~SimpleScene()
 
 void SimpleScene::initialize()
 {
-	QOpenGLFunctions_3_1::initializeOpenGLFunctions();
+	QOpenGLFunctions_3_3_Core::initializeOpenGLFunctions();
 
 	initializeShaders();
 

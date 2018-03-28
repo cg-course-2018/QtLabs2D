@@ -10,7 +10,12 @@ int main(int argc, char *argv[])
 	try
 	{
 		// Окно размером 800x600, используем OpenGL Core Profile
-		platform::RenderWindowOptions opts = { 800, 600, true };
+		QSurfaceFormat format;
+		format.setVersion(3, 3);
+		format.setProfile(QSurfaceFormat::CoreProfile);
+		format.setRenderableType(QSurfaceFormat::RenderableType::OpenGL);
+		platform::RenderWindowOptions opts = { 800, 600, format };
+
 		platform::RenderWindow window(opts);
 		window.setScene(std::make_unique<SimpleScene>());
 
