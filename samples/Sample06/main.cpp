@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 #include "SimpleScene.h"
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMessageBox>
@@ -28,7 +30,7 @@ int main(int argc, char *argv[])
 		std::cerr << ex.what() << std::endl;
 		QMessageBox::warning(
 			nullptr,
-			QLatin1String("Sample05"),
+			QLatin1String("Sample06"),
 			QString::fromUtf8(ex.what()));
 	}
 }
