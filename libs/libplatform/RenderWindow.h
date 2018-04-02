@@ -41,11 +41,17 @@ protected:
 	bool event(QEvent *event) override;
 	void exposeEvent(QExposeEvent *event) override;
 
+	void keyPressEvent(QKeyEvent *event) override;
+	void keyReleaseEvent(QKeyEvent *event) override;
+
 private:
 	void renderLater();
 	void renderNow();
 	void updateScene();
 	void renderScene();
+
+	template<class Callable>
+	void CatchAndClose(Callable &&callable);
 
 	RenderWindowOptions m_options;
 	QSurfaceFormat m_surfaceFormat;

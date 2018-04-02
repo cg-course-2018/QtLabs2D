@@ -108,7 +108,9 @@
     </QtMoc>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CatchAndDisplay.cpp" />
     <ClCompile Include="GraphicsSceneAdapter.cpp" />
+    <ClCompile Include="InputListenerAdapter.cpp" />
     <ClCompile Include="RenderWindow.cpp" />
     <ClCompile Include="ResourceLoader.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -117,8 +119,11 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CatchAndDisplay.h" />
     <ClInclude Include="GraphicsSceneAdapter.h" />
     <ClInclude Include="IGraphicsScene.h" />
+    <ClInclude Include="IInputListener.h" />
+    <ClInclude Include="InputListenerAdapter.h" />
     <ClInclude Include="IRenderScene.h" />
     <ClInclude Include="libplatform.h" />
     <QtMoc Include="RenderWindow.h" />
