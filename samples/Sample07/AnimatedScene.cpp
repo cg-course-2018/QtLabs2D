@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "SimpleScene.h"
+#include "AnimatedScene.h"
 #include <algorithm>
 #include <glbinding/gl32core/gl.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -7,14 +7,27 @@
 #include <glm/vec2.hpp>
 #include <libplatform/ResourceLoader.h>
 
+namespace
+{
+glm::vec2 animateMoveAlongY(const glm::vec2 &point, float phase)
+{
+	constexpr float kAmplitudePx = 50;
+	const float deviation = std::abs(0.5f - phase) / 0.5f;
+	return {
+		point.x,
+		point.y + kAmplitudePx * deviation
+	};
+}
+} // namespace
+
 // Используем функции из gl32core, экспортированные библиотекой glbinding.
 using namespace gl32core;
 
-SimpleScene::SimpleScene() = default;
+AnimatedScene::AnimatedScene() = default;
 
-SimpleScene::~SimpleScene() = default;
+AnimatedScene::~AnimatedScene() = default;
 
-void SimpleScene::initialize()
+void AnimatedScene::initialize()
 {
 	glcore::initGLBinding();
 	initializeShaders();
@@ -22,41 +35,36 @@ void SimpleScene::initialize()
 	m_vao = glcore::createVAO();
 	glBindVertexArray(m_vao);
 
-	// Генерируем список вершин треугольников, представляющих пятиугольник,
-	//  добавляем его к списку вершин круга.
-	const std::vector<glm::vec2> convexPoints = {
-		{ 100 - 200, 200 - 250 },
-		{ 250 - 200, 210 - 250 },
-		{ 220 - 200, 290 - 250 },
-		{ 130 - 200, 300 - 250 },
-		{ 100 - 200, 250 - 250 },
-	};
-	std::vector<VertexP2C4> verticies = tesselateConvex(convexPoints, glm::vec4{ 0, 1, 0, 0 });
-
 	// Загружаем данные в вершинный буфер.
-	m_vbo = glcore::createStaticVBO(GL_ARRAY_BUFFER, verticies);
-
-	// Выполняем привязку вершинных данных в контексте текущего VAO и VBO.
-	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-	bindVertexData(verticies);
-
-	m_trianglesCount = verticies.size();
+	m_vbo = glcore::createVBO();
 }
 
-void SimpleScene::update(float deltaSeconds)
+void AnimatedScene::update(float deltaSeconds)
 {
 	m_totalTime += deltaSeconds;
 }
 
-void SimpleScene::redraw(unsigned width, unsigned height)
+void AnimatedScene::redraw(unsigned width, unsigned height)
 {
 	glViewport(0, 0, width, height);
 	glUseProgram(m_program);
 	glBindVertexArray(m_vao);
 
-	glClear(GL_COLOR_BUFFER_BIT);
+	// Генерируем список вершин треугольников, представляющих полярную розу.
+	std::vector<VertexP2C4> verticies = tesselatePolarRose(100.0f, 7, glm::vec2{ 0, 0 }, glm::vec4{ 0.72, 0.2, 1, 0 });
+	animateShape(verticies);
 
-	updateTwisting();
+	// Загружаем вершины на видеокарту
+	glcore::setStreamBufferData(m_vbo, GL_ARRAY_BUFFER, verticies);
+
+	// Выполняем привязку вершинных данных в контексте текущего VAO и VBO.
+	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+	bindVertexData(verticies);
+
+	// Запоминаем число примитивов.
+	m_trianglesCount = verticies.size();
+
+	glClear(GL_COLOR_BUFFER_BIT);
 
 	// Устанавливаем матрицу ортографического проецирования.
 	setProjectionMatrix(width, height);
@@ -64,7 +72,35 @@ void SimpleScene::redraw(unsigned width, unsigned height)
 	glDrawArrays(GL_TRIANGLES, 0, m_trianglesCount);
 }
 
-void SimpleScene::initializeShaders()
+bool AnimatedScene::keyReleaseEvent(platform::IKeyEvent &event)
+{
+	using platform::Key;
+
+	switch (event.getKey())
+	{
+	case Key::Equal:
+		// TODO: zoom camera in.
+		break;
+	case Key::Minus:
+		// TODO: zoom camera out.
+		break;
+	case Key::Left:
+		// TODO: move camera left.
+		break;
+	case Key::Right:
+		// TODO: move camera right.
+		break;
+	case Key::Up:
+		// TODO: move camera up.
+		break;
+	case Key::Down:
+		// TODO: move camera down.
+		break;
+	}
+	return false;
+}
+
+void AnimatedScene::initializeShaders()
 {
 	platform::ResourceLoader loader;
 
@@ -74,7 +110,7 @@ void SimpleScene::initializeShaders()
 	m_program = glcore::linkProgram(shaders);
 }
 
-void SimpleScene::bindVertexData(const std::vector<VertexP2C4> &verticies)
+void AnimatedScene::bindVertexData(const std::vector<VertexP2C4> &verticies)
 {
 	// OpenGL должен получить байтовые смещения полей относительно структуры VertexP2C4.
 	const void *colorOffset = reinterpret_cast<void *>(offsetof(VertexP2C4, rgba));
@@ -92,7 +128,7 @@ void SimpleScene::bindVertexData(const std::vector<VertexP2C4> &verticies)
 	glVertexAttribPointer(posLocation, glm::vec2().length(), GL_FLOAT, GL_FALSE, stride, posOffset);
 }
 
-void SimpleScene::setProjectionMatrix(unsigned width, unsigned height)
+void AnimatedScene::setProjectionMatrix(unsigned width, unsigned height)
 {
 	// Вычисляем матрицу ортографического проецирования
 	const glm::mat4 mat = glm::ortho(-0.5f * float(width), 0.5f * float(width), -0.5f * float(height), 0.5f * float(height));
@@ -101,14 +137,18 @@ void SimpleScene::setProjectionMatrix(unsigned width, unsigned height)
 	glUniformMatrix4fv(glGetUniformLocation(m_program, "u_projection_matrix"), 1, GL_FALSE, glm::value_ptr(mat));
 }
 
-void SimpleScene::updateTwisting()
+void AnimatedScene::animateShape(std::vector<VertexP2C4> &verticies)
 {
-	constexpr float kTwistingPeriodSec = 4.0f;
-	constexpr float kTwistingHalfPeriodSec = 0.5f * kTwistingPeriodSec;
-	constexpr float kTwistingAmplitude = 0.02f;
+	constexpr float kAnimationPeriodSec = 2.0;
+	for (auto &v : verticies)
+	{
+		const float phase = std::fmod(m_totalTime, kAnimationPeriodSec) / kAnimationPeriodSec;
+		assert(phase >= 0.f && phase <= 1.f);
+		v.xy = animate(v.xy, phase);
+	}
+}
 
-	const float twistingPhase = std::abs(kTwistingHalfPeriodSec - fmodf(m_totalTime, kTwistingPeriodSec)) / kTwistingHalfPeriodSec;
-	const float twisting = kTwistingAmplitude * (twistingPhase - 0.25f * kTwistingPeriodSec);
-
-	glUniform1f(glGetUniformLocation(m_program, "u_twisting"), twisting);
+glm::vec2 AnimatedScene::animate(const glm::vec2 &point, float phase)
+{
+	return animateMoveAlongY(point, phase);
 }

@@ -1,4 +1,4 @@
-#version 110
+#version 130
 
 in vec2 i_position;
 in vec4 i_color;
