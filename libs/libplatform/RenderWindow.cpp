@@ -1,5 +1,7 @@
 ﻿#include "RenderWindow.h"
+#include "CatchAndDisplay.h"
 #include "GraphicsSceneAdapter.h"
+#include "InputListenerAdapter.h"
 #include <QtCore/QDebug>
 
 namespace platform
@@ -100,6 +102,32 @@ void RenderWindow::exposeEvent(QExposeEvent *event)
 	}
 }
 
+void RenderWindow::keyPressEvent(QKeyEvent *event)
+{
+	if (m_scene)
+	{
+		InputListenerAdapter listener(*m_scene);
+		if (listener.keyPressEvent(event))
+		{
+			return;
+		}
+	}
+	QWindow::keyPressEvent(event);
+}
+
+void RenderWindow::keyReleaseEvent(QKeyEvent *event)
+{
+	if (m_scene)
+	{
+		InputListenerAdapter listener(*m_scene);
+		if (listener.keyReleaseEvent(event))
+		{
+			return;
+		}
+	}
+	QWindow::keyReleaseEvent(event);
+}
+
 void RenderWindow::renderLater()
 {
 	requestUpdate();
@@ -125,7 +153,9 @@ void RenderWindow::renderNow()
 
 		if (m_scene)
 		{
-			m_scene->initialize();
+			CatchAndClose([&] {
+				m_scene->initialize();
+			});
 		}
 	}
 	else
@@ -155,13 +185,30 @@ void RenderWindow::updateScene()
 	if (elapsedSeconds > 0)
 	{
 		m_updateTimer.restart();
-		m_scene->update((std::min)(elapsedSeconds, MAX_ELAPSED_SECONDS));
+		CatchAndClose([&] {
+			m_scene->update((std::min)(elapsedSeconds, MAX_ELAPSED_SECONDS));
+		});
 	}
 }
 
 void RenderWindow::renderScene()
 {
-	m_scene->redraw(width(), height());
+	CatchAndClose([&] {
+		m_scene->redraw(width(), height());
+	});
+}
+
+template<class Callable>
+void RenderWindow::CatchAndClose(Callable &&callable)
+{
+	const bool ok = CatchAndDisplay([&] {
+		callable();
+		return true;
+	});
+	if (!ok)
+	{
+		close();
+	}
 }
 
 } // namespace platform
