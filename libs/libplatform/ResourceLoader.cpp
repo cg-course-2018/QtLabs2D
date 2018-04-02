@@ -27,4 +27,13 @@ std::string ResourceLoader::loadAsString(const std::string &relativePath)
 
 	return std::string(bytes.data(), bytes.size());
 }
+
+QImage ResourceLoader::loadImage(const std::string &relativePath)
+{
+	// Формируем абсолютный путь к файлу, добавляя путь к каталогу исполняемого файла
+	QString absolutePath = QCoreApplication::applicationDirPath() + QDir::separator() + QString::fromUtf8(relativePath.c_str());
+
+	// Конструируем изображение, что приведёт к его загрузке.
+	return QImage(absolutePath);
+}
 } // namespace platform
