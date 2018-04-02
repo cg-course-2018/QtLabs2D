@@ -3,21 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libplatform", "libplatform\libplatform.vcxproj", "{B12702AD-ABFB-343A-A199-8E24837244A3}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libplatform", "libs\libplatform\libplatform.vcxproj", "{B12702AD-ABFB-343A-A199-8E24837244A3}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BouncingBallApp", "BouncingBallApp\BouncingBallApp.vcxproj", "{43F8050E-472D-42A8-A766-EB88FA0E3640}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BouncingBallApp", "apps\BouncingBallApp\BouncingBallApp.vcxproj", "{43F8050E-472D-42A8-A766-EB88FA0E3640}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmath", "libmath\libmath.vcxproj", "{4092AEB5-00BB-49D6-A073-D4834EB3A9BC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmath", "libs\libmath\libmath.vcxproj", "{4092AEB5-00BB-49D6-A073-D4834EB3A9BC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libballs2d", "libballs2d\libballs2d.vcxproj", "{CBFFAD09-E44B-46B7-B356-92B242CD0DBD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libballs2d", "libs\libballs2d\libballs2d.vcxproj", "{CBFFAD09-E44B-46B7-B356-92B242CD0DBD}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PoolTableApp", "PoolTableApp\PoolTableApp.vcxproj", "{E7897A7C-6FDA-461E-9D0B-BBFFFEEC6D0E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PoolTableApp", "apps\PoolTableApp\PoolTableApp.vcxproj", "{E7897A7C-6FDA-461E-9D0B-BBFFFEEC6D0E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{6E1D27C7-BA78-46C4-96BE-B14D026DBB96}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "apps", "apps", "{21CEA395-9553-4B17-AC17-135454C4D4FA}"
 EndProject
+<<<<<<< HEAD
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmath_tests", "libmath_tests\libmath_tests.vcxproj", "{50811C8B-6766-4154-87E6-90C91E14714D}"
+=======
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libglcore", "libs\libglcore\libglcore.vcxproj", "{6E8FB4B9-B15F-4AB8-9162-49FAE661F87C}"
+>>>>>>> stable
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +65,7 @@ Global
 		{E7897A7C-6FDA-461E-9D0B-BBFFFEEC6D0E}.Release|x64.ActiveCfg = Release|x64
 		{E7897A7C-6FDA-461E-9D0B-BBFFFEEC6D0E}.Release|x64.Build.0 = Release|x64
 		{E7897A7C-6FDA-461E-9D0B-BBFFFEEC6D0E}.Release|x86.ActiveCfg = Release|x64
+<<<<<<< HEAD
 		{50811C8B-6766-4154-87E6-90C91E14714D}.Debug|x64.ActiveCfg = Debug|x64
 		{50811C8B-6766-4154-87E6-90C91E14714D}.Debug|x64.Build.0 = Debug|x64
 		{50811C8B-6766-4154-87E6-90C91E14714D}.Debug|x86.ActiveCfg = Debug|Win32
@@ -69,6 +74,16 @@ Global
 		{50811C8B-6766-4154-87E6-90C91E14714D}.Release|x64.Build.0 = Release|x64
 		{50811C8B-6766-4154-87E6-90C91E14714D}.Release|x86.ActiveCfg = Release|Win32
 		{50811C8B-6766-4154-87E6-90C91E14714D}.Release|x86.Build.0 = Release|Win32
+=======
+		{6E8FB4B9-B15F-4AB8-9162-49FAE661F87C}.Debug|x64.ActiveCfg = Debug|x64
+		{6E8FB4B9-B15F-4AB8-9162-49FAE661F87C}.Debug|x64.Build.0 = Debug|x64
+		{6E8FB4B9-B15F-4AB8-9162-49FAE661F87C}.Debug|x86.ActiveCfg = Debug|Win32
+		{6E8FB4B9-B15F-4AB8-9162-49FAE661F87C}.Debug|x86.Build.0 = Debug|Win32
+		{6E8FB4B9-B15F-4AB8-9162-49FAE661F87C}.Release|x64.ActiveCfg = Release|x64
+		{6E8FB4B9-B15F-4AB8-9162-49FAE661F87C}.Release|x64.Build.0 = Release|x64
+		{6E8FB4B9-B15F-4AB8-9162-49FAE661F87C}.Release|x86.ActiveCfg = Release|Win32
+		{6E8FB4B9-B15F-4AB8-9162-49FAE661F87C}.Release|x86.Build.0 = Release|Win32
+>>>>>>> stable
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,7 +94,11 @@ Global
 		{4092AEB5-00BB-49D6-A073-D4834EB3A9BC} = {6E1D27C7-BA78-46C4-96BE-B14D026DBB96}
 		{CBFFAD09-E44B-46B7-B356-92B242CD0DBD} = {6E1D27C7-BA78-46C4-96BE-B14D026DBB96}
 		{E7897A7C-6FDA-461E-9D0B-BBFFFEEC6D0E} = {21CEA395-9553-4B17-AC17-135454C4D4FA}
+<<<<<<< HEAD
 		{50811C8B-6766-4154-87E6-90C91E14714D} = {6E1D27C7-BA78-46C4-96BE-B14D026DBB96}
+=======
+		{6E8FB4B9-B15F-4AB8-9162-49FAE661F87C} = {6E1D27C7-BA78-46C4-96BE-B14D026DBB96}
+>>>>>>> stable
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {91011195-4D0F-4F2F-955A-15AD60D455D1}
