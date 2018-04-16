@@ -44,13 +44,7 @@ void Simple3DScene::initialize()
 	glcore::initGLBinding();
 	initializeShaders();
 
-	// Включаем тест глубины.
-	glEnable(GL_DEPTH_TEST);
-
-	// Включаем отсечение задних граней
-	glEnable(GL_CULL_FACE);
-	glFrontFace(GL_CCW);
-	glCullFace(GL_BACK);
+	// TODO: enable depth test
 
 	const MeshDataP3C3 data = tesselateCube();
 	m_cube.init(data);
@@ -64,10 +58,7 @@ void Simple3DScene::update(float deltaSeconds)
 {
 	m_cameraController->update(deltaSeconds);
 
-	// Вращаем куб вокруг оси Oy (вертикальной оси).
-	const float cubeRotation = glm::radians(CUBE_ROTATE_SPEED * deltaSeconds);
-	m_cubeTransform.rotateBy(glm::angleAxis(cubeRotation, glm::vec3{ 0, 1, 0 }));
-	m_cube.setTransform(m_cubeTransform);
+	// TODO: rotate cube
 
 	constexpr float WIREFRAME_PERIOD_SEC = 0.7f;
 	m_totalTime += deltaSeconds;
@@ -79,10 +70,10 @@ void Simple3DScene::redraw(unsigned width, unsigned height)
 	glViewport(0, 0, width, height);
 	glUseProgram(m_program);
 
-	// Выбираем режим рендеринга треугольников: только линии (wireframe mode) либо полная заливка.
-	glPolygonMode(GL_FRONT_AND_BACK, m_renderWireframe ? GL_LINE : GL_FILL);
+	// TODO: call glPolygonMode
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// TODO: clear depth buffer
+	glClear(GL_COLOR_BUFFER_BIT);
 
 	// Устанавливаем матрицу ортографического проецирования.
 	setProjectionMatrix(width, height);
@@ -133,15 +124,7 @@ void Simple3DScene::setProjectionMatrix(unsigned width, unsigned height)
 {
 	glViewport(0, 0, width, height);
 
-	// Вычисляем матрицу перспективного проецирования.
-	// Затем передаём матрицу как константу в графической программе.
-	const float fieldOfView = glm::radians(70.f);
-	const float aspect = float(width) / float(height);
-	const float zNear = 0.05f;
-	const float zFar = 50.f;
-	const glm::mat4 mat = glm::perspective(fieldOfView, aspect, zNear, zFar);
-
-	glUniformMatrix4fv(glGetUniformLocation(m_program, "u_projection_matrix"), 1, GL_FALSE, glm::value_ptr(mat));
+	// TODO: set projection matrix
 }
 
 void Simple3DScene::setViewMatrix()
