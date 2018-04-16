@@ -68,12 +68,19 @@ void Simple3DScene::update(float deltaSeconds)
 	const float cubeRotation = glm::radians(CUBE_ROTATE_SPEED * deltaSeconds);
 	m_cubeTransform.rotateBy(glm::angleAxis(cubeRotation, glm::vec3{ 0, 1, 0 }));
 	m_cube.setTransform(m_cubeTransform);
+
+	constexpr float WIREFRAME_PERIOD_SEC = 0.7f;
+	m_totalTime += deltaSeconds;
+	m_renderWireframe = (fmod(m_totalTime, 2.f * WIREFRAME_PERIOD_SEC) > WIREFRAME_PERIOD_SEC);
 }
 
 void Simple3DScene::redraw(unsigned width, unsigned height)
 {
 	glViewport(0, 0, width, height);
 	glUseProgram(m_program);
+
+	// ¬ыбираем режим рендеринга треугольников: только линии (wireframe mode) либо полна€ заливка.
+	glPolygonMode(GL_FRONT_AND_BACK, m_renderWireframe ? GL_LINE : GL_FILL);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

@@ -32,4 +32,7 @@ private:
 	glcore::ProgramObject m_program;
 	MeshP3C3 m_cube;
 	Transform3D m_cubeTransform;
+
+	float m_totalTime = 0;
+	bool m_renderWireframe = false;
 };
