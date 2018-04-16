@@ -27,6 +27,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libglcore", "libs\libglcore
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample07", "samples\Sample07\Sample07.vcxproj", "{86A7178B-D638-4CAF-A3D3-3C23E1C1CE38}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample08", "samples\Sample08\Sample08.vcxproj", "{4A4B9117-E1BA-43D6-A443-5851590F6F5B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -95,6 +97,12 @@ Global
 		{86A7178B-D638-4CAF-A3D3-3C23E1C1CE38}.Release|x64.ActiveCfg = Release|x64
 		{86A7178B-D638-4CAF-A3D3-3C23E1C1CE38}.Release|x64.Build.0 = Release|x64
 		{86A7178B-D638-4CAF-A3D3-3C23E1C1CE38}.Release|x86.ActiveCfg = Release|x64
+		{4A4B9117-E1BA-43D6-A443-5851590F6F5B}.Debug|x64.ActiveCfg = Debug|x64
+		{4A4B9117-E1BA-43D6-A443-5851590F6F5B}.Debug|x64.Build.0 = Debug|x64
+		{4A4B9117-E1BA-43D6-A443-5851590F6F5B}.Debug|x86.ActiveCfg = Debug|x64
+		{4A4B9117-E1BA-43D6-A443-5851590F6F5B}.Release|x64.ActiveCfg = Release|x64
+		{4A4B9117-E1BA-43D6-A443-5851590F6F5B}.Release|x64.Build.0 = Release|x64
+		{4A4B9117-E1BA-43D6-A443-5851590F6F5B}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -109,6 +117,7 @@ Global
 		{3FD49B09-B0BC-426F-B6A4-9ED8557AD634} = {72074650-711C-4BC6-98B3-AAC4CD17A51A}
 		{6E8FB4B9-B15F-4AB8-9162-49FAE661F87C} = {6E1D27C7-BA78-46C4-96BE-B14D026DBB96}
 		{86A7178B-D638-4CAF-A3D3-3C23E1C1CE38} = {72074650-711C-4BC6-98B3-AAC4CD17A51A}
+		{4A4B9117-E1BA-43D6-A443-5851590F6F5B} = {72074650-711C-4BC6-98B3-AAC4CD17A51A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {91011195-4D0F-4F2F-955A-15AD60D455D1}

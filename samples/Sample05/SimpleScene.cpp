@@ -143,7 +143,7 @@ void SimpleScene::initialize()
 	// ¬ыполн€ем прив€зку вершинных данных в контексте текущего VAO.
 	bindVertexData(verticies);
 
-	m_trianglesCount = verticies.size();
+	m_vertexCount = verticies.size();
 }
 
 void SimpleScene::update(float deltaSeconds)
@@ -162,7 +162,7 @@ void SimpleScene::redraw(unsigned width, unsigned height)
 	// ”станавливаем матрицу ортографического проецировани€.
 	setProjectionMatrix(width, height);
 
-	glDrawArrays(GL_TRIANGLES, 0, m_trianglesCount);
+	glDrawArrays(GL_TRIANGLES, 0, m_vertexCount);
 }
 
 void SimpleScene::initializeShaders()

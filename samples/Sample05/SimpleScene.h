@@ -37,5 +37,5 @@ private:
 	GLuint m_program = 0;
 	GLuint m_vbo = 0;
 	GLuint m_vao = 0;
-	size_t m_trianglesCount = 0;
+	size_t m_vertexCount = 0;
 };

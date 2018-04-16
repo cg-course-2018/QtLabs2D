@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="main">
+      <UniqueIdentifier>{bc649e7b-bfe2-4fc3-9ed5-7d363ec680f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scene">
+      <UniqueIdentifier>{aa88d06a-cd3d-4723-8a56-18111a193f1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{ece4dd89-5957-4628-8981-b15d688da434}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="camera">
+      <UniqueIdentifier>{b671c416-cb42-4606-8b4d-e3f4728f4bcf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="TesselateUtils.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Simple3DScene.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshP3C3.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraController.cpp">
+      <Filter>camera</Filter>
+    </ClCompile>
+    <ClCompile Include="FlyingCamera.cpp">
+      <Filter>camera</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="TesselateUtils.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Simple3DScene.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshP3C3.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraController.h">
+      <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="FlyingCamera.h">
+      <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="ICameraController.h">
+      <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="IFlyingCamera.h">
+      <Filter>camera</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="copy_res.bat">
+      <Filter>main</Filter>
+    </None>
+    <None Include="draw3d.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="draw3d.vert">
+      <Filter>shaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>

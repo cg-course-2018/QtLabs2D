@@ -61,15 +61,15 @@ void AnimatedScene::redraw(unsigned width, unsigned height)
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 	bindVertexData(verticies);
 
-	// Запоминаем число примитивов.
-	m_trianglesCount = verticies.size();
+	// Запоминаем число вершин.
+	m_vertexCount = verticies.size();
 
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	// Устанавливаем матрицу ортографического проецирования.
 	setProjectionMatrix(width, height);
 
-	glDrawArrays(GL_TRIANGLES, 0, m_trianglesCount);
+	glDrawArrays(GL_TRIANGLES, 0, m_vertexCount);
 }
 
 bool AnimatedScene::keyReleaseEvent(platform::IKeyEvent &event)

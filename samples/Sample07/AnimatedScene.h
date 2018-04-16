@@ -26,6 +26,6 @@ private:
 	glcore::VBO m_vbo;
 	glcore::VAO m_vao;
 
-	size_t m_trianglesCount = 0;
+	size_t m_vertexCount = 0;
 	float m_totalTime = 0;
 };
