@@ -113,6 +113,7 @@
     <ClCompile Include="InputListenerAdapter.cpp" />
     <ClCompile Include="RenderWindow.cpp" />
     <ClCompile Include="ResourceLoader.cpp" />
+    <ClCompile Include="SetupDebugOutput.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -128,6 +129,7 @@
     <ClInclude Include="libplatform.h" />
     <QtMoc Include="RenderWindow.h" />
     <ClInclude Include="ResourceLoader.h" />
+    <ClInclude Include="SetupDebugOutput.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

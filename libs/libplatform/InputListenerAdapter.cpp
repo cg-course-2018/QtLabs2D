@@ -32,12 +32,60 @@ public:
 			return Key::Plus;
 		case Qt::Key_Equal:
 			return Key::Equal;
+		case Qt::Key_W:
+			return Key::LetterW;
+		case Qt::Key_A:
+			return Key::LetterA;
+		case Qt::Key_S:
+			return Key::LetterS;
+		case Qt::Key_D:
+			return Key::LetterD;
+		case Qt::Key_E:
+			return Key::LetterE;
+		case Qt::Key_Q:
+			return Key::LetterQ;
 		}
 		return Key::Unknown;
 	}
 
 private:
 	QKeyEvent *m_event = nullptr;
+};
+
+class MouseEventAdapter final : public IMouseEvent
+{
+public:
+	MouseEventAdapter(QMouseEvent *event)
+		: m_event(event)
+	{
+	}
+
+	std::pair<double, double> getPosition() const final
+	{
+		const auto localPos = m_event->localPos();
+		return { localPos.x(), localPos.y() };
+	}
+
+	bool isButtonPressed(MouseButton button) const
+	{
+		Qt::MouseButtons mask = 0;
+		switch (button)
+		{
+		case MouseButton::Left:
+			mask = Qt::LeftButton;
+			break;
+		case MouseButton::Right:
+			mask = Qt::RightButton;
+			break;
+		case MouseButton::Middle:
+			mask = Qt::MiddleButton;
+			break;
+		}
+		return ((mask & m_event->buttons()) != 0);
+	}
+
+private:
+	QMouseEvent *m_event = nullptr;
 };
 } // namespace
 
@@ -56,6 +104,24 @@ bool InputListenerAdapter::keyReleaseEvent(QKeyEvent *event)
 {
 	KeyEventAdapter adapter(event);
 	return m_listener.keyReleaseEvent(adapter);
+}
+
+bool InputListenerAdapter::mousePressEvent(QMouseEvent *event)
+{
+	MouseEventAdapter adapter(event);
+	return m_listener.mousePressEvent(adapter);
+}
+
+bool InputListenerAdapter::mouseReleaseEvent(QMouseEvent *event)
+{
+	MouseEventAdapter adapter(event);
+	return m_listener.mouseReleaseEvent(adapter);
+}
+
+bool InputListenerAdapter::mouseMoveEvent(QMouseEvent *event)
+{
+	MouseEventAdapter adapter(event);
+	return m_listener.mouseMoveEvent(adapter);
 }
 
 } // namespace platform
