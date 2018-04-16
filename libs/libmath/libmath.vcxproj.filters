@@ -24,12 +24,18 @@
     <ClInclude Include="Transform2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Transform3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Transform2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

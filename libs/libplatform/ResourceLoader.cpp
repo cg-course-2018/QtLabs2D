@@ -3,10 +3,6 @@
 #include <QtCore/QDir>
 #include <QtCore/QTextStream>
 
-namespace
-{
-}
-
 namespace platform
 {
 std::string ResourceLoader::loadAsString(const std::string &relativePath)

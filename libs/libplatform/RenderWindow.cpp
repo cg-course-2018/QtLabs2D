@@ -2,6 +2,7 @@
 #include "CatchAndDisplay.h"
 #include "GraphicsSceneAdapter.h"
 #include "InputListenerAdapter.h"
+#include "SetupDebugOutput.h"
 #include <QtCore/QDebug>
 
 namespace platform
@@ -128,6 +129,45 @@ void RenderWindow::keyReleaseEvent(QKeyEvent *event)
 	QWindow::keyReleaseEvent(event);
 }
 
+void RenderWindow::mousePressEvent(QMouseEvent *event)
+{
+	if (m_scene)
+	{
+		InputListenerAdapter listener(*m_scene);
+		if (listener.mousePressEvent(event))
+		{
+			return;
+		}
+	}
+	QWindow::mousePressEvent(event);
+}
+
+void RenderWindow::mouseReleaseEvent(QMouseEvent *event)
+{
+	if (m_scene)
+	{
+		InputListenerAdapter listener(*m_scene);
+		if (listener.mouseReleaseEvent(event))
+		{
+			return;
+		}
+	}
+	QWindow::mouseReleaseEvent(event);
+}
+
+void RenderWindow::mouseMoveEvent(QMouseEvent *event)
+{
+	if (m_scene)
+	{
+		InputListenerAdapter listener(*m_scene);
+		if (listener.mouseMoveEvent(event))
+		{
+			return;
+		}
+	}
+	QWindow::mouseMoveEvent(event);
+}
+
 void RenderWindow::renderLater()
 {
 	requestUpdate();
@@ -156,6 +196,12 @@ void RenderWindow::renderNow()
 			CatchAndClose([&] {
 				m_scene->initialize();
 			});
+		}
+
+		// Если установлен флаг отладочного контекста, подключаем наш callback для отладки.
+		if (m_surfaceFormat.testOption(QSurfaceFormat::DebugContext))
+		{
+			SetupDebugOutput();
 		}
 	}
 	else

@@ -44,6 +44,9 @@
     <ClCompile Include="InputListenerAdapter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SetupDebugOutput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libplatform.h">
@@ -71,6 +74,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="InputListenerAdapter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SetupDebugOutput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
