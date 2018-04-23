@@ -6,6 +6,7 @@
 #include "ShaderProgram.h"
 #include <libglcore/libglcore.h>
 #include <libplatform/IRenderScene.h>
+#include <memory>
 
 class LightingScene
 	: public platform::IRenderScene
