@@ -1,1 +1,1 @@
-#include <QtCore>
+﻿#include <QtCore>

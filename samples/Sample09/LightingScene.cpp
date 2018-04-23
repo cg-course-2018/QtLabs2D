@@ -177,6 +177,7 @@ void LightingScene::initializeLambertProgram()
 		{ UniformLight1Position, "u_light1.position" },
 		{ UniformLight1Diffuse, "u_light1.diffuse" },
 		{ UniformMaterialDiffuse, "u_material.diffuse" },
+		{ UniformMaterialEmission, "u_material.emission" },
 	};
 
 	m_programLambert.init(std::move(program), uniforms, attributes);
