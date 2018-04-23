@@ -75,7 +75,9 @@ void LightingScene::redraw(unsigned width, unsigned height)
 	glViewport(0, 0, width, height);
 	m_activeProgram->bind();
 	utils::setLightSource0(*m_activeProgram, m_sunlight);
-	utils::setLightSource1(*m_activeProgram, m_rightLight);
+
+	// TODO: включите снова источник света №1
+	// utils::setLightSource1(*m_activeProgram, m_rightLight);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -88,11 +90,13 @@ void LightingScene::redraw(unsigned width, unsigned height)
 	m_cube.updateUniforms(*m_activeProgram);
 	m_cube.draw();
 
-	m_sphere.updateUniforms(*m_activeProgram);
-	m_sphere.draw();
+	// TODO: раскомментируйте рисование серой сферы.
+	// m_sphere.updateUniforms(*m_activeProgram);
+	// m_sphere.draw();
 
-	m_rightLightSphere.updateUniforms(*m_activeProgram);
-	m_rightLightSphere.draw();
+	// TODO: раскомментируйте рисование визуализации источника света.
+	// m_rightLightSphere.updateUniforms(*m_activeProgram);
+	// m_rightLightSphere.draw();
 }
 
 bool LightingScene::keyPressEvent(platform::IKeyEvent &event)
@@ -127,11 +131,8 @@ void LightingScene::initializeShaders()
 	initializePhongProgram();
 
 	// Выбираем активную программу.
-#if 0
 	m_activeProgram = &m_programNoLighting;
-#else
-	m_activeProgram = &m_programLambert;
-#endif
+	// TODO: включите m_programLambert вместо m_programNoLighting
 }
 
 void LightingScene::initializeNoLightingProgram()
@@ -175,7 +176,6 @@ void LightingScene::initializeLambertProgram()
 		{ UniformLight0Diffuse, "u_light0.diffuse" },
 		{ UniformLight1Position, "u_light1.position" },
 		{ UniformLight1Diffuse, "u_light1.diffuse" },
-		{ UniformMaterialEmission, "u_material.emission" },
 		{ UniformMaterialDiffuse, "u_material.diffuse" },
 	};
 
@@ -205,7 +205,8 @@ void LightingScene::initializeObjects()
 {
 	{
 		const Material cubeMaterial{
-			glm::vec4(0.15, 0.15, 0.15, 1),
+			// TODO: замените значения emission цвета на 0.15, 0.15, 0.15, 1
+			glm::vec4(0, 0, 0, 1),
 			glm::vec4(0.7, 0.7, 0.7, 1),
 			glm::vec4(0.7, 0.7, 0.7, 1),
 		};
@@ -220,7 +221,8 @@ void LightingScene::initializeObjects()
 	}
 	{
 		const Material sphereMaterial{
-			glm::vec4(0.15, 0.15, 0.15, 1),
+			// TODO: замените значения emission цвета на 0.15, 0.15, 0.15, 1
+			glm::vec4(0, 0, 0, 1),
 			glm::vec4(0.7, 0.7, 0.7, 1),
 			glm::vec4(0.7, 0.7, 0.7, 1),
 		};
