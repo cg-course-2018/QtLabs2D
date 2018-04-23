@@ -175,52 +175,52 @@ void RenderWindow::renderLater()
 
 void RenderWindow::renderNow()
 {
-	if (!isExposed())
-	{
-		return;
-	}
+	CatchAndClose([&] {
+		if (!isExposed() || !m_allowRendering)
+		{
+			return;
+		}
 
-	// Лениво инициализируем контекст OpenGL.
-	if (!m_context)
-	{
-		m_context = new QOpenGLContext(this);
-		m_context->setFormat(m_surfaceFormat);
-		m_context->create();
-		m_context->makeCurrent(this);
+		// Лениво инициализируем контекст OpenGL.
+		if (!m_context)
+		{
+			m_context = new QOpenGLContext(this);
+			m_context->setFormat(m_surfaceFormat);
+			m_context->create();
+			m_context->makeCurrent(this);
 
-		QSurfaceFormat actualFormat = m_context->format();
-		qDebug() << formatSurfaceFormat(actualFormat);
+			QSurfaceFormat actualFormat = m_context->format();
+			qDebug() << formatSurfaceFormat(actualFormat);
+
+			if (m_scene)
+			{
+				m_scene->initialize();
+			}
+
+			// Если установлен флаг отладочного контекста, подключаем наш callback для отладки.
+			if (m_surfaceFormat.testOption(QSurfaceFormat::DebugContext))
+			{
+				SetupDebugOutput();
+			}
+		}
+		else
+		{
+			m_context->makeCurrent(this);
+		}
 
 		if (m_scene)
 		{
-			CatchAndClose([&] {
-				m_scene->initialize();
-			});
+			updateScene();
+			renderScene();
 		}
+		// Выполняем обмен буферами в рамках двойной буферизации рисования.
+		m_context->swapBuffers(this);
 
-		// Если установлен флаг отладочного контекста, подключаем наш callback для отладки.
-		if (m_surfaceFormat.testOption(QSurfaceFormat::DebugContext))
+		if (m_isAnimating)
 		{
-			SetupDebugOutput();
+			renderLater();
 		}
-	}
-	else
-	{
-		m_context->makeCurrent(this);
-	}
-
-	if (m_scene)
-	{
-		updateScene();
-		renderScene();
-	}
-	// Выполняем обмен буферами в рамках двойной буферизации рисования.
-	m_context->swapBuffers(this);
-
-	if (m_isAnimating)
-	{
-		renderLater();
-	}
+	});
 }
 
 void RenderWindow::updateScene()
@@ -245,7 +245,7 @@ void RenderWindow::renderScene()
 }
 
 template<class Callable>
-void RenderWindow::CatchAndClose(Callable &&callable)
+bool RenderWindow::CatchAndClose(Callable &&callable)
 {
 	const bool ok = CatchAndDisplay([&] {
 		callable();
@@ -253,8 +253,10 @@ void RenderWindow::CatchAndClose(Callable &&callable)
 	});
 	if (!ok)
 	{
+		m_allowRendering = false;
 		close();
 	}
+	return ok;
 }
 
 } // namespace platform

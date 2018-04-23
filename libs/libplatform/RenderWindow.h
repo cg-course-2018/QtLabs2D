@@ -54,12 +54,13 @@ private:
 	void renderScene();
 
 	template<class Callable>
-	void CatchAndClose(Callable &&callable);
+	bool CatchAndClose(Callable &&callable);
 
 	RenderWindowOptions m_options;
 	QSurfaceFormat m_surfaceFormat;
 	std::unique_ptr<IRenderScene> m_scene;
 	bool m_isAnimating = true;
+	bool m_allowRendering = true;
 	QElapsedTimer m_updateTimer;
 	QOpenGLContext *m_context = nullptr;
 };
