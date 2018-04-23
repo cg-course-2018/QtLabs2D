@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{07072530-BD26-43B7-96BD-067784956F9C}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{A42CB12E-A3A0-4A4F-8639-A0F2D00FED70}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="main">
+      <UniqueIdentifier>{AE6F4379-4642-4CCB-8820-E51EBDB70D98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scene">
+      <UniqueIdentifier>{00A8C54E-514C-4585-9D6E-682F5455C499}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{94B0A9D9-DE62-4764-9388-14F73F9B7149}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="camera">
+      <UniqueIdentifier>{2D14A584-CDCE-40A0-BD13-042244AA37BB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader">
+      <UniqueIdentifier>{1c7e62f2-731b-4373-a47d-bbd832790f77}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="TesselateUtils.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraController.cpp">
+      <Filter>camera</Filter>
+    </ClCompile>
+    <ClCompile Include="FlyingCamera.cpp">
+      <Filter>camera</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshP3N3.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="LightingScene.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderProgram.cpp">
+      <Filter>shader</Filter>
+    </ClCompile>
+    <ClCompile Include="LightSource.cpp">
+      <Filter>shader</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="TesselateUtils.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraController.h">
+      <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="FlyingCamera.h">
+      <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="ICameraController.h">
+      <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="IFlyingCamera.h">
+      <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshP3N3.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="LightingScene.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="IShaderProgram.h">
+      <Filter>shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderProgram.h">
+      <Filter>shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Enumerations.h">
+      <Filter>shader</Filter>
+    </ClInclude>
+    <ClInclude Include="LightSource.h">
+      <Filter>shader</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="copy_res.bat">
+      <Filter>main</Filter>
+    </None>
+    <None Include="no_lighting.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="no_lighting.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="lambert_lighting.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="lambert_lighting.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="phong_lighting.vert">
+      <Filter>shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="phong_lighting.frag">
+      <Filter>shaders</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
