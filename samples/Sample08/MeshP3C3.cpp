@@ -8,18 +8,23 @@ using namespace gl32core;
 
 namespace
 {
-const glm::vec3 kYellowColor = { 1.0f, 1.0f, 0.2f };
+/*const glm::vec3 kYellowColor = { 1.0f, 1.0f, 0.2f };
 const glm::vec3 kOrangeColor = { 1.0f, 0.5f, 0.1f };
 const glm::vec3 kBlueColor = { 0.f, 0.4f, 0.6f };
 const glm::vec3 kGreenColor = { 0.1f, 1.0f, 0.1f };
 const glm::vec3 kDarkBlueColor = { 0.1f, 0.1f, 0.8f };
 const glm::vec3 kVioletColor = { 0.3f, 0.0f, 0.3f };
 const glm::vec3 kLightGrayColor = { 0.5f, 0.5f, 0.5f };
-const glm::vec3 kBrownColor = { 0.62f, 0.32f, 0.18f };
+const glm::vec3 kBrownColor = { 0.62f, 0.32f, 0.18f };*/
+
+	const glm::vec3 kYellowColor = { 0.f, 0.f, -1.0f };
+	const glm::vec3 kOrangeColor = { std::sqrt(1.5f), 0.f, 0.5f };
+	const glm::vec3 kBlueColor = { -std::sqrt(1.5f), 0.f, 0.5f };
+	const glm::vec3 kGreenColor = { 0.f, std::sqrt(2.f), 0.f };
 
 // ¬ершины куба служат материалом дл€ формировани€ треугольников,
 //  составл€ющих грани куба.
-const VertexP3C3 kCubeVerticies[] = {
+/*const VertexP3C3 kCubeVerticies[] = {
 	{ { -1, +1, -1 }, kYellowColor },
 	{ { +1, +1, -1 }, kOrangeColor },
 	{ { +1, -1, -1 }, kBlueColor },
@@ -28,11 +33,17 @@ const VertexP3C3 kCubeVerticies[] = {
 	{ { +1, +1, +1 }, kDarkBlueColor },
 	{ { +1, -1, +1 }, kVioletColor },
 	{ { -1, -1, +1 }, kBrownColor },
-};
+};*/
+
+	const VertexP3C3 kTetrahedronVerticies[] = {
+		{ { 0.f, 0.f, -1.0f }, kYellowColor },
+	{ { std::sqrt(1.5f), 0.f, 0.5f }, kOrangeColor },
+	{ { -std::sqrt(1.5f), 0.f, 0.5f }, kBlueColor },
+	{ { 0.f, std::sqrt(2.f), 0.f }, kGreenColor } };
 
 // »ндексы вершин задают косвенный способ получени€ вершины дл€
 //  каждого из треугольников.
-const glm::uvec3 kCubeIndexes[] = {
+/*const glm::uvec3 kCubeIndexes[] = {
 	{ 0, 1, 2 },
 	{ 0, 2, 3 },
 	{ 2, 1, 5 },
@@ -45,7 +56,13 @@ const glm::uvec3 kCubeIndexes[] = {
 	{ 1, 4, 5 },
 	{ 6, 5, 4 },
 	{ 6, 4, 7 },
-};
+};*/
+
+	const glm::uvec3 kTetrahedronIndexes[] = {
+		{ 0, 1, 3 },
+	{ 0, 2, 3 },
+	{ 0, 1, 2 },
+	{ 1, 2, 3 } };
 
 } // namespace
 
@@ -54,7 +71,7 @@ MeshDataP3C3 tesselateCube(const Transform3D &transform)
 	MeshDataP3C3 data;
 
 	//  опируем вершинные данные, затем трансформируем их.
-	data.vertexes.assign(std::begin(kCubeVerticies), std::end(kCubeVerticies));
+	data.vertexes.assign(std::begin(kTetrahedronVerticies), std::end(kTetrahedronVerticies));
 	const glm::mat4 transformMat = transform.toMat4();
 	for (auto &v : data.vertexes)
 	{
@@ -63,8 +80,8 @@ MeshDataP3C3 tesselateCube(const Transform3D &transform)
 	}
 
 	//  опируем индексы вершин.
-	data.indicies.reserve(3 * std::size(kCubeIndexes));
-	for (const auto &triangleIndexes : kCubeIndexes)
+	data.indicies.reserve(3 * std::size(kTetrahedronVerticies));
+	for (const auto &triangleIndexes : kTetrahedronIndexes)
 	{
 		data.indicies.push_back(triangleIndexes.x);
 		data.indicies.push_back(triangleIndexes.y);

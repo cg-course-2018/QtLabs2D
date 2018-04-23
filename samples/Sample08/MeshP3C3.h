@@ -16,6 +16,11 @@ struct VertexP3C3
 };
 #pragma pack(pop)
 
+
+
+
+
+
 struct MeshDataP3C3
 {
 	std::vector<VertexP3C3> vertexes;
