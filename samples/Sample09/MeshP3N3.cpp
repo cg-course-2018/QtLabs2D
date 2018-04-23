@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 #include "MeshP3N3.h"
+#include <cassert>
 #include <glbinding/gl32core/gl.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/vec4.hpp>
@@ -44,11 +45,54 @@ glm::mat4 getNormalMatrix(const glm::mat4 &modelView)
 {
 	return glm::transpose(glm::inverse(modelView));
 }
+
+glm::vec3 getPositionOnSphere(float u, float v)
+{
+	const float radius = 1.f;
+	const float latitude = float(M_PI) * (1.f - v); // 𝝅∙(𝟎.𝟓-𝒗)
+	const float longitude = float(2.0 * M_PI) * u; // 𝟐𝝅∙𝒖
+	const float latitudeRadius = radius * sinf(latitude);
+
+	return {
+		cosf(longitude) * latitudeRadius,
+		cosf(latitude) * radius,
+		sinf(longitude) * latitudeRadius
+	};
+}
+
+void calculateTriangleStripIndicies(MeshDataP3N3 &data, unsigned columnCount, unsigned rowCount)
+{
+	data.indicies.clear();
+	data.indicies.reserve((columnCount - 1) * rowCount * 2);
+	// вычисляем индексы вершин.
+	for (unsigned ci = 0; ci < columnCount - 1; ++ci)
+	{
+		if (ci % 2 == 0)
+		{
+			for (unsigned ri = 0; ri < rowCount; ++ri)
+			{
+				unsigned index = ci * rowCount + ri;
+				data.indicies.push_back(index + rowCount);
+				data.indicies.push_back(index);
+			}
+		}
+		else
+		{
+			for (unsigned ri = rowCount - 1; ri < rowCount; --ri)
+			{
+				unsigned index = ci * rowCount + ri;
+				data.indicies.push_back(index);
+				data.indicies.push_back(index + rowCount);
+			}
+		}
+	}
+}
 } // namespace
 
-MeshDataP3N3 tesselateCube(const Transform3D &transform)
+MeshDataP3N3 tesselateCube(const Material &material)
 {
 	MeshDataP3N3 data;
+	data.material = material;
 
 	// Каждая вершина будет использоваться только в одном треугольнике, т.к. у всех граней разные нормали.
 	// Поэтому мы просто заполняем массив индексов последовательностью 0, 1, ...
@@ -61,20 +105,12 @@ MeshDataP3N3 tesselateCube(const Transform3D &transform)
 	//  из-за того, что у всех граней куба разные нормали.
 	data.vertexes.reserve(3 * std::size(kCubeIndexes));
 
-	// Параметр transform содержит аффинное преобразование, которое надо применить ко всем вершинам.
-	// Анонимная функция transformPoint будет применять преобразование к одной точке.
-	const mat4 transformMat = transform.toMat4();
-	const auto transformPoint = [&](const vec3 &point) {
-		const vec4 transformed = transformMat * vec4(point, 1.f);
-		return vec3{ transformed.x, transformed.y, transformed.z };
-	};
-
 	for (const auto &triangleIndexes : kCubeIndexes)
 	{
 		// Выбираем три точки из палитры вершин куба.
-		const vec3 p1 = transformPoint(kCubeVerticies[triangleIndexes.x]);
-		const vec3 p2 = transformPoint(kCubeVerticies[triangleIndexes.y]);
-		const vec3 p3 = transformPoint(kCubeVerticies[triangleIndexes.z]);
+		const vec3 p1 = kCubeVerticies[triangleIndexes.x];
+		const vec3 p2 = kCubeVerticies[triangleIndexes.y];
+		const vec3 p3 = kCubeVerticies[triangleIndexes.z];
 
 		// Нормаль к треугольнику можно найти, используя векторное произведение двух сторон треугольника.
 		const vec3 n = normalize(cross(p3 - p2, p1 - p2));
@@ -88,8 +124,47 @@ MeshDataP3N3 tesselateCube(const Transform3D &transform)
 	return data;
 }
 
+MeshDataP3N3 tesselateSphere(const Material &material, unsigned latitudePrecision, unsigned longitudePrecision)
+{
+	constexpr unsigned kMinPrecision = 4;
+	assert((latitudePrecision >= kMinPrecision) && (longitudePrecision >= kMinPrecision));
+
+	MeshDataP3N3 data;
+
+	// Для сферы мы используем примитив "полоса треугольников".
+	data.primitive = gl::GL_TRIANGLE_STRIP;
+	data.material = material;
+
+	data.vertexes.reserve(latitudePrecision * longitudePrecision);
+	for (unsigned longI = 0; longI < longitudePrecision; ++longI)
+	{
+		const float u = float(longI) / float(longitudePrecision - 1);
+		for (unsigned latI = 0; latI < latitudePrecision; ++latI)
+		{
+			const float v = float(latI) / float(latitudePrecision - 1);
+
+			VertexP3N3 vertex;
+			vertex.position = getPositionOnSphere(u, v);
+
+			// Нормаль к сфере - это нормализованный вектор радиуса к данной точке
+			// Поскольку координаты центра равны 0, координаты вектора радиуса
+			// будут равны координатам вершины.
+			// Благодаря радиусу, равному 1, нормализация не требуется.
+			vertex.normal = vertex.position;
+
+			data.vertexes.push_back(vertex);
+		}
+	}
+
+	calculateTriangleStripIndicies(data, longitudePrecision, latitudePrecision);
+
+	return data;
+}
+
 void MeshP3N3::init(const MeshDataP3N3 &data)
 {
+	m_primitive = data.primitive;
+	m_material = data.material;
 	m_maxIndex = data.vertexes.size();
 	m_indexCount = data.indicies.size();
 
@@ -142,6 +217,18 @@ void MeshP3N3::updateUniforms(const IShaderProgram &program)
 	{
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(normalMat));
 	}
+	if (int location = program.getUniform(UniformMaterialEmission); location != -1)
+	{
+		glUniform4fv(location, 1, glm::value_ptr(m_material.emission));
+	}
+	if (int location = program.getUniform(UniformMaterialDiffuse); location != -1)
+	{
+		glUniform4fv(location, 1, glm::value_ptr(m_material.diffuse));
+	}
+	if (int location = program.getUniform(UniformMaterialSpecular); location != -1)
+	{
+		glUniform4fv(location, 1, glm::value_ptr(m_material.specular));
+	}
 }
 
 void MeshP3N3::draw()
@@ -163,7 +250,7 @@ void MeshP3N3::draw()
 	// glDrawRangeElements эффективнее, чем glDrawElements — ему передаются
 	//  максимальный и минимальный индекс вершины, что позволяет видеодрайверу
 	//  заранее определить размеры области памяти с вершинными данными.
-	glDrawRangeElements(GL_TRIANGLES, minIndex, maxIndex, indexCount, GL_UNSIGNED_INT, pointer);
+	glDrawRangeElements(m_primitive, minIndex, maxIndex, indexCount, GL_UNSIGNED_INT, pointer);
 }
 
 const Transform3D &MeshP3N3::getTransform() const

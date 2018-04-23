@@ -25,6 +25,11 @@ enum UniformId : unsigned
 	UniformLight2Diffuse,
 	UniformLight2Specular,
 
+	// Параметры цвета материала текущей поверхности, vec4
+	UniformMaterialEmission,
+	UniformMaterialDiffuse,
+	UniformMaterialSpecular,
+
 	// Специальное значение, равное числу констант enum.
 	UniformIdCount
 };

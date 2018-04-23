@@ -29,6 +29,7 @@ private:
 	void initializeLambertProgram();
 	void initializePhongProgram();
 	void initializeLights();
+	void initializeObjects();
 	void setProjectionMatrix(unsigned width, unsigned height);
 	void setViewMatrix();
 
@@ -37,9 +38,13 @@ private:
 
 	ShaderProgram m_programNoLighting;
 	ShaderProgram m_programLambert;
+	ShaderProgram m_programPhong;
 	ShaderProgram *m_activeProgram = nullptr;
 	MeshP3N3 m_cube;
 	Transform3D m_cubeTransform;
+	MeshP3N3 m_sphere;
+	Transform3D m_sphereTransform;
 	LightSource m_sunlight;
+	MeshP3N3 m_rightLightSphere;
 	LightSource m_rightLight;
 };
