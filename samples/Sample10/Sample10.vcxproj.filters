@@ -31,6 +31,9 @@
     <ClCompile Include="TextureUtils.cpp">
       <Filter>scene</Filter>
     </ClCompile>
+    <ClCompile Include="Texture2DAtlas.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraController.h">
@@ -72,12 +75,18 @@
     <ClInclude Include="TextureUtils.h">
       <Filter>scene</Filter>
     </ClInclude>
+    <ClInclude Include="Texture2DAtlas.h">
+      <Filter>scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="copy_res.bat">
       <Filter>main</Filter>
     </None>
-    <None Include="phong_lighting.vert">
+    <None Include="res\phong_lighting.frag">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\phong_lighting.vert">
       <Filter>res</Filter>
     </None>
   </ItemGroup>
@@ -97,10 +106,5 @@
     <Filter Include="res">
       <UniqueIdentifier>{c05dcfdd-4624-42e4-8b16-1c75bc9d191a}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="phong_lighting.frag">
-      <Filter>res</Filter>
-    </Text>
   </ItemGroup>
 </Project>

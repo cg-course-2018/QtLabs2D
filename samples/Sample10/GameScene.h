@@ -4,8 +4,10 @@
 #include "LightSource.h"
 #include "MeshP3N3T2.h"
 #include "ShaderProgram.h"
+#include "Texture2DAtlas.h"
 #include <libglcore/libglcore.h>
 #include <libplatform/IRenderScene.h>
+#include <optional>
 
 class GameScene
 	: public platform::IRenderScene
@@ -35,6 +37,7 @@ private:
 	std::unique_ptr<ICameraController> m_cameraController;
 
 	ShaderProgram m_programPhong;
+	std::optional<Texture2DAtlas> m_textureAtlas;
 	MeshP3N3T2 m_sphere;
 	Transform3D m_sphereTransform;
 	LightSource m_sunlight;

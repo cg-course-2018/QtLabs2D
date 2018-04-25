@@ -198,12 +198,19 @@ void MeshP3N3T2::updateUniforms(const IShaderProgram &program)
 	}
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_material->colorMap);
+	glBindTexture(GL_TEXTURE_2D, m_material->colorMapId);
 
 	if (int location = program.getUniform(UniformColorMap); location != -1)
 	{
 		// ColorMap привязана к текстурному слоту #0
 		glUniform1i(location, 0);
+	}
+	if (int location = program.getUniform(UniformColorMapRect); location != -1)
+	{
+		glm::vec2 topLeft = m_material->colorMapRect.getTopLeft();
+		glm::vec2 size = m_material->colorMapRect.getSize();
+		glm::vec4 packed = { topLeft.x, topLeft.y, size.x, size.y };
+		glUniform4fv(location, 1, glm::value_ptr(packed));
 	}
 }
 

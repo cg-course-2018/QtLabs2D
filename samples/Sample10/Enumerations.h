@@ -30,6 +30,8 @@ enum UniformId : unsigned
 
 	// Текстура (отображение текстурных координат на цвет материала)
 	UniformColorMap,
+	// Прямоугольник текстуры в текстурных координатах, vec4 (x, y, w, h).
+	UniformColorMapRect,
 
 	// Специальное значение, равное числу констант enum.
 	UniformIdCount

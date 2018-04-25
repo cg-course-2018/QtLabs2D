@@ -6,7 +6,7 @@
 // Используем функции из gl32core, экспортированные библиотекой glbinding.
 using namespace gl32core;
 
-glcore::TextureObject utils::loadImage(const std::string &relativePath)
+glcore::TextureObject utils::loadTextureFromImage(const std::string &relativePath)
 {
 	// Загружаем изображение и приводим его к формату ARGB (8 бит на цветовой канал)
 	QImage image = platform::ResourceLoader::loadImage(relativePath);

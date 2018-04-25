@@ -153,6 +153,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Texture2DAtlas.cpp" />
     <ClCompile Include="TextureUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -168,11 +169,13 @@
     <ClInclude Include="SceneNode.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Texture2DAtlas.h" />
     <ClInclude Include="TextureUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="copy_res.bat" />
-    <None Include="phong_lighting.vert" />
+    <None Include="res\phong_lighting.frag" />
+    <None Include="res\phong_lighting.vert" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\libs\libglcore\libglcore.vcxproj">
@@ -184,9 +187,9 @@
     <ProjectReference Include="..\..\libs\libplatform\libplatform.vcxproj">
       <Project>{b12702ad-abfb-343a-a199-8e24837244a3}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="phong_lighting.frag" />
+    <ProjectReference Include="..\..\libs\tinyxml2\tinyxml2.vcxproj">
+      <Project>{85962e8f-162d-4f1d-8aea-5416f101af5a}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

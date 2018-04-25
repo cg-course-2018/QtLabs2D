@@ -26,6 +26,7 @@ in vec2 v_texture_uv;
 in vec3 v_pos_in_world_space;
 
 uniform sampler2D u_color_map;
+uniform vec4 u_color_map_rect;
 
 uniform LightSource u_light0;
 uniform LightSource u_light1;
@@ -53,12 +54,22 @@ LightIntensity calculateIntensity(LightSource light)
     return result;
 }
 
+vec4 getColorMapColor()
+{
+	float x = u_color_map_rect.x;
+	float y = u_color_map_rect.y;
+	float width = u_color_map_rect.z;
+	float height = u_color_map_rect.w;
+	vec2 texture_uv = vec2(x + width * v_texture_uv.x, y + height * v_texture_uv.y);
+    return texture(u_color_map, texture_uv);
+}
+
 void main()
 {
 	LightIntensity light0_intensity = calculateIntensity(u_light0);
 	LightIntensity light1_intensity = calculateIntensity(u_light1);
-	
-    vec4 diffuse_color = texture(u_color_map, v_texture_uv);
+
+    vec4 diffuse_color = getColorMapColor();
     vec4 diffuse_intensity = u_light0.diffuse * light0_intensity.diffuse + u_light1.diffuse * light1_intensity.diffuse;
     vec4 specular_intensity = u_light0.specular * light0_intensity.specular + u_light1.specular * light1_intensity.specular;
 

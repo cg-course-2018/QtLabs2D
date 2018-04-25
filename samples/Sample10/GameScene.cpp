@@ -142,6 +142,7 @@ void GameScene::initializePhongProgram()
 		{ UniformLight1Diffuse, "u_light1.diffuse" },
 		{ UniformLight1Specular, "u_light1.specular" },
 		{ UniformColorMap, "u_color_map" },
+		{ UniformColorMapRect, "u_color_map_rect" },
 	};
 
 	m_programPhong.init(std::move(program), uniforms, attributes);
@@ -157,9 +158,12 @@ void GameScene::initializeLights()
 
 void GameScene::initializeObjects()
 {
+	m_textureAtlas.emplace("res10/spites.plist");
+
 	{
 		auto sphereMaterial = std::make_shared<Material>();
-		sphereMaterial->colorMap = utils::loadImage("res10/spites.png");
+		sphereMaterial->colorMapId = m_textureAtlas->getTextureId();
+		sphereMaterial->colorMapRect = m_textureAtlas->getFrameRect("mushroomRed.png");
 
 		const MeshDataP3N3T2 data = tesselateSphere(sphereMaterial, 25, 25);
 		m_sphere.init(data);

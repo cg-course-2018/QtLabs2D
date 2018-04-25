@@ -2,6 +2,7 @@
 
 #include "IShaderProgram.h"
 #include "libglcore/libglcore.h"
+#include "libmath/FloatRect.h"
 #include "libmath/Transform3D.h"
 #include <glbinding/gl/enum.h>
 #include <glm/vec3.hpp>
@@ -23,7 +24,8 @@ struct VertexP3N3T2
 // Представляет компоненты цвета материала (зависящие от компоненты освещения).
 struct Material
 {
-	glcore::TextureObject colorMap;
+	gl::GLuint colorMapId;
+	FloatRect colorMapRect{ { 0, 0 }, { 1, 1 } };
 };
 
 using MaterialPtr = std::shared_ptr<Material>;

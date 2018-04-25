@@ -5,5 +5,5 @@ namespace utils
 {
 // Загружает ресурс из файла в виде текстуры.
 // @param relativePath - путь относительно каталога, где лежит исполняемый файл программы.
-glcore::TextureObject loadImage(const std::string &relativePath);
-}
+glcore::TextureObject loadTextureFromImage(const std::string &relativePath);
+} // namespace utils
