@@ -54,7 +54,7 @@ private:
 	void renderScene();
 
 	template<class Callable>
-	bool CatchAndClose(Callable &&callable);
+	void CatchAndClose(Callable &&callable);
 
 	RenderWindowOptions m_options;
 	QSurfaceFormat m_surfaceFormat;

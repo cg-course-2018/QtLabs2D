@@ -197,11 +197,13 @@ void RenderWindow::renderNow()
 				m_scene->initialize();
 			}
 
-			// Если установлен флаг отладочного контекста, подключаем наш callback для отладки.
+// Если установлен флаг отладочного контекста, подключаем наш callback для отладки.
+#if defined(_MSC_VER)
 			if (m_surfaceFormat.testOption(QSurfaceFormat::DebugContext))
 			{
 				SetupDebugOutput();
 			}
+#endif
 		}
 		else
 		{
@@ -245,18 +247,18 @@ void RenderWindow::renderScene()
 }
 
 template<class Callable>
-bool RenderWindow::CatchAndClose(Callable &&callable)
+void RenderWindow::CatchAndClose(Callable &&callable)
 {
-	const bool ok = CatchAndDisplay([&] {
-		callable();
-		return true;
-	});
-	if (!ok)
+	try
+	{
+		std::invoke(std::forward<Callable>(callable));
+	}
+	catch (const std::exception &ex)
 	{
 		m_allowRendering = false;
 		close();
+		detail::DisplayException(ex);
 	}
-	return ok;
 }
 
 } // namespace platform
