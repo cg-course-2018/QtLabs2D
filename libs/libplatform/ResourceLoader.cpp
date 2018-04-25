@@ -33,8 +33,15 @@ std::string ResourceLoader::loadAsString(const std::string &relativePath)
 
 QImage ResourceLoader::loadImage(const std::string &relativePath)
 {
+	// Конвертируем относительный путь в QString, заменяем прямой/обратный слеш на платформо-зависимый разделитель путей.
+	QString cleanRelativePath = QString::fromUtf8(relativePath.c_str());
+	if (QDir::separator() != QLatin1Char('/'))
+	{
+		cleanRelativePath.replace(QLatin1Char('/'), QDir::separator());
+	}
+
 	// Формируем абсолютный путь к файлу, добавляя путь к каталогу исполняемого файла
-	QString absolutePath = QCoreApplication::applicationDirPath() + QDir::separator() + QString::fromUtf8(relativePath.c_str());
+	QString absolutePath = QCoreApplication::applicationDirPath() + QDir::separator() + cleanRelativePath;
 
 	// Конструируем изображение, что приведёт к его загрузке.
 	QImage image;

@@ -28,6 +28,9 @@
     <ClCompile Include="SceneNode.cpp">
       <Filter>scene</Filter>
     </ClCompile>
+    <ClCompile Include="TextureUtils.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraController.h">
@@ -64,6 +67,9 @@
       <Filter>scene</Filter>
     </ClInclude>
     <ClInclude Include="SceneNode.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureUtils.h">
       <Filter>scene</Filter>
     </ClInclude>
   </ItemGroup>
