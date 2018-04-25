@@ -31,7 +31,7 @@ private:
 	void initializeLights();
 	void initializeObjects();
 	void setProjectionMatrix(unsigned width, unsigned height);
-	void setViewMatrix();
+	void setCameraUniforms();
 
 	std::unique_ptr<IFlyingCamera> m_camera;
 	std::unique_ptr<ICameraController> m_cameraController;

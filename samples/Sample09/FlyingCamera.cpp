@@ -61,6 +61,11 @@ void FlyingCamera::rotate(float yaw, float pitch)
 	m_forward = getForwardDirection(m_up, right);
 }
 
+glm::vec3 FlyingCamera::getViewPosition() const
+{
+	return m_position;
+}
+
 glm::mat4 FlyingCamera::getViewTransform() const
 {
 	return glm::lookAt(m_position, m_position + m_forward, m_up);

@@ -77,26 +77,26 @@ void LightingScene::redraw(unsigned width, unsigned height)
 	utils::setLightSource0(*m_activeProgram, m_sunlight);
 
 	// TODO: включите снова источник света №1
-	// utils::setLightSource1(*m_activeProgram, m_rightLight);
+	utils::setLightSource1(*m_activeProgram, m_rightLight);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Устанавливаем матрицу ортографического проецирования.
 	setProjectionMatrix(width, height);
 
-	// Устанавливаем матрицу перехода в координаты наблюдателя.
-	setViewMatrix();
+	// Устанавливаем uniform-переменные шейдера в соответствие с состоянием камеры .
+	setCameraUniforms();
 
 	m_cube.updateUniforms(*m_activeProgram);
 	m_cube.draw();
 
 	// TODO: раскомментируйте рисование серой сферы.
-	// m_sphere.updateUniforms(*m_activeProgram);
-	// m_sphere.draw();
+	m_sphere.updateUniforms(*m_activeProgram);
+	m_sphere.draw();
 
 	// TODO: раскомментируйте рисование визуализации источника света.
-	// m_rightLightSphere.updateUniforms(*m_activeProgram);
-	// m_rightLightSphere.draw();
+	m_rightLightSphere.updateUniforms(*m_activeProgram);
+	m_rightLightSphere.draw();
 }
 
 bool LightingScene::keyPressEvent(platform::IKeyEvent &event)
@@ -131,7 +131,7 @@ void LightingScene::initializeShaders()
 	initializePhongProgram();
 
 	// Выбираем активную программу.
-	m_activeProgram = &m_programNoLighting;
+	m_activeProgram = &m_programPhong;
 	// TODO: включите m_programLambert вместо m_programNoLighting
 }
 
@@ -177,6 +177,7 @@ void LightingScene::initializeLambertProgram()
 		{ UniformLight1Position, "u_light1.position" },
 		{ UniformLight1Diffuse, "u_light1.diffuse" },
 		{ UniformMaterialDiffuse, "u_material.diffuse" },
+		{ UniformMaterialEmission, "u_material.emission" },
 	};
 
 	m_programLambert.init(std::move(program), uniforms, attributes);
@@ -186,6 +187,35 @@ void LightingScene::initializePhongProgram()
 {
 	// TODO: проинициализируйте программу Phong подобно программе Lambert,
 	//  указав правильные атрибуты.
+
+	platform::ResourceLoader loader;
+	std::vector<glcore::ShaderObject> shaders;
+	shaders.emplace_back(glcore::compileShader(GL_VERTEX_SHADER, loader.loadAsString("res09/phong_lighting.vert")));
+	shaders.emplace_back(glcore::compileShader(GL_FRAGMENT_SHADER, loader.loadAsString("res09/phong_lighting.frag")));
+	auto program = glcore::linkProgram(shaders);
+
+	std::vector<AttributeInfo> attributes = {
+		{ AttributePosition, "i_position" },
+		{ AttributeNormal, "i_normal" },
+	};
+	std::vector<UniformInfo> uniforms = {
+		{ UniformWorldMatrix, "u_world_matrix" },
+		{ UniformViewMatrix, "u_view_matrix" },
+		{ UniformViewerPosition, "u_viewer_position" },
+		{ UniformProjectionMatrix, "u_projection_matrix" },
+		{ UniformNormalWorldMatrix, "u_normal_world_matrix" },
+		{ UniformLight0Position, "u_light0.position" },
+		{ UniformLight0Diffuse, "u_light0.diffuse" },
+		{ UniformLight0Specular, "u_light0.specular" },
+		{ UniformLight1Position, "u_light1.position" },
+		{ UniformLight1Diffuse, "u_light1.diffuse" },
+		{ UniformLight1Specular, "u_light1.specular" },
+		{ UniformMaterialEmission, "u_material.emission" },
+		{ UniformMaterialDiffuse, "u_material.diffuse" },
+		{ UniformMaterialSpecular, "u_material.specular" },
+	};
+
+	m_programPhong.init(std::move(program), uniforms, attributes);
 }
 
 void LightingScene::initializeLights()
@@ -206,7 +236,7 @@ void LightingScene::initializeObjects()
 	{
 		const Material cubeMaterial{
 			// TODO: замените значения emission цвета на 0.15, 0.15, 0.15, 1
-			glm::vec4(0, 0, 0, 1),
+			glm::vec4(0.15, 0.15, 0.15, 1),
 			glm::vec4(0.7, 0.7, 0.7, 1),
 			glm::vec4(0.7, 0.7, 0.7, 1),
 		};
@@ -222,7 +252,7 @@ void LightingScene::initializeObjects()
 	{
 		const Material sphereMaterial{
 			// TODO: замените значения emission цвета на 0.15, 0.15, 0.15, 1
-			glm::vec4(0, 0, 0, 1),
+			glm::vec4(0.15, 0.15, 0.15, 1),
 			glm::vec4(0.7, 0.7, 0.7, 1),
 			glm::vec4(0.7, 0.7, 0.7, 1),
 		};
@@ -270,13 +300,17 @@ void LightingScene::setProjectionMatrix(unsigned width, unsigned height)
 	}
 }
 
-void LightingScene::setViewMatrix()
+void LightingScene::setCameraUniforms()
 {
-	// Матрица перехода в координаты наблюдателя определяется состоянием камеры.
-	// Мы передаём матрицу как константу в графической программе.
 	const glm::mat4 mat = m_camera->getViewTransform();
 	if (int location = m_activeProgram->getUniform(UniformViewMatrix); location != -1)
 	{
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat));
+	}
+
+	const glm::vec3 pos = m_camera->getViewPosition();
+	if (int location = m_activeProgram->getUniform(UniformViewerPosition); location != -1)
+	{
+		glUniform3fv(location, 1, glm::value_ptr(pos));
 	}
 }

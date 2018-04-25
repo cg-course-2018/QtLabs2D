@@ -14,6 +14,9 @@ enum UniformId : unsigned
 	// Матрица преобразования нормалей из локальных координат в глобальные координаты, mat4
 	UniformNormalWorldMatrix,
 
+	// Положение виртуальной камеры, vec3
+	UniformViewerPosition,
+
 	// Параметры источников света №0..№2, vec4
 	UniformLight0Position,
 	UniformLight0Diffuse,

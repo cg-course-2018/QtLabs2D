@@ -17,6 +17,9 @@ public:
 	// @param pitch - угол тангажа в радианах, вызывает поворот вектора up вокруг оси, заданной вектором right
 	virtual void rotate(float yaw, float pitch) = 0;
 
+	// Возвращает позицию камеры.
+	virtual glm::vec3 getViewPosition() const = 0;
+
 	// Возвращает матрицу моделирования-вида для текущего положения и ориентации камеры.
 	virtual glm::mat4 getViewTransform() const = 0;
 };
