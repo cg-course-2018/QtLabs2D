@@ -1,5 +1,5 @@
 ﻿#include "stdafx.h"
-#include "MeshP3N3.h"
+#include "MeshP3N3T2.h"
 #include <cassert>
 #include <glbinding/gl32core/gl.h>
 #include <glm/gtc/type_ptr.hpp>
@@ -60,7 +60,7 @@ glm::vec3 getPositionOnSphere(float u, float v)
 	};
 }
 
-void calculateTriangleStripIndicies(MeshDataP3N3 &data, unsigned columnCount, unsigned rowCount)
+void calculateTriangleStripIndicies(MeshDataP3N3T2 &data, unsigned columnCount, unsigned rowCount)
 {
 	data.indicies.clear();
 	data.indicies.reserve((columnCount - 1) * rowCount * 2);
@@ -89,47 +89,13 @@ void calculateTriangleStripIndicies(MeshDataP3N3 &data, unsigned columnCount, un
 }
 } // namespace
 
-MeshDataP3N3 tesselateCube(const Material &material)
-{
-	MeshDataP3N3 data;
-	data.material = material;
-
-	// Каждая вершина будет использоваться только в одном треугольнике, т.к. у всех граней разные нормали.
-	// Поэтому мы просто заполняем массив индексов последовательностью 0, 1, ...
-	// Фактически для куба буфер индексов нами не используется.
-	data.indicies.resize(3 * std::size(kCubeIndexes));
-	std::iota(data.indicies.begin(), data.indicies.end(), 0);
-
-	// Создаём новые вершины, соединяя базовые координаты вершины куба и нормаль к грани куба.
-	// Таким образом, одна вершина куба будет иметь три дубликата в вершинном буфере
-	//  из-за того, что у всех граней куба разные нормали.
-	data.vertexes.reserve(3 * std::size(kCubeIndexes));
-
-	for (const auto &triangleIndexes : kCubeIndexes)
-	{
-		// Выбираем три точки из палитры вершин куба.
-		const vec3 p1 = kCubeVerticies[triangleIndexes.x];
-		const vec3 p2 = kCubeVerticies[triangleIndexes.y];
-		const vec3 p3 = kCubeVerticies[triangleIndexes.z];
-
-		// Нормаль к треугольнику можно найти, используя векторное произведение двух сторон треугольника.
-		const vec3 n = normalize(cross(p3 - p2, p1 - p2));
-
-		// Дубликаты вершин помещаются в конец массива вершин.
-		data.vertexes.push_back(VertexP3N3{ p1, n });
-		data.vertexes.push_back(VertexP3N3{ p2, n });
-		data.vertexes.push_back(VertexP3N3{ p3, n });
-	}
-
-	return data;
-}
-
-MeshDataP3N3 tesselateSphere(const Material &material, unsigned latitudeDivisions, unsigned longitudeDivisions)
+MeshDataP3N3T2 tesselateSphere(const MaterialPtr &material, unsigned latitudeDivisions, unsigned longitudeDivisions)
 {
 	constexpr unsigned kMinPrecision = 4;
 	assert((latitudeDivisions >= kMinPrecision) && (longitudeDivisions >= kMinPrecision));
+	assert(material != nullptr);
 
-	MeshDataP3N3 data;
+	MeshDataP3N3T2 data;
 
 	// Для сферы мы используем примитив "полоса треугольников".
 	data.primitive = gl::GL_TRIANGLE_STRIP;
@@ -143,7 +109,7 @@ MeshDataP3N3 tesselateSphere(const Material &material, unsigned latitudeDivision
 		{
 			const float v = float(latI) / float(latitudeDivisions - 1);
 
-			VertexP3N3 vertex;
+			VertexP3N3T2 vertex;
 			vertex.position = getPositionOnSphere(u, v);
 
 			// Нормаль к сфере - это нормализованный вектор радиуса к данной точке
@@ -151,6 +117,9 @@ MeshDataP3N3 tesselateSphere(const Material &material, unsigned latitudeDivision
 			// будут равны координатам вершины.
 			// Благодаря радиусу, равному 1, нормализация не требуется.
 			vertex.normal = vertex.position;
+
+			// Исходные параметры UV являются текстурными координатами.
+			vertex.textureUV = glm::vec2(u, v);
 
 			data.vertexes.push_back(vertex);
 		}
@@ -161,8 +130,10 @@ MeshDataP3N3 tesselateSphere(const Material &material, unsigned latitudeDivision
 	return data;
 }
 
-void MeshP3N3::init(const MeshDataP3N3 &data)
+void MeshP3N3T2::init(const MeshDataP3N3T2 &data)
 {
+	assert(data.material != nullptr);
+
 	m_primitive = data.primitive;
 	m_material = data.material;
 	m_maxIndex = data.vertexes.size();
@@ -180,15 +151,23 @@ void MeshP3N3::init(const MeshDataP3N3 &data)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indicies);
 }
 
-void MeshP3N3::bindAttributes(const IShaderProgram &program)
+void MeshP3N3T2::bindAttributes(const IShaderProgram &program)
 {
 	// OpenGL должен получить байтовые смещения полей относительно структуры VertexP2C4.
-	const void *posOffset = reinterpret_cast<void *>(offsetof(VertexP3N3, position));
-	const void *normalOffset = reinterpret_cast<void *>(offsetof(VertexP3N3, normal));
-	const size_t stride = sizeof(VertexP3N3);
+	const void *posOffset = reinterpret_cast<void *>(offsetof(VertexP3N3T2, position));
+	const void *normalOffset = reinterpret_cast<void *>(offsetof(VertexP3N3T2, normal));
+	const void *textureUVOffset = reinterpret_cast<void *>(offsetof(VertexP3N3T2, textureUV));
+	const size_t stride = sizeof(VertexP3N3T2);
 
 	// Выполнять привязку нужно в контексте VAO.
 	glBindVertexArray(m_vao);
+
+	// Привязываем атрибут позиции к данным в вершинном буфере.
+	if (int location = program.getAttribute(AttributePosition); location != -1)
+	{
+		glEnableVertexAttribArray(location);
+		glVertexAttribPointer(location, glm::vec3().length(), GL_FLOAT, GL_FALSE, stride, posOffset);
+	}
 
 	// Привязываем атрибут нормали к данным в вершинном буфере.
 	if (int location = program.getAttribute(AttributeNormal); location != -1)
@@ -197,15 +176,15 @@ void MeshP3N3::bindAttributes(const IShaderProgram &program)
 		glVertexAttribPointer(location, glm::vec3().length(), GL_FLOAT, GL_FALSE, stride, normalOffset);
 	}
 
-	// Привязываем атрибут позиции к данным в вершинном буфере.
-	if (int location = program.getAttribute(AttributePosition); location != -1)
+	// Привязываем атрибут текстурных координат UV  к данным в вершинном буфере.
+	if (int location = program.getAttribute(AttributeTexCoord); location != -1)
 	{
 		glEnableVertexAttribArray(location);
-		glVertexAttribPointer(location, glm::vec3().length(), GL_FLOAT, GL_FALSE, stride, posOffset);
+		glVertexAttribPointer(location, glm::vec2().length(), GL_FLOAT, GL_FALSE, stride, textureUVOffset);
 	}
 }
 
-void MeshP3N3::updateUniforms(const IShaderProgram &program)
+void MeshP3N3T2::updateUniforms(const IShaderProgram &program)
 {
 	const glm::mat4 transformMat = m_transform.toMat4();
 	const glm::mat4 normalMat = getNormalMatrix(transformMat);
@@ -217,21 +196,36 @@ void MeshP3N3::updateUniforms(const IShaderProgram &program)
 	{
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(normalMat));
 	}
-	if (int location = program.getUniform(UniformMaterialEmission); location != -1)
+
+	// переключаемся на текстурный слот #2
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, m_material->specularMap);
+	// переключаемся на текстурный слот #1
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, m_material->detailMap);
+	// переключаемся обратно на текстурный слот #0
+	// перед началом рендеринга активным будет именно этот слот.
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_material->colorMap);
+
+	if (int location = program.getUniform(UniformColorMap); location != -1)
 	{
-		glUniform4fv(location, 1, glm::value_ptr(m_material.emission));
+		// ColorMap привязана к текстурному слоту #0
+		glUniform1i(location, 0);
 	}
-	if (int location = program.getUniform(UniformMaterialDiffuse); location != -1)
+	if (int location = program.getUniform(UniformDetailsMap); location != -1)
 	{
-		glUniform4fv(location, 1, glm::value_ptr(m_material.diffuse));
+		// DetailMap привязана к текстурному слоту #1
+		glUniform1i(location, 1);
 	}
-	if (int location = program.getUniform(UniformMaterialSpecular); location != -1)
+	if (int location = program.getUniform(UniformSpecularMap); location != -1)
 	{
-		glUniform4fv(location, 1, glm::value_ptr(m_material.specular));
+		// SpecularMap привязана к текстурному слоту #2
+		glUniform1i(location, 2);
 	}
 }
 
-void MeshP3N3::draw()
+void MeshP3N3T2::draw()
 {
 	const GLuint minIndex = 0;
 	const GLuint maxIndex = static_cast<GLuint>(m_maxIndex);
@@ -253,12 +247,12 @@ void MeshP3N3::draw()
 	glDrawRangeElements(m_primitive, minIndex, maxIndex, indexCount, GL_UNSIGNED_INT, pointer);
 }
 
-const Transform3D &MeshP3N3::getTransform() const
+const Transform3D &MeshP3N3T2::getTransform() const
 {
 	return m_transform;
 }
 
-void MeshP3N3::setTransform(const Transform3D &transform)
+void MeshP3N3T2::setTransform(const Transform3D &transform)
 {
 	m_transform = transform;
 }
