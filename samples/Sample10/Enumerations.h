@@ -28,10 +28,8 @@ enum UniformId : unsigned
 	UniformLight2Diffuse,
 	UniformLight2Specular,
 
-	// Текстуры: карта цветов, карта деталей
+	// Текстура (отображение текстурных координат на цвет материала)
 	UniformColorMap,
-	UniformDetailsMap,
-	UniformSpecularMap,
 
 	// Специальное значение, равное числу констант enum.
 	UniformIdCount

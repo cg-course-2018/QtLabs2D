@@ -37,6 +37,11 @@ QImage ResourceLoader::loadImage(const std::string &relativePath)
 	QString absolutePath = QCoreApplication::applicationDirPath() + QDir::separator() + QString::fromUtf8(relativePath.c_str());
 
 	// Конструируем изображение, что приведёт к его загрузке.
-	return QImage(absolutePath);
+	QImage image;
+	if (!image.load(absolutePath))
+	{
+		throw std::runtime_error("cannot load image " + relativePath);
+	}
+	return image;
 }
 } // namespace platform

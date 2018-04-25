@@ -80,6 +80,8 @@ function(custom_distribute_assets SOURCE_DIRNAME DESTINATION_DIRNAME TARGET)
     file(GLOB_RECURSE SRC_FILES
         "${SOURCE}/*.png"
         "${SOURCE}/*.jpg"
+        "${SOURCE}/*.xml"
+        "${SOURCE}/*.json"
         "${SOURCE}/*.vert"
         "${SOURCE}/*.frag")
 

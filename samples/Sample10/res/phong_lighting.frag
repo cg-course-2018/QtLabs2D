@@ -26,8 +26,6 @@ in vec2 v_texture_uv;
 in vec3 v_pos_in_world_space;
 
 uniform sampler2D u_color_map;
-uniform sampler2D u_detail_map;
-uniform sampler2D u_specular_map;
 
 uniform LightSource u_light0;
 uniform LightSource u_light1;
@@ -60,14 +58,9 @@ void main()
 	LightIntensity light0_intensity = calculateIntensity(u_light0);
 	LightIntensity light1_intensity = calculateIntensity(u_light1);
 	
-	vec4 color_map_color = texture(u_color_map, v_texture_uv);
-	vec4 detail_map_color = texture(u_detail_map, v_texture_uv);
-	vec4 specular_color = texture(u_specular_map, v_texture_uv);
-	vec4 diffuse_color = mix(color_map_color, detail_map_color, detail_map_color.a);
+    vec4 diffuse_color = texture(u_color_map, v_texture_uv);
+    vec4 diffuse_intensity = u_light0.diffuse * light0_intensity.diffuse + u_light1.diffuse * light1_intensity.diffuse;
+    vec4 specular_intensity = u_light0.specular * light0_intensity.specular + u_light1.specular * light1_intensity.specular;
 
-	vec4 ambient_intensity = diffuse_color * kAmbientLight;
-    vec4 diffuse_intensity = diffuse_color * (u_light0.diffuse * light0_intensity.diffuse + u_light1.diffuse * light1_intensity.diffuse);
-    vec4 specular_intensity = specular_color * (u_light0.specular * light0_intensity.specular + u_light1.specular * light1_intensity.specular);
-
-    out_fragColor = ambient_intensity + diffuse_intensity + specular_intensity;
+    out_fragColor = diffuse_color * (kAmbientLight + diffuse_intensity + specular_intensity);
 }

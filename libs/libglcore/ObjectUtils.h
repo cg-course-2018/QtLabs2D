@@ -7,57 +7,61 @@
 namespace glcore
 {
 
-// Фасад функции glGenVertexArrays
-// Создаёт VAO, хранящий связь буферов данных и атрибутов вершин.
+// Р¤Р°СЃР°Рґ С„СѓРЅРєС†РёРё glGenVertexArrays
+// РЎРѕР·РґР°С‘С‚ VAO, С…СЂР°РЅСЏС‰РёР№ СЃРІСЏР·СЊ Р±СѓС„РµСЂРѕРІ РґР°РЅРЅС‹С… Рё Р°С‚СЂРёР±СѓС‚РѕРІ РІРµСЂС€РёРЅ.
 VAO createVAO();
 
-// Фасад функции glGenBuffers
-// @param target - это GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER или GL_UNIFORM_BUFFER
+// Р¤Р°СЃР°Рґ С„СѓРЅРєС†РёРё glGenBuffers
+// @param target - СЌС‚Рѕ GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER РёР»Рё GL_UNIFORM_BUFFER
 VBO createVBO();
 
-// Фасад функций glGenBuffers и glBufferData
-// Передаёт на видеокарту заданные байты
-// @param target - это GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER или GL_UNIFORM_BUFFER
+// Р¤Р°СЃР°Рґ С„СѓРЅРєС†РёРё glGenTextures
+// РЎРѕР·РґР°С‘С‚ СЂРµСЃСѓСЂСЃ - Р±СѓС„РµСЂ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ С‚РµРєСЃС‚СѓСЂС‹
+TextureObject createTexture();
+
+// Р¤Р°СЃР°Рґ С„СѓРЅРєС†РёР№ glGenBuffers Рё glBufferData
+// РџРµСЂРµРґР°С‘С‚ РЅР° РІРёРґРµРѕРєР°СЂС‚Сѓ Р·Р°РґР°РЅРЅС‹Рµ Р±Р°Р№С‚С‹
+// @param target - СЌС‚Рѕ GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER РёР»Рё GL_UNIFORM_BUFFER
 VBO createStaticVBO(gl::GLenum target, const void *bytes, const size_t byteCount);
 
-// Фасад функции glBufferData
-// Передаёт на видеокарту заданные байты
-// @param target - это GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER или GL_UNIFORM_BUFFER
+// Р¤Р°СЃР°Рґ С„СѓРЅРєС†РёРё glBufferData
+// РџРµСЂРµРґР°С‘С‚ РЅР° РІРёРґРµРѕРєР°СЂС‚Сѓ Р·Р°РґР°РЅРЅС‹Рµ Р±Р°Р№С‚С‹
+// @param target - СЌС‚Рѕ GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER РёР»Рё GL_UNIFORM_BUFFER
 void setStreamBufferData(gl::GLuint buffer, gl::GLenum target, const void *bytes, const size_t byteCount);
 
-// Эта версия функции принимает данные в виде массива. Допустимы следующие типы:
-// - T[], массив в стиле C
+// Р­С‚Р° РІРµСЂСЃРёСЏ С„СѓРЅРєС†РёРё РїСЂРёРЅРёРјР°РµС‚ РґР°РЅРЅС‹Рµ РІ РІРёРґРµ РјР°СЃСЃРёРІР°. Р”РѕРїСѓСЃС‚РёРјС‹ СЃР»РµРґСѓСЋС‰РёРµ С‚РёРїС‹:
+// - T[], РјР°СЃСЃРёРІ РІ СЃС‚РёР»Рµ C
 // - std::vector<T>
 // - std::array<T>
-// - std::initializer_list<T>, т.е. списки инициализации
+// - std::initializer_list<T>, С‚.Рµ. СЃРїРёСЃРєРё РёРЅРёС†РёР°Р»РёР·Р°С†РёРё
 template<class ArrayT>
 VBO createStaticVBO(gl::GLenum target, const ArrayT &verticies)
 {
-	// VertexT - тип элемента массива
+	// VertexT - С‚РёРї СЌР»РµРјРµРЅС‚Р° РјР°СЃСЃРёРІР°
 	using VertexT = std::decay_t<decltype(verticies[0])>;
 
-	// Превращаем указатель на начало массива в указатель на байты массива.
+	// РџСЂРµРІСЂР°С‰Р°РµРј СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РЅР°С‡Р°Р»Рѕ РјР°СЃСЃРёРІР° РІ СѓРєР°Р·Р°С‚РµР»СЊ РЅР° Р±Р°Р№С‚С‹ РјР°СЃСЃРёРІР°.
 	const auto bytes = reinterpret_cast<const void *>(std::data(verticies));
-	// Вычисляем размер массива в байтах.
+	// Р’С‹С‡РёСЃР»СЏРµРј СЂР°Р·РјРµСЂ РјР°СЃСЃРёРІР° РІ Р±Р°Р№С‚Р°С….
 	const size_t byteCount = sizeof(VertexT) * std::size(verticies);
 
 	return createStaticVBO(target, bytes, byteCount);
 }
 
-// Эта версия функции принимает данные в виде массива. Допустимы следующие типы:
-// - T[], массив в стиле C
+// Р­С‚Р° РІРµСЂСЃРёСЏ С„СѓРЅРєС†РёРё РїСЂРёРЅРёРјР°РµС‚ РґР°РЅРЅС‹Рµ РІ РІРёРґРµ РјР°СЃСЃРёРІР°. Р”РѕРїСѓСЃС‚РёРјС‹ СЃР»РµРґСѓСЋС‰РёРµ С‚РёРїС‹:
+// - T[], РјР°СЃСЃРёРІ РІ СЃС‚РёР»Рµ C
 // - std::vector<T>
 // - std::array<T>
-// - std::initializer_list<T>, т.е. списки инициализации
+// - std::initializer_list<T>, С‚.Рµ. СЃРїРёСЃРєРё РёРЅРёС†РёР°Р»РёР·Р°С†РёРё
 template<class ArrayT>
 void setStreamBufferData(gl::GLuint buffer, gl::GLenum target, const ArrayT &verticies)
 {
-	// VertexT - тип элемента массива
+	// VertexT - С‚РёРї СЌР»РµРјРµРЅС‚Р° РјР°СЃСЃРёРІР°
 	using VertexT = std::decay_t<decltype(verticies[0])>;
 
-	// Превращаем указатель на начало массива в указатель на байты массива.
+	// РџСЂРµРІСЂР°С‰Р°РµРј СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РЅР°С‡Р°Р»Рѕ РјР°СЃСЃРёРІР° РІ СѓРєР°Р·Р°С‚РµР»СЊ РЅР° Р±Р°Р№С‚С‹ РјР°СЃСЃРёРІР°.
 	const auto bytes = reinterpret_cast<const void *>(std::data(verticies));
-	// Вычисляем размер массива в байтах.
+	// Р’С‹С‡РёСЃР»СЏРµРј СЂР°Р·РјРµСЂ РјР°СЃСЃРёРІР° РІ Р±Р°Р№С‚Р°С….
 	const size_t byteCount = sizeof(VertexT) * std::size(verticies);
 
 	setStreamBufferData(buffer, target, bytes, byteCount);

@@ -26,6 +26,17 @@ glcore::VAO glcore::createVAO()
 	return VAO(handle);
 }
 
+glcore::TextureObject glcore::createTexture()
+{
+	GLuint handle = 0;
+	glGenTextures(1, &handle);
+	if (handle == 0)
+	{
+		throw std::runtime_error("cannot create Texture: no enough memory");
+	}
+	return TextureObject(handle);
+}
+
 glcore::VBO glcore::createStaticVBO(gl::GLenum target, const void *bytes, const size_t byteCount)
 {
 	auto vbo = createVBO();

@@ -1,12 +1,12 @@
 ﻿#include "stdafx.h"
 #include "MeshP3N3T2.h"
 #include <cassert>
-#include <glbinding/gl32core/gl.h>
+#include <glbinding/gl33core/gl.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/vec4.hpp>
 
-// Используем функции из gl32core, экспортированные библиотекой glbinding.
-using namespace gl32core;
+// Используем функции из gl33core, экспортированные библиотекой glbinding.
+using namespace gl33core;
 using namespace glm;
 
 namespace
@@ -197,14 +197,6 @@ void MeshP3N3T2::updateUniforms(const IShaderProgram &program)
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(normalMat));
 	}
 
-	// переключаемся на текстурный слот #2
-	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, m_material->specularMap);
-	// переключаемся на текстурный слот #1
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, m_material->detailMap);
-	// переключаемся обратно на текстурный слот #0
-	// перед началом рендеринга активным будет именно этот слот.
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_material->colorMap);
 
@@ -212,16 +204,6 @@ void MeshP3N3T2::updateUniforms(const IShaderProgram &program)
 	{
 		// ColorMap привязана к текстурному слоту #0
 		glUniform1i(location, 0);
-	}
-	if (int location = program.getUniform(UniformDetailsMap); location != -1)
-	{
-		// DetailMap привязана к текстурному слоту #1
-		glUniform1i(location, 1);
-	}
-	if (int location = program.getUniform(UniformSpecularMap); location != -1)
-	{
-		// SpecularMap привязана к текстурному слоту #2
-		glUniform1i(location, 2);
 	}
 }
 

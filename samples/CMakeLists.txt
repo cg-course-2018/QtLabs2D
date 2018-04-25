@@ -26,3 +26,6 @@ endfunction()
 
 custom_add_example(Sample09 "Sample09")
 custom_distribute_assets("Sample09" "res09" Sample09)
+
+custom_add_example(Sample10 "Sample10")
+custom_distribute_assets("Sample10/res" "res10" Sample10)

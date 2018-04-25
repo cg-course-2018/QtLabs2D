@@ -6,10 +6,11 @@
 #include <glbinding/gl/enum.h>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
+#include <memory>
 #include <string>
 #include <vector>
 
-// Структура, содержащая 6 чисел float, описывающих позицию вершины и нормаль к поверхности в данной вершине
+// РЎС‚СЂСѓРєС‚СѓСЂР°, СЃРѕРґРµСЂР¶Р°С‰Р°СЏ 6 С‡РёСЃРµР» float, РѕРїРёСЃС‹РІР°СЋС‰РёС… РїРѕР·РёС†РёСЋ РІРµСЂС€РёРЅС‹ Рё РЅРѕСЂРјР°Р»СЊ Рє РїРѕРІРµСЂС…РЅРѕСЃС‚Рё РІ РґР°РЅРЅРѕР№ РІРµСЂС€РёРЅРµ
 #pragma pack(push, 1)
 struct VertexP3N3T2
 {
@@ -19,12 +20,10 @@ struct VertexP3N3T2
 };
 #pragma pack(pop)
 
-// Представляет компоненты цвета материала (зависящие от компоненты освещения).
+// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ РєРѕРјРїРѕРЅРµРЅС‚С‹ С†РІРµС‚Р° РјР°С‚РµСЂРёР°Р»Р° (Р·Р°РІРёСЃСЏС‰РёРµ РѕС‚ РєРѕРјРїРѕРЅРµРЅС‚С‹ РѕСЃРІРµС‰РµРЅРёСЏ).
 struct Material
 {
 	glcore::TextureObject colorMap;
-	glcore::TextureObject detailMap;
-	glcore::TextureObject specularMap;
 };
 
 using MaterialPtr = std::shared_ptr<Material>;
@@ -37,9 +36,9 @@ struct MeshDataP3N3T2
 	gl::GLenum primitive = gl::GL_TRIANGLES;
 };
 
-// Генерирует список вершин отдельных треугольников, формирующих поверхность сферы.
-// @param latitudeDivisions - число делений по широте, не менее 4
-// @param longitudeDivisions - число делений по долготе, не менее 4
+// Р“РµРЅРµСЂРёСЂСѓРµС‚ СЃРїРёСЃРѕРє РІРµСЂС€РёРЅ РѕС‚РґРµР»СЊРЅС‹С… С‚СЂРµСѓРіРѕР»СЊРЅРёРєРѕРІ, С„РѕСЂРјРёСЂСѓСЋС‰РёС… РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ СЃС„РµСЂС‹.
+// @param latitudeDivisions - С‡РёСЃР»Рѕ РґРµР»РµРЅРёР№ РїРѕ С€РёСЂРѕС‚Рµ, РЅРµ РјРµРЅРµРµ 4
+// @param longitudeDivisions - С‡РёСЃР»Рѕ РґРµР»РµРЅРёР№ РїРѕ РґРѕР»РіРѕС‚Рµ, РЅРµ РјРµРЅРµРµ 4
 MeshDataP3N3T2 tesselateSphere(const MaterialPtr &material, unsigned latitudeDivisions, unsigned longitudeDivisions);
 
 class MeshP3N3T2

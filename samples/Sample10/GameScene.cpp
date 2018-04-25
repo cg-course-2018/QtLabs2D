@@ -2,6 +2,7 @@
 #include "GameScene.h"
 #include "CameraController.h"
 #include "FlyingCamera.h"
+#include "TextureUtils.h"
 #include <algorithm>
 #include <glbinding/gl32core/gl.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -69,7 +70,7 @@ void GameScene::update(float deltaSeconds)
 
 void GameScene::redraw(unsigned width, unsigned height)
 {
-	glViewport(0, 0, width, height);
+	glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
 	m_programPhong.bind();
 	utils::setLightSource0(m_programPhong, m_sunlight);
 
@@ -117,9 +118,6 @@ void GameScene::initializeShaders()
 
 void GameScene::initializePhongProgram()
 {
-	// TODO: проинициализируйте программу Phong подобно программе Lambert,
-	//  указав правильные атрибуты.
-
 	platform::ResourceLoader loader;
 	std::vector<glcore::ShaderObject> shaders;
 	shaders.emplace_back(glcore::compileShader(GL_VERTEX_SHADER, loader.loadAsString("res10/phong_lighting.vert")));
@@ -144,8 +142,6 @@ void GameScene::initializePhongProgram()
 		{ UniformLight1Diffuse, "u_light1.diffuse" },
 		{ UniformLight1Specular, "u_light1.specular" },
 		{ UniformColorMap, "u_color_map" },
-		{ UniformDetailsMap, "u_detail_map" },
-		{ UniformSpecularMap, "u_specular_map" },
 	};
 
 	m_programPhong.init(std::move(program), uniforms, attributes);
@@ -163,7 +159,7 @@ void GameScene::initializeObjects()
 {
 	{
 		auto sphereMaterial = std::make_shared<Material>();
-		bool TODO_set_textures;
+		sphereMaterial->colorMap = utils::loadImage("res10/spites.png");
 
 		const MeshDataP3N3T2 data = tesselateSphere(sphereMaterial, 25, 25);
 		m_sphere.init(data);
@@ -176,8 +172,6 @@ void GameScene::initializeObjects()
 
 void GameScene::setProjectionMatrix(unsigned width, unsigned height)
 {
-	glViewport(0, 0, width, height);
-
 	// Вычисляем матрицу перспективного проецирования.
 	// Затем передаём матрицу как константу в графической программе.
 	const float fieldOfView = glm::radians(70.f);
