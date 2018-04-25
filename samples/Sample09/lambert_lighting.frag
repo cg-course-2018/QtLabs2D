@@ -20,27 +20,22 @@ struct Material
 const float kShininess = 30.0;
 
 in vec3 v_normal;
-in vec3 v_view_direction;
+in vec3 v_pos_in_world_space;
 
 uniform Material u_material;
 uniform LightSource u_light0;
 uniform LightSource u_light1;
-uniform mat4 u_view_matrix;
 
 out vec4 out_fragColor;
 
 float calculateDiffuseIntensity(LightSource light)
 {
-    vec3 view_direction = normalize(v_view_direction);
     vec3 normal = normalize(v_normal);
 
-    // Calculate light_direction for both directed and undirected light sources.
-    vec3 delta = light.position.w * view_direction;
-    vec4 light_pos_in_view_space = u_view_matrix * light.position;
-    vec3 light_direction = normalize(light_pos_in_view_space.xyz + delta);
-    vec3 reflect_direction = normalize(-reflect(light_direction, normal));
-	
-    float diffuse = max(dot(normal, light_direction), 0.0);
+    // Calculate direction_to_light for both directed and undirected light sources.
+    vec3 direction_to_light = normalize(vec3(light.position) - light.position.w * v_pos_in_world_space);
+
+    float diffuse = max(dot(normal, direction_to_light), 0.0);
 
 	// Clamp intensity to [0..1].
     diffuse = clamp(diffuse, 0.0, 1.0);
