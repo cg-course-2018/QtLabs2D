@@ -9,6 +9,8 @@
 #include <libplatform/IRenderScene.h>
 #include <optional>
 
+#include "ScoreController.h"
+
 class GameScene
 	: public platform::IRenderScene
 {
@@ -33,6 +35,9 @@ private:
 	void setProjectionMatrix(unsigned width, unsigned height);
 	void setCameraUniforms();
 
+	//Тестирование ScoreController
+	bool m_isGaming = true;
+
 	std::unique_ptr<IFlyingCamera> m_camera;
 	std::unique_ptr<ICameraController> m_cameraController;
 
@@ -41,4 +46,8 @@ private:
 	MeshP3N3T2 m_sphere;
 	Transform3D m_sphereTransform;
 	LightSource m_sunlight;
+
+	ScoreController m_scoreController;
 };
+
+void ShowGemeOverMessage();
