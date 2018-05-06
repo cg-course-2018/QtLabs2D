@@ -147,7 +147,6 @@
     <ClCompile Include="LightSource.cpp" />
     <ClCompile Include="MeshP3N3T2.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="SceneNode.cpp" />
     <ClCompile Include="ScoreController.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -167,7 +166,6 @@
     <ClInclude Include="IShaderProgram.h" />
     <ClInclude Include="LightSource.h" />
     <ClInclude Include="MeshP3N3T2.h" />
-    <ClInclude Include="SceneNode.h" />
     <ClInclude Include="ScoreController.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="stdafx.h" />
