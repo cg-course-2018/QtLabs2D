@@ -1,14 +1,14 @@
-#pragma once
+п»ї#pragma once
 
 #include "IShaderProgram.h"
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 
-// Представляет источник света, отправляемый шейдеру.
+// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ РёСЃС‚РѕС‡РЅРёРє СЃРІРµС‚Р°, РѕС‚РїСЂР°РІР»СЏРµРјС‹Р№ С€РµР№РґРµСЂСѓ.
 struct LightSource
 {
-	// (x, y, z, 1) означает точечный источник света (positioned light).
-	// (x, y, z, 0) означает направленный источник света (directed light).
+	// (x, y, z, 1) РѕР·РЅР°С‡Р°РµС‚ С‚РѕС‡РµС‡РЅС‹Р№ РёСЃС‚РѕС‡РЅРёРє СЃРІРµС‚Р° (positioned light).
+	// (x, y, z, 0) РѕР·РЅР°С‡Р°РµС‚ РЅР°РїСЂР°РІР»РµРЅРЅС‹Р№ РёСЃС‚РѕС‡РЅРёРє СЃРІРµС‚Р° (directed light).
 	glm::vec4 position;
 	glm::vec4 diffuse;
 	glm::vec4 specular;
