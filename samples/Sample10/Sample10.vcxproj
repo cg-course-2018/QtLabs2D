@@ -155,6 +155,7 @@
     </ClCompile>
     <ClCompile Include="Texture2DAtlas.cpp" />
     <ClCompile Include="TextureUtils.cpp" />
+    <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraController.h" />
@@ -171,6 +172,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Texture2DAtlas.h" />
     <ClInclude Include="TextureUtils.h" />
+    <ClInclude Include="Tile.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="copy_res.bat" />

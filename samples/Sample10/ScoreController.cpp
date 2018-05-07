@@ -7,16 +7,6 @@ constexpr int PAIRGUESSEDSCORE = 10;
 constexpr int PAIRMISSEDSCORE = 1;
 } // namespace
 
-//Constructor
-ScoreController::ScoreController()
-{
-}
-
-ScoreController::~ScoreController()
-{
-}
-
-//Methods
 void ScoreController::onPairGuessed()
 {
 	m_score += PAIRGUESSEDSCORE;

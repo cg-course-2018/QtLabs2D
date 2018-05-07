@@ -25,7 +25,7 @@ struct VertexP3N3T2
 struct Material
 {
 	gl::GLuint colorMapId;
-	FloatRect colorMapRect{ { 0, 0 }, { 1, 1 } };
+	math::FloatRect colorMapRect{ { 0, 0 }, { 1, 1 } };
 };
 
 using MaterialPtr = std::shared_ptr<Material>;
@@ -42,6 +42,11 @@ struct MeshDataP3N3T2
 // @param latitudeDivisions - число делений по широте, не менее 4
 // @param longitudeDivisions - число делений по долготе, не менее 4
 MeshDataP3N3T2 tesselateSphere(const MaterialPtr &material, unsigned latitudeDivisions, unsigned longitudeDivisions);
+
+// Генерирует список вершин отдельных треугольников, формирующих двухсторонний quad.
+// @param frontTextureRect - текстурный прямоугольник передней грани
+// @param backTextureRect - текстурный прямоугольник задней грани
+MeshDataP3N3T2 tesselateTwoSideQuad(const math::FloatRect& frontTextureRect, const math::FloatRect& backTextureRect, const MaterialPtr& material);
 
 class MeshP3N3T2
 {

@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "FloatRect.h"
 
+namespace math
+{
 FloatRect::FloatRect(const glm::vec2 &topLeft, const glm::vec2 &bottomRight)
 	: m_topLeft(topLeft)
 	, m_bottomRight(bottomRight)
@@ -57,3 +59,4 @@ void FloatRect::moveTo(const glm::vec2 &topLeft)
 	m_topLeft = topLeft;
 	m_bottomRight = topLeft + size;
 }
+} // namespace math

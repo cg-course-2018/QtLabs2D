@@ -130,6 +130,68 @@ MeshDataP3N3T2 tesselateSphere(const MaterialPtr &material, unsigned latitudeDiv
 	return data;
 }
 
+MeshDataP3N3T2 tesselateTwoSideQuad(const math::FloatRect& frontTextureRect, const math::FloatRect& backTextureRect, const MaterialPtr& material)
+{
+	constexpr float a = 1;
+	const glm::vec3 kQuadVert[] = {	//quad in OXY plane
+		{ -a, -a, 0 },	//bottom left
+		{ -a, a, 0 },	//top left
+		{ a, a, 0 },	//top right
+		{ a, -a, 0 }	//bottom right
+	};
+
+	const glm::uvec3 kQuadIdx[] = {
+		{ 0, 2, 1 },
+		{ 0, 3, 2 },	//front side
+		{ 4, 5, 6 },
+		{ 4, 6, 7 }		//back side
+	};
+
+	const glm::vec2 kTexCoordsFront[] = {
+		{ frontTextureRect.getBottomLeft() },
+		{ frontTextureRect.getTopLeft() },
+		{ frontTextureRect.getTopRight() },
+		{ frontTextureRect.getBottomRight() }
+	};
+
+	const glm::vec2 kTexCoordsBack[] = {
+		{ backTextureRect.getBottomLeft() },
+		{ backTextureRect.getTopLeft() },
+		{ backTextureRect.getTopRight() },
+		{ backTextureRect.getBottomRight() }
+	};
+
+	MeshDataP3N3T2 data;
+	data.primitive = gl::GL_TRIANGLES;
+	data.material = material;
+	data.vertexes.reserve(8);
+	//Front side
+	for (size_t i = 0; i < 4; i++)
+	{
+		VertexP3N3T2 vertex;
+		vertex.position = kQuadVert[i];
+		vertex.normal = glm::vec3(0, 0, 1);
+		vertex.textureUV = kTexCoordsFront[i];
+		data.vertexes.push_back(vertex);
+	}
+	//Back side
+	for (size_t i = 0; i < 4; i++)
+	{
+		VertexP3N3T2 vertex;
+		vertex.position = kQuadVert[i];
+		vertex.normal = glm::vec3(0, 0, -1);
+		vertex.textureUV = kTexCoordsBack[i];
+		data.vertexes.push_back(vertex);
+	}
+	for (auto v : kQuadIdx)
+	{
+		data.indicies.push_back(v.x);
+		data.indicies.push_back(v.y);
+		data.indicies.push_back(v.z);
+	}
+	return data;
+}
+
 void MeshP3N3T2::init(const MeshDataP3N3T2 &data)
 {
 	assert(data.material != nullptr);

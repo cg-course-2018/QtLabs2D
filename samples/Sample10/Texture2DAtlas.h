@@ -18,9 +18,9 @@ public:
 	Texture2DAtlas(const std::string &plistRelativePath);
 
 	gl::GLuint getTextureId() const;
-	FloatRect getFrameRect(const std::string &frameName) const;
+	math::FloatRect getFrameRect(const std::string &frameName) const;
 
 private:
-	std::unordered_map<std::string, FloatRect> m_frames;
+	std::unordered_map<std::string, math::FloatRect> m_frames;
 	glcore::TextureObject m_texture;
 };

@@ -3,9 +3,6 @@
 class ScoreController
 {
 public:
-	ScoreController();
-	~ScoreController();
-
 	void onPairGuessed();
 	void onPairMissed();
 	void setTileCount(int cnt);
