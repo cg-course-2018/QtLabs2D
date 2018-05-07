@@ -46,7 +46,7 @@ MeshDataP3N3T2 tesselateSphere(const MaterialPtr &material, unsigned latitudeDiv
 // Генерирует список вершин отдельных треугольников, формирующих двухсторонний quad.
 // @param frontTextureRect - текстурный прямоугольник передней грани
 // @param backTextureRect - текстурный прямоугольник задней грани
-MeshDataP3N3T2 tesselateTwoSideQuad(const FloatRect& frontTextureRect, const FloatRect& backTextureRect, const MaterialPtr& material);
+MeshDataP3N3T2 tesselateTwoSideQuad(const math::FloatRect& frontTextureRect, const math::FloatRect& backTextureRect, const MaterialPtr& material);
 
 class MeshP3N3T2
 {

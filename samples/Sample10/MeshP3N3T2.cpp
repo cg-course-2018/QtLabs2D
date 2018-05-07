@@ -130,7 +130,7 @@ MeshDataP3N3T2 tesselateSphere(const MaterialPtr &material, unsigned latitudeDiv
 	return data;
 }
 
-MeshDataP3N3T2 tesselateTwoSideQuad(const FloatRect& frontTextureRect, const FloatRect& backTextureRect, const MaterialPtr& material)
+MeshDataP3N3T2 tesselateTwoSideQuad(const math::FloatRect& frontTextureRect, const math::FloatRect& backTextureRect, const MaterialPtr& material)
 {
 	constexpr float a = 1;
 	const glm::vec3 kQuadVert[] = {	//quad in OXY plane
