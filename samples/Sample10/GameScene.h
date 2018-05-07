@@ -10,6 +10,8 @@
 #include <optional>
 #include "Tile.h"
 
+#include "ScoreController.h"
+
 class GameScene
 	: public platform::IRenderScene
 {
@@ -34,6 +36,9 @@ private:
 	void setProjectionMatrix(unsigned width, unsigned height);
 	void setCameraUniforms();
 
+	// Позволяет протестировать подсистемы игры путём симуляции игры.
+	bool m_shouldSimulateGame = false;
+
 	std::unique_ptr<IFlyingCamera> m_camera;
 	std::unique_ptr<ICameraController> m_cameraController;
 
@@ -43,4 +48,7 @@ private:
 	Transform3D m_sphereTransform;
 	LightSource m_sunlight;
 	std::unique_ptr<TileMesh> m_tile;
+	ScoreController m_scoreController;
 };
+
+void ShowGemeOverMessage();

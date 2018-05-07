@@ -10,6 +10,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <libplatform/ResourceLoader.h>
 
+#include <qmessagebox.h>
+
 // Используем функции из gl32core, экспортированные библиотекой glbinding.
 using namespace gl32core;
 
@@ -37,6 +39,7 @@ constexpr float CUBE_ROTATE_SPEED = 20;
 GameScene::GameScene()
 	: m_camera(std::make_unique<FlyingCamera>(CAMERA_POSITION, CAMERA_TARGET, CAMERA_UP))
 	, m_cameraController(std::make_unique<CameraController>(*m_camera))
+	, m_scoreController()
 {
 }
 
@@ -56,11 +59,33 @@ void GameScene::initialize()
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);
 	glCullFace(GL_BACK);
+
+	//Задаём количество плиток для счётчика очков
+	m_scoreController.setTileCount(300);
+}
+
+void ShowGameOverMessage(ScoreController m_scoreController)
+{
+	QString str = "Score: %1 TileCount: %2";
+	str = str.arg(m_scoreController.getScore()).arg(m_scoreController.getTileCount());
+	QMessageBox::information(nullptr, "End of Game", str, QMessageBox::Ok, QMessageBox::NoButton);
 }
 
 void GameScene::update(float deltaSeconds)
 {
 	m_cameraController->update(deltaSeconds);
+
+	/////////////////////////
+	//Test ScoreControl
+	m_scoreController.onPairGuessed();
+	m_scoreController.onPairMissed();
+	if (m_scoreController.isGameFinished() && m_shouldSimulateGame)
+	{
+		m_shouldSimulateGame = false;
+		ShowGameOverMessage(m_scoreController);
+	}
+	//End test ScoreControl
+	/////////////////////////
 
 	// Вращаем куб вокруг оси Oy (вертикальной оси).
 	const float cubeRotation = glm::radians(CUBE_ROTATE_SPEED * deltaSeconds);
