@@ -118,6 +118,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TextToImage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CatchAndDisplay.h" />
@@ -127,6 +128,7 @@
     <ClInclude Include="InputListenerAdapter.h" />
     <ClInclude Include="IRenderScene.h" />
     <ClInclude Include="libplatform.h" />
+    <ClInclude Include="TextToImage.h" />
     <QtMoc Include="RenderWindow.h" />
     <ClInclude Include="ResourceLoader.h" />
     <ClInclude Include="SetupDebugOutput.h" />
