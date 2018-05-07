@@ -28,7 +28,7 @@ const glm::vec3 CAMERA_UP = { 0, 1, 0 };
 // Аналогично для сферы.
 constexpr float SPHERE_SIZE = 7.f;
 constexpr float SPHERE_SCALE = SPHERE_SIZE / 2.f;
-const glm::vec3 SPHERE_POSITION = glm::vec3{ 0, 0, 0 };
+const glm::vec3 SPHERE_POSITION = glm::vec3{ 5, 0, 0 };
 
 // Скорость вращения куба, градусов в секунду.
 constexpr float CUBE_ROTATE_SPEED = 20;
@@ -66,6 +66,8 @@ void GameScene::update(float deltaSeconds)
 	const float cubeRotation = glm::radians(CUBE_ROTATE_SPEED * deltaSeconds);
 	m_sphereTransform.rotateBy(glm::angleAxis(cubeRotation, glm::vec3{ 0, 1, 0 }));
 	m_sphere.setTransform(m_sphereTransform);
+
+	m_tile->update(deltaSeconds);
 }
 
 void GameScene::redraw(unsigned width, unsigned height)
@@ -84,6 +86,8 @@ void GameScene::redraw(unsigned width, unsigned height)
 
 	m_sphere.updateUniforms(m_programPhong);
 	m_sphere.draw();
+
+	m_tile->draw(m_programPhong);
 }
 
 bool GameScene::keyPressEvent(platform::IKeyEvent &event)
@@ -171,6 +175,9 @@ void GameScene::initializeObjects()
 		m_sphereTransform.scaleBy(SPHERE_SCALE);
 		m_sphereTransform.moveBy(SPHERE_POSITION);
 		m_sphere.setTransform(m_sphereTransform);
+		
+		m_tile = std::make_unique<TileMesh>(m_textureAtlas.value(), "mushroomRed.png", "flyFly2.png");
+		m_tile->initialize(m_programPhong);
 	}
 }
 

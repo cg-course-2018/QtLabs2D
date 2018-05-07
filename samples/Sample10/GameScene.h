@@ -8,6 +8,7 @@
 #include <libglcore/libglcore.h>
 #include <libplatform/IRenderScene.h>
 #include <optional>
+#include "Tile.h"
 
 class GameScene
 	: public platform::IRenderScene
@@ -41,4 +42,5 @@ private:
 	MeshP3N3T2 m_sphere;
 	Transform3D m_sphereTransform;
 	LightSource m_sunlight;
+	std::unique_ptr<TileMesh> m_tile;
 };
