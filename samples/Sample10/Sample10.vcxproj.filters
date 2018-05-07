@@ -34,9 +34,8 @@
     <ClCompile Include="Texture2DAtlas.cpp">
       <Filter>scene</Filter>
     </ClCompile>
-
     <ClCompile Include="Tile.cpp">
-		<Filter>scene</Filter>
+      <Filter>scene</Filter>
     </ClCompile>
     <ClCompile Include="ScoreController.cpp">
       <Filter>scene</Filter>
@@ -85,11 +84,10 @@
     <ClInclude Include="Texture2DAtlas.h">
       <Filter>scene</Filter>
     </ClInclude>
-<<<<<<< HEAD
     <ClInclude Include="Tile.h">
-=======
+      <Filter>scene</Filter>
+    </ClInclude>
     <ClInclude Include="ScoreController.h">
->>>>>>> fcbd91ff74e46c6b00e9553757d5386ecaa427cc
       <Filter>scene</Filter>
     </ClInclude>
   </ItemGroup>
