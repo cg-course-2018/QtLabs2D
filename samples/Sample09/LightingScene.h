@@ -9,6 +9,7 @@
 
 class LightingScene
 	: public platform::IRenderScene
+
 {
 public:
 	LightingScene();
@@ -22,7 +23,7 @@ public:
 	bool mousePressEvent(platform::IMouseEvent &event) final;
 	bool mouseMoveEvent(platform::IMouseEvent &event) final;
 	bool mouseReleaseEvent(platform::IMouseEvent &event) final;
-
+	
 private:
 	void initializeShaders();
 	void initializeNoLightingProgram();

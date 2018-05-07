@@ -3,8 +3,8 @@
 // Represents light source passed to shader.
 struct LightSource
 {
-    // (x, y, z, 1) means positioned light.
-    // (x, y, z, 0) means directed light.
+    (x, y, z, 1) means positioned light.
+    (x, y, z, 0) means directed light.
     vec4 position;
     vec4 diffuse;
     vec4 specular;

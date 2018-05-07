@@ -14,6 +14,7 @@ struct Material
 {
     vec4 emission;
     vec4 diffuse;
+	
 };
 
 // Constant Phong lighting model shininess.
