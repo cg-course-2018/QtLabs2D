@@ -35,8 +35,8 @@ private:
 	void setProjectionMatrix(unsigned width, unsigned height);
 	void setCameraUniforms();
 
-	//Тестирование ScoreController
-	bool m_isGaming = true;
+	// Позволяет протестировать подсистемы игры путём симуляции игры.
+	bool m_shouldSimulateGame = false;
 
 	std::unique_ptr<IFlyingCamera> m_camera;
 	std::unique_ptr<ICameraController> m_cameraController;

@@ -15,7 +15,7 @@ class CPropertyListParser
 {
 public:
 	using MetaHandler = std::function<void(const std::string &textureName, glm::ivec2 &size)>;
-	using FrameHandler = std::function<void(const std::string &, const FloatRect &)>;
+	using FrameHandler = std::function<void(const std::string &, const math::FloatRect &)>;
 
 	CPropertyListParser(const std::string &xmlPath)
 		: m_xmlPath(xmlPath)
@@ -110,13 +110,13 @@ private:
 		{
 			const std::string spriteName = pKey->GetText();
 			const auto *dict = GetNextSibling(pKey);
-			FloatRect rect = ParseFrameRect(dict);
+			math::FloatRect rect = ParseFrameRect(dict);
 			m_onParsedFrame(spriteName, rect);
 			pKey = pKey->NextSiblingElement("key");
 		}
 	}
 
-	FloatRect ParseFrameRect(const xml::XMLElement *dict)
+	math::FloatRect ParseFrameRect(const xml::XMLElement *dict)
 	{
 		const auto *nodeX = GetValueNode(dict, "x");
 		const auto *nodeY = GetValueNode(dict, "y");
@@ -128,7 +128,7 @@ private:
 		const auto width = std::stoul(nodeWidth->GetText());
 		const auto height = std::stoul(nodeHeight->GetText());
 
-		return FloatRect(glm::vec2{ float(x), float(y) },
+		return math::FloatRect(glm::vec2{ float(x), float(y) },
 			glm::vec2{ float(x + width), float(y + height) });
 	}
 
@@ -171,9 +171,9 @@ Texture2DAtlas::Texture2DAtlas(const std::string &plistRelativePath)
 			float(1.f / size.y) };
 		m_texture = utils::loadTextureFromImage(getParentPath(plistRelativePath) + "/" + filename);
 	});
-	parser.DoOnParsedFrame([&](const std::string &name, const FloatRect &rect) {
+	parser.DoOnParsedFrame([&](const std::string &name, const math::FloatRect &rect) {
 		// ѕреобразуем координаты в атласе текстур к диапазону [0..1]
-		FloatRect texRect = rect.getScaled(frameScale);
+		math::FloatRect texRect = rect.getScaled(frameScale);
 
 		// ѕереворачиваем по оси Y, чтобы синхронизировать
 		//    с переворотом текстуры в загузчике текстур.
@@ -190,7 +190,7 @@ gl::GLuint Texture2DAtlas::getTextureId() const
 	return m_texture;
 }
 
-FloatRect Texture2DAtlas::getFrameRect(const std::string &frameName) const
+math::FloatRect Texture2DAtlas::getFrameRect(const std::string &frameName) const
 {
 	try
 	{

@@ -2,6 +2,8 @@
 
 #include <glm/vec2.hpp>
 
+namespace math
+{
 class FloatRect
 {
 public:
@@ -23,3 +25,4 @@ private:
 	glm::vec2 m_topLeft;
 	glm::vec2 m_bottomRight;
 };
+} // namespace math

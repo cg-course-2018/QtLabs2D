@@ -79,9 +79,9 @@ void GameScene::update(float deltaSeconds)
 	//Test ScoreControl
 	m_scoreController.onPairGuessed();
 	m_scoreController.onPairMissed();
-	if (m_scoreController.isGameFinished() && m_isGaming)
+	if (m_scoreController.isGameFinished() && m_shouldSimulateGame)
 	{
-		m_isGaming = false;
+		m_shouldSimulateGame = false;
 		ShowGameOverMessage(m_scoreController);
 	}
 	//End test ScoreControl

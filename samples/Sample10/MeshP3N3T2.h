@@ -25,7 +25,7 @@ struct VertexP3N3T2
 struct Material
 {
 	gl::GLuint colorMapId;
-	FloatRect colorMapRect{ { 0, 0 }, { 1, 1 } };
+	math::FloatRect colorMapRect{ { 0, 0 }, { 1, 1 } };
 };
 
 using MaterialPtr = std::shared_ptr<Material>;

@@ -1,15 +1,16 @@
 #include "stdafx.h"
 #include "TextureUtils.h"
 #include "libplatform/ResourceLoader.h"
+#include "libplatform/TextToImage.h"
 #include <glbinding/gl32core/gl.h>
 
 // Используем функции из gl32core, экспортированные библиотекой glbinding.
 using namespace gl32core;
 
-glcore::TextureObject utils::loadTextureFromImage(const std::string &relativePath)
+namespace
 {
-	// Загружаем изображение и приводим его к формату ARGB (8 бит на цветовой канал)
-	QImage image = platform::ResourceLoader::loadImage(relativePath);
+glcore::TextureObject makeTextureFromImage(QImage image)
+{
 	if (image.format() != QImage::Format_RGBA8888)
 	{
 		image = image.convertToFormat(QImage::Format_RGBA8888);
@@ -43,4 +44,33 @@ glcore::TextureObject utils::loadTextureFromImage(const std::string &relativePat
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.bits());
 
 	return texture;
+}
+
+QString fromUtf8(const std::string &textUtf8)
+{
+	return QString::fromUtf8(textUtf8.data(), static_cast<int>(textUtf8.size()));
+}
+} // namespace
+
+glcore::TextureObject utils::loadTextureFromImage(const std::string &relativePath)
+{
+	// Загружаем изображение и приводим его к формату ARGB (8 бит на цветовой канал)
+	QImage image = platform::ResourceLoader::loadImage(relativePath);
+	return makeTextureFromImage(std::move(image));
+}
+
+glcore::TextureObject utils::renderTextAsTexture(int fontSize, const std::string &textUtf8)
+{
+	// Растеризуем изображение
+	QFont textFont(QLatin1Literal("Arial"), fontSize);
+	QImage image = platform::textToImage(textFont, fromUtf8(textUtf8));
+	return makeTextureFromImage(std::move(image));
+}
+
+glcore::TextureObject utils::renderTextAsTexture(const glm::uvec2 &size, int fontSize, const std::string &textUtf8)
+{
+	QFont textFont(QLatin1Literal("Arial"), fontSize);
+	QImage image = platform::textToImage(textFont, QSize(size.x, size.y), fromUtf8(textUtf8));
+
+	return makeTextureFromImage(std::move(image));
 }
