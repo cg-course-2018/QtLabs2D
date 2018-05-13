@@ -9,25 +9,25 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <libplatform/ResourceLoader.h>
 
-// Èñïîëüçóåì ôóíêöèè èç gl32core, ýêñïîðòèðîâàííûå áèáëèîòåêîé glbinding.
+// Ð˜ÑÐ¿Ð¾Ð»ÑŒÐ·ÑƒÐµÐ¼ Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¸ Ð¸Ð· gl32core, ÑÐºÑÐ¿Ð¾Ñ€Ñ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð½Ñ‹Ðµ Ð±Ð¸Ð±Ð»Ð¸Ð¾Ñ‚ÐµÐºÐ¾Ð¹ glbinding.
 using namespace gl32core;
 
 namespace
 {
 
-// Òðè âåêòîðà, îïèñûâàþùèõ ïåðâîíà÷àëüíîå ïîëîæåíèå êàìåðû:
-//  - ïîëîæåíèå êàìåðû
-//  - ïîëîæåíèå öåëè, íà êîòîðóþ íàïðàâëåíà êàìåðà
-//  - íàïðàâëåíèå "ââåðõ" äëÿ êàìåðû
+// Ð¢Ñ€Ð¸ Ð²ÐµÐºÑ‚Ð¾Ñ€Ð°, Ð¾Ð¿Ð¸ÑÑ‹Ð²Ð°ÑŽÑ‰Ð¸Ñ… Ð¿ÐµÑ€Ð²Ð¾Ð½Ð°Ñ‡Ð°Ð»ÑŒÐ½Ð¾Ðµ Ð¿Ð¾Ð»Ð¾Ð¶ÐµÐ½Ð¸Ðµ ÐºÐ°Ð¼ÐµÑ€Ñ‹:
+//  - Ð¿Ð¾Ð»Ð¾Ð¶ÐµÐ½Ð¸Ðµ ÐºÐ°Ð¼ÐµÑ€Ñ‹
+//  - Ð¿Ð¾Ð»Ð¾Ð¶ÐµÐ½Ð¸Ðµ Ñ†ÐµÐ»Ð¸, Ð½Ð° ÐºÐ¾Ñ‚Ð¾Ñ€ÑƒÑŽ Ð½Ð°Ð¿Ñ€Ð°Ð²Ð»ÐµÐ½Ð° ÐºÐ°Ð¼ÐµÑ€Ð°
+//  - Ð½Ð°Ð¿Ñ€Ð°Ð²Ð»ÐµÐ½Ð¸Ðµ "Ð²Ð²ÐµÑ€Ñ…" Ð´Ð»Ñ ÐºÐ°Ð¼ÐµÑ€Ñ‹
 const glm::vec3 CAMERA_POSITION = { 0, 4, 10 };
 const glm::vec3 CAMERA_TARGET = { 0, 0, 0 };
 const glm::vec3 CAMERA_UP = { 0, 1, 0 };
 
-// Áàçîâûé ïðèìèòèâ êóáà èìååò ðàçìåð 2, ïîýòîìó ìàñøòàá çàäà¸ì ðàâíûì æåëàåìîìó ðàçìåðó, äåë¸ííîìó íà 2
+// Ð‘Ð°Ð·Ð¾Ð²Ñ‹Ð¹ Ð¿Ñ€Ð¸Ð¼Ð¸Ñ‚Ð¸Ð² ÐºÑƒÐ±Ð° Ð¸Ð¼ÐµÐµÑ‚ Ñ€Ð°Ð·Ð¼ÐµÑ€ 2, Ð¿Ð¾ÑÑ‚Ð¾Ð¼Ñƒ Ð¼Ð°ÑÑˆÑ‚Ð°Ð± Ð·Ð°Ð´Ð°Ñ‘Ð¼ Ñ€Ð°Ð²Ð½Ñ‹Ð¼ Ð¶ÐµÐ»Ð°ÐµÐ¼Ð¾Ð¼Ñƒ Ñ€Ð°Ð·Ð¼ÐµÑ€Ñƒ, Ð´ÐµÐ»Ñ‘Ð½Ð½Ð¾Ð¼Ñƒ Ð½Ð° 2
 constexpr float CUBE_SIZE = 5.f;
 constexpr float CUBE_SCALE = CUBE_SIZE / 2.f;
 
-// Ñêîðîñòü âðàùåíèÿ êóáà, ãðàäóñîâ â ñåêóíäó.
+// Ð¡ÐºÐ¾Ñ€Ð¾ÑÑ‚ÑŒ Ð²Ñ€Ð°Ñ‰ÐµÐ½Ð¸Ñ ÐºÑƒÐ±Ð°, Ð³Ñ€Ð°Ð´ÑƒÑÐ¾Ð² Ð² ÑÐµÐºÑƒÐ½Ð´Ñƒ.
 constexpr float CUBE_ROTATE_SPEED = 20;
 } // namespace
 
@@ -44,10 +44,10 @@ void Simple3DScene::initialize()
 	glcore::initGLBinding();
 	initializeShaders();
 
-	// Âêëþ÷àåì òåñò ãëóáèíû.
+	// Ð’ÐºÐ»ÑŽÑ‡Ð°ÐµÐ¼ Ñ‚ÐµÑÑ‚ Ð³Ð»ÑƒÐ±Ð¸Ð½Ñ‹.
 	glEnable(GL_DEPTH_TEST);
 
-	// Âêëþ÷àåì îòñå÷åíèå çàäíèõ ãðàíåé
+	// Ð’ÐºÐ»ÑŽÑ‡Ð°ÐµÐ¼ Ð¾Ñ‚ÑÐµÑ‡ÐµÐ½Ð¸Ðµ Ð·Ð°Ð´Ð½Ð¸Ñ… Ð³Ñ€Ð°Ð½ÐµÐ¹
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);
 	glCullFace(GL_BACK);
@@ -64,7 +64,7 @@ void Simple3DScene::update(float deltaSeconds)
 {
 	m_cameraController->update(deltaSeconds);
 
-	// Âðàùàåì êóá âîêðóã îñè Oy (âåðòèêàëüíîé îñè).
+	// Ð’Ñ€Ð°Ñ‰Ð°ÐµÐ¼ ÐºÑƒÐ± Ð²Ð¾ÐºÑ€ÑƒÐ³ Ð¾ÑÐ¸ Oy (Ð²ÐµÑ€Ñ‚Ð¸ÐºÐ°Ð»ÑŒÐ½Ð¾Ð¹ Ð¾ÑÐ¸).
 	const float cubeRotation = glm::radians(CUBE_ROTATE_SPEED * deltaSeconds);
 	m_cubeTransform.rotateBy(glm::angleAxis(cubeRotation, glm::vec3{ 0, 1, 0 }));
 	m_cube.setTransform(m_cubeTransform);
@@ -79,15 +79,15 @@ void Simple3DScene::redraw(unsigned width, unsigned height)
 	glViewport(0, 0, width, height);
 	glUseProgram(m_program);
 
-	// Âûáèðàåì ðåæèì ðåíäåðèíãà òðåóãîëüíèêîâ: òîëüêî ëèíèè (wireframe mode) ëèáî ïîëíàÿ çàëèâêà.
+	// Ð’Ñ‹Ð±Ð¸Ñ€Ð°ÐµÐ¼ Ñ€ÐµÐ¶Ð¸Ð¼ Ñ€ÐµÐ½Ð´ÐµÑ€Ð¸Ð½Ð³Ð° Ñ‚Ñ€ÐµÑƒÐ³Ð¾Ð»ÑŒÐ½Ð¸ÐºÐ¾Ð²: Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð»Ð¸Ð½Ð¸Ð¸ (wireframe mode) Ð»Ð¸Ð±Ð¾ Ð¿Ð¾Ð»Ð½Ð°Ñ Ð·Ð°Ð»Ð¸Ð²ÐºÐ°.
 	glPolygonMode(GL_FRONT_AND_BACK, m_renderWireframe ? GL_LINE : GL_FILL);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// Óñòàíàâëèâàåì ìàòðèöó îðòîãðàôè÷åñêîãî ïðîåöèðîâàíèÿ.
+	// Ð£ÑÑ‚Ð°Ð½Ð°Ð²Ð»Ð¸Ð²Ð°ÐµÐ¼ Ð¼Ð°Ñ‚Ñ€Ð¸Ñ†Ñƒ Ð¾Ñ€Ñ‚Ð¾Ð³Ñ€Ð°Ñ„Ð¸Ñ‡ÐµÑÐºÐ¾Ð³Ð¾ Ð¿Ñ€Ð¾ÐµÑ†Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ñ.
 	setProjectionMatrix(width, height);
 
-	// Óñòàíàâëèâàåì ìàòðèöó ïåðåõîäà â êîîðäèíàòû íàáëþäàòåëÿ.
+	// Ð£ÑÑ‚Ð°Ð½Ð°Ð²Ð»Ð¸Ð²Ð°ÐµÐ¼ Ð¼Ð°Ñ‚Ñ€Ð¸Ñ†Ñƒ Ð¿ÐµÑ€ÐµÑ…Ð¾Ð´Ð° Ð² ÐºÐ¾Ð¾Ñ€Ð´Ð¸Ð½Ð°Ñ‚Ñ‹ Ð½Ð°Ð±Ð»ÑŽÐ´Ð°Ñ‚ÐµÐ»Ñ.
 	setViewMatrix();
 
 	m_cube.updateUniforms(m_program, "u_world_matrix");
@@ -133,8 +133,8 @@ void Simple3DScene::setProjectionMatrix(unsigned width, unsigned height)
 {
 	glViewport(0, 0, width, height);
 
-	// Âû÷èñëÿåì ìàòðèöó ïåðñïåêòèâíîãî ïðîåöèðîâàíèÿ.
-	// Çàòåì ïåðåäà¸ì ìàòðèöó êàê êîíñòàíòó â ãðàôè÷åñêîé ïðîãðàììå.
+	// Ð’Ñ‹Ñ‡Ð¸ÑÐ»ÑÐµÐ¼ Ð¼Ð°Ñ‚Ñ€Ð¸Ñ†Ñƒ Ð¿ÐµÑ€ÑÐ¿ÐµÐºÑ‚Ð¸Ð²Ð½Ð¾Ð³Ð¾ Ð¿Ñ€Ð¾ÐµÑ†Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ñ.
+	// Ð—Ð°Ñ‚ÐµÐ¼ Ð¿ÐµÑ€ÐµÐ´Ð°Ñ‘Ð¼ Ð¼Ð°Ñ‚Ñ€Ð¸Ñ†Ñƒ ÐºÐ°Ðº ÐºÐ¾Ð½ÑÑ‚Ð°Ð½Ñ‚Ñƒ Ð² Ð³Ñ€Ð°Ñ„Ð¸Ñ‡ÐµÑÐºÐ¾Ð¹ Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼Ð¼Ðµ.
 	const float fieldOfView = glm::radians(70.f);
 	const float aspect = float(width) / float(height);
 	const float zNear = 0.05f;
@@ -146,8 +146,8 @@ void Simple3DScene::setProjectionMatrix(unsigned width, unsigned height)
 
 void Simple3DScene::setViewMatrix()
 {
-	// Ìàòðèöà ïåðåõîäà â êîîðäèíàòû íàáëþäàòåëÿ îïðåäåëÿåòñÿ ñîñòîÿíèåì êàìåðû.
-	// Ìû ïåðåäà¸ì ìàòðèöó êàê êîíñòàíòó â ãðàôè÷åñêîé ïðîãðàììå.
+	// ÐœÐ°Ñ‚Ñ€Ð¸Ñ†Ð° Ð¿ÐµÑ€ÐµÑ…Ð¾Ð´Ð° Ð² ÐºÐ¾Ð¾Ñ€Ð´Ð¸Ð½Ð°Ñ‚Ñ‹ Ð½Ð°Ð±Ð»ÑŽÐ´Ð°Ñ‚ÐµÐ»Ñ Ð¾Ð¿Ñ€ÐµÐ´ÐµÐ»ÑÐµÑ‚ÑÑ ÑÐ¾ÑÑ‚Ð¾ÑÐ½Ð¸ÐµÐ¼ ÐºÐ°Ð¼ÐµÑ€Ñ‹.
+	// ÐœÑ‹ Ð¿ÐµÑ€ÐµÐ´Ð°Ñ‘Ð¼ Ð¼Ð°Ñ‚Ñ€Ð¸Ñ†Ñƒ ÐºÐ°Ðº ÐºÐ¾Ð½ÑÑ‚Ð°Ð½Ñ‚Ñƒ Ð² Ð³Ñ€Ð°Ñ„Ð¸Ñ‡ÐµÑÐºÐ¾Ð¹ Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼Ð¼Ðµ.
 	const glm::mat4 mat = m_camera->getViewTransform();
 	glUniformMatrix4fv(glGetUniformLocation(m_program, "u_view_matrix"), 1, GL_FALSE, glm::value_ptr(mat));
 }

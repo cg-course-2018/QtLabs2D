@@ -4,6 +4,7 @@
 #include "MeshP3C3.h"
 #include <libglcore/libglcore.h>
 #include <libplatform/IRenderScene.h>
+#include <memory>
 
 class Simple3DScene
 	: public platform::IRenderScene

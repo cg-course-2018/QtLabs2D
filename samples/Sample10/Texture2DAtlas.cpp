@@ -173,7 +173,7 @@ Texture2DAtlas::Texture2DAtlas(const std::string &plistRelativePath)
 	});
 	parser.DoOnParsedFrame([&](const std::string &name, const math::FloatRect &rect) {
 		// Преобразуем координаты в атласе текстур к диапазону [0..1]
-		FloatRect texRect = rect.getScaled(frameScale);
+		math::FloatRect texRect = rect.getScaled(frameScale);
 
 		// Переворачиваем по оси Y, чтобы синхронизировать
 		//    с переворотом текстуры в загузчике текстур.
