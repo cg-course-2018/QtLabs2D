@@ -14,8 +14,8 @@ include(scripts/functions.cmake)
 # custom_clang_tidy_checks(
 #     "cppcoreguidelines-*"
 #     "clang-analyzer-*"
-#     "readability-*"
-#     "modernize-*"
+#     #"readability-*"
+#     #"modernize-*"
 #     "-cppcoreguidelines-pro-type-union-access"
 #     "-cppcoreguidelines-pro-bounds-array-to-pointer-decay"
 #     "-cppcoreguidelines-pro-type-reinterpret-cast"

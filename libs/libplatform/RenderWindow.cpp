@@ -210,7 +210,7 @@ void RenderWindow::renderNow()
 			m_context->makeCurrent(this);
 		}
 
-		if (m_scene)
+		if (m_scene && width() > 0 && height() > 0)
 		{
 			updateScene();
 			renderScene();
@@ -242,7 +242,7 @@ void RenderWindow::updateScene()
 void RenderWindow::renderScene()
 {
 	CatchAndClose([&] {
-		m_scene->redraw(width(), height());
+		m_scene->redraw(static_cast<unsigned>(width()), static_cast<unsigned>(height()));
 	});
 }
 

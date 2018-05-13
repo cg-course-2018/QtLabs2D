@@ -119,7 +119,7 @@ bool CameraController::isPressed(platform::Key key) const
 
 glm::vec3 CameraController::getRequestedMovementDir() const
 {
-	glm::vec3 movementDir;
+	glm::vec3 movementDir{ 0 };
 	if (isPressed(Key::LetterW))
 	{
 		movementDir.z = 1;

@@ -9,9 +9,9 @@ struct LightSource
 {
 	// (x, y, z, 1) означает точечный источник света (positioned light).
 	// (x, y, z, 0) означает направленный источник света (directed light).
-	glm::vec4 position;
-	glm::vec4 diffuse;
-	glm::vec4 specular;
+	glm::vec4 position{ 0 };
+	glm::vec4 diffuse{ 0 };
+	glm::vec4 specular{ 0 };
 };
 
 namespace utils

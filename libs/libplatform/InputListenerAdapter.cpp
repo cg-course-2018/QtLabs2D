@@ -14,7 +14,7 @@ public:
 	{
 	}
 
-	Key getKey() const
+	Key getKey() const final
 	{
 		switch (m_event->key())
 		{
@@ -66,9 +66,9 @@ public:
 		return { localPos.x(), localPos.y() };
 	}
 
-	bool isButtonPressed(MouseButton button) const
+	bool isButtonPressed(MouseButton button) const final
 	{
-		Qt::MouseButtons mask = 0;
+		Qt::MouseButtons mask = {};
 		switch (button)
 		{
 		case MouseButton::Left:

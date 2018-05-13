@@ -3,6 +3,7 @@
 #include "IFlyingCamera.h"
 #include "LightSource.h"
 #include "ShaderProgram.h"
+#include "SceneGraph.h"
 #include <libglcore/libglcore.h>
 #include <libplatform/IRenderScene.h>
 #include <optional>
@@ -35,7 +36,9 @@ private:
 	std::unique_ptr<IFlyingCamera> m_camera;
 	std::unique_ptr<ICameraController> m_cameraController;
 
-    ShaderProgram m_programPhong;
+	glcore::VAO m_vao;
+	SceneGraphNodePtr m_rootNode;
+    ShaderProgram m_particlesProgram;
     LightSource m_sunlight;
 };
 

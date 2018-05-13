@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 	QApplication app(argc, argv);
 	try
 	{
-		// Окно размером 800x600, используем OpenGL Core Profile и multisampling со значением 8
+		// РћРєРЅРѕ СЂР°Р·РјРµСЂРѕРј 800x600, РёСЃРїРѕР»СЊР·СѓРµРј OpenGL Core Profile Рё multisampling СЃРѕ Р·РЅР°С‡РµРЅРёРµРј 8
 		QSurfaceFormat format;
 		format.setVersion(3, 3);
 		format.setSamples(8);

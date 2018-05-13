@@ -2,6 +2,8 @@
 #include "Transform3D.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/matrix_transform_2d.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <cmath>
 
 using namespace glm;
 
@@ -27,10 +29,9 @@ void Transform3D::moveBy(const glm::vec3 &distance)
 
 glm::mat4 Transform3D::toMat4() const
 {
-	const mat4 scaleMatrix = scale(mat4(), m_size);
+	const mat4 scaleMatrix = scale(mat4(1), m_size);
 	const mat4 rotationMatrix = mat4_cast(m_orientation);
-	const mat4 translateMatrix = translate(mat4(), m_position);
-
+	const mat4 translateMatrix = translate(mat4(1), m_position);
 	return translateMatrix * rotationMatrix * scaleMatrix;
 }
 

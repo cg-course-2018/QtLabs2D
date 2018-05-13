@@ -29,7 +29,7 @@ void Transform2D::moveBy(const glm::vec2 &distance)
 // Ñì. https://glm.g-truc.net/0.9.9/api/a00209.html
 glm::mat3 Transform2D::toMat3() const
 {
-	glm::mat3 mat;
+	glm::mat3 mat{ 1 };
 	mat = glm::translate(mat, position);
 	mat = glm::rotate(mat, orientation);
 	mat = glm::scale(mat, size);
@@ -41,7 +41,7 @@ glm::mat3 Transform2D::toMat3() const
 // Ñì. https://glm.g-truc.net/0.9.9/api/a00169.html
 glm::mat4 Transform2D::toMat4() const
 {
-	glm::mat4 mat;
+	glm::mat4 mat{ 1 };
 	mat = glm::translate(mat, { position.x, position.y, 0 });
 	mat = glm::rotate(mat, orientation, glm::vec3(0, 0, 1));
 	mat = glm::scale(mat, { size.x, size.y, 1 });

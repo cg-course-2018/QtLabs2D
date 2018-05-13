@@ -6,10 +6,10 @@ using platform::Key;
 
 namespace
 {
-// Линейная скорость движения камеры, единиц в секунду.
+// Р›РёРЅРµР№РЅР°СЏ СЃРєРѕСЂРѕСЃС‚СЊ РґРІРёР¶РµРЅРёСЏ РєР°РјРµСЂС‹, РµРґРёРЅРёС† РІ СЃРµРєСѓРЅРґСѓ.
 constexpr float CAMERA_SPEED = 0.3f;
 
-// Угловая скорость вращения камеры, градусов на пиксель смещения мыши.
+// РЈРіР»РѕРІР°СЏ СЃРєРѕСЂРѕСЃС‚СЊ РІСЂР°С‰РµРЅРёСЏ РєР°РјРµСЂС‹, РіСЂР°РґСѓСЃРѕРІ РЅР° РїРёРєСЃРµР»СЊ СЃРјРµС‰РµРЅРёСЏ РјС‹С€Рё.
 constexpr float CAMERA_ANGULAR_SPEED = 0.2f;
 
 bool IsCameraControlKey(Key key)
@@ -66,8 +66,8 @@ bool CameraController::mousePressEvent(platform::IMouseEvent &event)
 {
 	if (event.isButtonPressed(platform::MouseButton::Left))
 	{
-		// Запоминаем текущую позицию мыши как последнюю позицию мыши при перетаскивании.
-		// Тем самым мы инициируем перетаскивание.
+		// Р—Р°РїРѕРјРёРЅР°РµРј С‚РµРєСѓС‰СѓСЋ РїРѕР·РёС†РёСЋ РјС‹С€Рё РєР°Рє РїРѕСЃР»РµРґРЅСЋСЋ РїРѕР·РёС†РёСЋ РјС‹С€Рё РїСЂРё РїРµСЂРµС‚Р°СЃРєРёРІР°РЅРёРё.
+		// РўРµРј СЃР°РјС‹Рј РјС‹ РёРЅРёС†РёРёСЂСѓРµРј РїРµСЂРµС‚Р°СЃРєРёРІР°РЅРёРµ.
 		const auto position = event.getPosition();
 		m_lastDragPos.emplace(position.first, position.second);
 	}
@@ -76,7 +76,7 @@ bool CameraController::mousePressEvent(platform::IMouseEvent &event)
 
 bool CameraController::mouseMoveEvent(platform::IMouseEvent &event)
 {
-	// Проверяем, выполняется ли перетаскивание
+	// РџСЂРѕРІРµСЂСЏРµРј, РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ Р»Рё РїРµСЂРµС‚Р°СЃРєРёРІР°РЅРёРµ
 	if (m_lastDragPos)
 	{
 		const auto position = event.getPosition();
@@ -88,14 +88,14 @@ bool CameraController::mouseMoveEvent(platform::IMouseEvent &event)
 
 bool CameraController::mouseReleaseEvent(platform::IMouseEvent &event)
 {
-	// Проверяем, выполняется ли перетаскивание
+	// РџСЂРѕРІРµСЂСЏРµРј, РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ Р»Рё РїРµСЂРµС‚Р°СЃРєРёРІР°РЅРёРµ
 	if (m_lastDragPos)
 	{
 		const auto position = event.getPosition();
 		applyDragRotation(glm::vec2{ position.first, position.second });
 
-		// Сбрасываем последнюю позицию мыши при перетаскивании.
-		// Тем самым мы завершаем перетаскивание.
+		// РЎР±СЂР°СЃС‹РІР°РµРј РїРѕСЃР»РµРґРЅСЋСЋ РїРѕР·РёС†РёСЋ РјС‹С€Рё РїСЂРё РїРµСЂРµС‚Р°СЃРєРёРІР°РЅРёРё.
+		// РўРµРј СЃР°РјС‹Рј РјС‹ Р·Р°РІРµСЂС€Р°РµРј РїРµСЂРµС‚Р°СЃРєРёРІР°РЅРёРµ.
 		m_lastDragPos = std::nullopt;
 	}
 
@@ -119,7 +119,7 @@ bool CameraController::isPressed(platform::Key key) const
 
 glm::vec3 CameraController::getRequestedMovementDir() const
 {
-	glm::vec3 movementDir;
+	glm::vec3 movementDir{ 0 };
 	if (isPressed(Key::LetterW))
 	{
 		movementDir.z = 1;
@@ -148,7 +148,7 @@ void CameraController::applyDragRotation(const glm::vec2 &newDragPos)
 	const glm::vec2 delta = newDragPos - *m_lastDragPos;
 	m_lastDragPos = newDragPos;
 
-	// Вычисляем углы рысканья и тангажа в радианах.
+	// Р’С‹С‡РёСЃР»СЏРµРј СѓРіР»С‹ СЂС‹СЃРєР°РЅСЊСЏ Рё С‚Р°РЅРіР°Р¶Р° РІ СЂР°РґРёР°РЅР°С….
 	const float yaw = glm::radians(delta.x * CAMERA_ANGULAR_SPEED);
 	const float pitch = glm::radians(-delta.y * CAMERA_ANGULAR_SPEED);
 

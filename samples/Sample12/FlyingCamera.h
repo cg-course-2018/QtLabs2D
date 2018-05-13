@@ -23,7 +23,7 @@ public:
 	glm::mat4 getViewTransform() const final;
 
 private:
-	glm::vec3 m_position;
-	glm::vec3 m_forward;
-	glm::vec3 m_up;
+	glm::vec3 m_position{ 0 };
+	glm::vec3 m_forward{ 0 };
+	glm::vec3 m_up{ 0 };
 };

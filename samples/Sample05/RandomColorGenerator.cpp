@@ -4,12 +4,12 @@ namespace
 {
 std::vector<glm::vec4> MakePalette()
 {
-	// Превращает rgb(255, 0, 128) в vec4{ 1, 0, 0.5, 1 }
+	// РџСЂРµРІСЂР°С‰Р°РµС‚ rgb(255, 0, 128) РІ vec4{ 1, 0, 0.5, 1 }
 	auto rgb = [](unsigned red, unsigned green, unsigned blue) {
 		return glm::vec4(float(red) / 255.f, float(green) / 255.f, float(blue) / 255.f, 1);
 	};
 
-	// Цвета подобраны на сайте https://websafecolors.info/color-chart
+	// Р¦РІРµС‚Р° РїРѕРґРѕР±СЂР°РЅС‹ РЅР° СЃР°Р№С‚Рµ https://websafecolors.info/color-chart
 	return {
 		rgb(0, 204, 102),
 		rgb(102, 102, 102),

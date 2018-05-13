@@ -9,9 +9,7 @@ GraphicsSceneAdapter::GraphicsSceneAdapter(std::unique_ptr<IGraphicsScene> neste
 {
 }
 
-GraphicsSceneAdapter::~GraphicsSceneAdapter()
-{
-}
+GraphicsSceneAdapter::~GraphicsSceneAdapter() = default;
 
 void GraphicsSceneAdapter::update(float deltaSeconds)
 {

@@ -64,9 +64,9 @@ endfunction()
 
 # Функция включает Address Sanitizer и UB Sanitizer для компиляторов, где они доступны.
 function(custom_add_sanitizers TARGET)
-    if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
         target_compile_options(${TARGET} PRIVATE "-fsanitize=address" "-fsanitize=undefined")
-        target_link_libraries(${TARGET} "-fsanitize=address" "-fsanitize=undefined")
+        target_link_libraries(${TARGET} PRIVATE "-fsanitize=address" "-fsanitize=undefined")
     endif()
 endfunction()
 
