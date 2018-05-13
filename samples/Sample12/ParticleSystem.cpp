@@ -54,10 +54,10 @@ void ParticleSystem::setParticleTexture(glcore::TextureObject texture)
     m_texture = std::move(texture);
 }
 
-void ParticleSystem::advance(float dt)
+void ParticleSystem::update(float deltaSeconds)
 {
     // Генерируем новые частицы (за 1 кадр может появиться несколько частиц).
-    m_pEmitter->advance(dt);
+	m_pEmitter->advance(deltaSeconds);
     while (m_pEmitter->isEmitReady())
     {
         m_particles.emplace_back(m_pEmitter->Emit());
@@ -66,7 +66,7 @@ void ParticleSystem::advance(float dt)
     // Продвигаем время жизни всех частиц.
     for (auto &particle : m_particles)
     {
-        particle.advance(dt, m_gravity);
+		particle.advance(deltaSeconds, m_gravity);
     }
 
     // Удаляем "умершие" частицы.
@@ -79,10 +79,15 @@ void ParticleSystem::advance(float dt)
     // Устанавливаем флаг, указывающий, что позиции частиц в видеопамяти
     //  следует обновить.
     m_isDirty = true;
+
+	SceneGraphNode::update(deltaSeconds);
 }
 
-void ParticleSystem::draw(IShaderProgram& program, const glm::mat4 &worldView)
+void ParticleSystem::draw(const RenderContext& ctx)
 {
+	const IShaderProgram &program = ctx.program.get();
+	const glm::mat4 worldView = ctx.viewMat4 * ctx.worldMat4;
+
     if (!m_texture)
     {
         throw std::runtime_error("No texture set for particle system");
@@ -90,11 +95,11 @@ void ParticleSystem::draw(IShaderProgram& program, const glm::mat4 &worldView)
     glBindTexture(GL_TEXTURE_2D, m_texture);
 
     // Обновляем и привязываем буфер с позициями частиц
-    bindParticlePositions(program, worldView);
+	bindParticlePositions(program, worldView);
 
     // Привязываем буфер с вершинами прямоугольного спрайта.
     glBindBuffer(GL_ARRAY_BUFFER, m_spriteGeometry);
-    if (int location = program.getAttribute(AttributeTexCoord); location != -1)
+	if (int location = program.getAttribute(AttributeTexCoord); location != -1)
     {
         glEnableVertexAttribArray(static_cast<unsigned>(location));
         glVertexAttribPointer(static_cast<unsigned>(location), glm::vec2().length(), GL_FLOAT, GL_FALSE, sizeof(vec2), nullptr);
@@ -103,12 +108,14 @@ void ParticleSystem::draw(IShaderProgram& program, const glm::mat4 &worldView)
     const GLsizei vertexCount = GLsizei(SPRITE_VERTEX_COUNT);
     const GLsizei instanceCount = GLsizei(m_particles.size());
     glDrawArraysInstanced(GL_TRIANGLES, 0, vertexCount, instanceCount);
+
+	SceneGraphNode::draw(ctx);
 }
 
 // Привязывает буфер с позициями частиц,
 //  при необходимости обновляет его,
 //  затем связывает с атрибутом шейдера.
-void ParticleSystem::bindParticlePositions(IShaderProgram& program, const glm::mat4 &worldView)
+void ParticleSystem::bindParticlePositions(const IShaderProgram& program, const glm::mat4 &worldView)
 {
     glBindBuffer(GL_ARRAY_BUFFER, m_particlePositions);
 

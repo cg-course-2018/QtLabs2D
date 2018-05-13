@@ -3,9 +3,9 @@
 #include <QtCore/QDir>
 #include <QtCore/QTextStream>
 
-namespace platform
+namespace
 {
-std::string ResourceLoader::loadAsString(const std::string &relativePath)
+QString findResource(const std::string &relativePath)
 {
 	// Конвертируем относительный путь в QString, заменяем прямой/обратный слеш на платформо-зависимый разделитель путей.
 	QString cleanRelativePath = QString::fromUtf8(relativePath.c_str());
@@ -15,7 +15,16 @@ std::string ResourceLoader::loadAsString(const std::string &relativePath)
 	}
 
 	// Формируем абсолютный путь к файлу, добавляя путь к каталогу исполняемого файла
-	QString absolutePath = QCoreApplication::applicationDirPath() + QDir::separator() + cleanRelativePath;
+	return QCoreApplication::applicationDirPath() + QDir::separator() + cleanRelativePath;
+}
+}
+
+namespace platform
+{
+std::string ResourceLoader::loadAsString(const std::string &relativePath)
+{
+	// Получаем абсолютный путь.
+	QString absolutePath = findResource(relativePath);
 
 	// Открываем файл и бросаем исключение, если открыть не удалось.
 	QFile file(absolutePath);
@@ -28,20 +37,13 @@ std::string ResourceLoader::loadAsString(const std::string &relativePath)
 	QTextStream in(&file);
 	QByteArray bytes = in.readAll().toUtf8();
 
-	return std::string(bytes.data(), bytes.size());
+	return std::string(bytes.data(), static_cast<size_t>(bytes.size()));
 }
 
 QImage ResourceLoader::loadImage(const std::string &relativePath)
 {
-	// Конвертируем относительный путь в QString, заменяем прямой/обратный слеш на платформо-зависимый разделитель путей.
-	QString cleanRelativePath = QString::fromUtf8(relativePath.c_str());
-	if (QDir::separator() != QLatin1Char('/'))
-	{
-		cleanRelativePath.replace(QLatin1Char('/'), QDir::separator());
-	}
-
-	// Формируем абсолютный путь к файлу, добавляя путь к каталогу исполняемого файла
-	QString absolutePath = QCoreApplication::applicationDirPath() + QDir::separator() + cleanRelativePath;
+	// Получаем абсолютный путь.
+	QString absolutePath = findResource(relativePath);
 
 	// Конструируем изображение, что приведёт к его загрузке.
 	QImage image;

@@ -1,16 +1,15 @@
 #pragma once
 
-#include <memory>
 #include <glm/vec3.hpp>
-#include <glm/mat4x4.hpp>
 #include "ParticleEmitter.h"
 #include "IShaderProgram.h"
 #include "libglcore/libglcore.h"
+#include "SceneGraph.h"
 
-class ParticleSystem
+class ParticleSystem : public SceneGraphNode
 {
 public:
-    ParticleSystem();
+	ParticleSystem();
     ~ParticleSystem();
 
     ParticleSystem(const ParticleSystem&) = delete;
@@ -21,15 +20,15 @@ public:
     void setParticleTexture(glcore::TextureObject texture);
 
     // @param dt - разница во времени с предыдущим вызовом Advance.
-    void advance(float dt);
+	void update(float deltaSeconds) final;
 
     // @param program - должна быть активирована перед рисованием.
     // @param worldView - задаёт преобразование из локальных координат
     //   системы частиц в систему координат камеры.
-    void draw(IShaderProgram &program, const glm::mat4 &worldView);
+	void draw(const RenderContext& ctx) final;
 
 private:
-    void bindParticlePositions(IShaderProgram &program, const glm::mat4 &worldView);
+	void bindParticlePositions(const IShaderProgram &program, const glm::mat4 &worldView);
     void updateParticlePositions(const glm::mat4 &worldView);
 
     std::unique_ptr<ParticleEmitter> m_pEmitter;

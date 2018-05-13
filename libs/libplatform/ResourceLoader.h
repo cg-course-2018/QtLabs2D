@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <QtGui/QImage>
+#include <experimental/filesystem>
 
 namespace platform
 {
