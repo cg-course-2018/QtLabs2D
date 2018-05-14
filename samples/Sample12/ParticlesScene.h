@@ -2,19 +2,19 @@
 #include "ICameraController.h"
 #include "IFlyingCamera.h"
 #include "LightSource.h"
-#include "ShaderProgram.h"
 #include "SceneGraph.h"
+#include "ShaderProgram.h"
 #include <libglcore/libglcore.h>
 #include <libplatform/IRenderScene.h>
-#include <optional>
 #include <memory>
+#include <optional>
 
 class ParticlesScene
 	: public platform::IRenderScene
 {
 public:
-    ParticlesScene();
-    ~ParticlesScene();
+	ParticlesScene();
+	~ParticlesScene();
 
 	void initialize() final;
 	void update(float deltaSeconds) final;
@@ -27,19 +27,21 @@ public:
 
 private:
 	void initializeShaders();
+	void initializeParticleProgram();
 	void initializePhongProgram();
 	void initializeLights();
 	void initializeObjects();
 	void setProjectionMatrix(unsigned width, unsigned height);
-    void setCameraUniforms();
+	void setCameraUniforms();
 
 	std::unique_ptr<IFlyingCamera> m_camera;
 	std::unique_ptr<ICameraController> m_cameraController;
 
 	glcore::VAO m_vao;
 	SceneGraphNodePtr m_rootNode;
-    ShaderProgram m_particlesProgram;
-    LightSource m_sunlight;
+	ShaderProgram m_particlesProgram;
+	ShaderProgram m_programPhong;
+	LightSource m_sunlight;
 };
 
 void ShowGemeOverMessage();

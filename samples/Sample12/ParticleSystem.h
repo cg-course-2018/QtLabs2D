@@ -18,6 +18,7 @@ public:
 	void setEmitter(std::unique_ptr<ParticleEmitter> &&pEmitter);
 	void setGravity(const glm::vec3 &gravity);
 	void setParticleTexture(glcore::TextureObject texture);
+	void setAdditiveBlending(bool use);
 
 	// @param dt - разница во времени с предыдущим вызовом Advance.
 	void update(float deltaSeconds) final;
@@ -40,6 +41,7 @@ private:
 	// См. паттерн "Dirty Flag": http://gameprogrammingpatterns.com/dirty-flag.html
 	bool m_isDirty = false;
 
+	bool m_useAdditiveBlending = false;
 	// Хранит текстуру отдельной частицы.
 	glcore::TextureObject m_texture;
 

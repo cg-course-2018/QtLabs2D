@@ -151,6 +151,7 @@
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="SceneGraph.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
+    <ClCompile Include="SolidObject.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -172,6 +173,7 @@
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="SceneGraph.h" />
     <ClInclude Include="ShaderProgram.h" />
+    <ClInclude Include="SolidObject.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TextureUtils.h" />
   </ItemGroup>

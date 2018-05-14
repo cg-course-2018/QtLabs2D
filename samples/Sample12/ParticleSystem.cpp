@@ -53,6 +53,11 @@ void ParticleSystem::setParticleTexture(glcore::TextureObject texture)
 	m_texture = std::move(texture);
 }
 
+void ParticleSystem::setAdditiveBlending(bool use)
+{
+	m_useAdditiveBlending = use;
+}
+
 void ParticleSystem::update(float deltaSeconds)
 {
 	// Генерируем новые частицы (за 1 кадр может появиться несколько частиц).
@@ -86,10 +91,13 @@ void ParticleSystem::draw(const RenderContext &ctx)
 {
 	// Включаем полупрозрачность и специальную функцию смешивания.
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+	if (m_useAdditiveBlending)
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+	else
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	// Отключаем запись в буфер глубины
-	// TODO: раскомментируйте код, отключающий запись в буфер глубины
+		// Отключаем запись в буфер глубины
+		// TODO: раскомментируйте код, отключающий запись в буфер глубины
 #if 0
 	glDepthMask(GL_FALSE);
 #endif

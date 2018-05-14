@@ -33,6 +33,11 @@ enum UniformId : unsigned
 	// Прямоугольник текстуры в текстурных координатах, vec4 (x, y, w, h).
 	UniformColorMapRect,
 
+	// Параметры цвета материала текущей поверхности, vec4
+	UniformMaterialEmission,
+	UniformMaterialDiffuse,
+	UniformMaterialSpecular,
+
 	// Специальное значение, равное числу констант enum.
 	UniformIdCount
 };

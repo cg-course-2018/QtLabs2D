@@ -109,10 +109,11 @@ bool ParticlesScene::mouseReleaseEvent(platform::IMouseEvent &event)
 
 void ParticlesScene::initializeShaders()
 {
+	initializeParticleProgram();
 	initializePhongProgram();
 }
 
-void ParticlesScene::initializePhongProgram()
+void ParticlesScene::initializeParticleProgram()
 {
 	platform::ResourceLoader loader;
 	std::vector<glcore::ShaderObject> shaders;
@@ -132,6 +133,38 @@ void ParticlesScene::initializePhongProgram()
 	};
 
 	m_particlesProgram.init(std::move(program), uniforms, attributes);
+}
+
+void ParticlesScene::initializePhongProgram()
+{
+	platform::ResourceLoader loader;
+	std::vector<glcore::ShaderObject> shaders;
+	shaders.emplace_back(glcore::compileShader(GL_VERTEX_SHADER, loader.loadAsString("res12/phong_lighting.vert")));
+	shaders.emplace_back(glcore::compileShader(GL_FRAGMENT_SHADER, loader.loadAsString("res12/phong_lighting.frag")));
+	auto program = glcore::linkProgram(shaders);
+
+	std::vector<AttributeInfo> attributes = {
+		{ AttributePosition, "i_position" },
+		{ AttributeNormal, "i_normal" },
+	};
+	std::vector<UniformInfo> uniforms = {
+		{ UniformWorldMatrix, "u_world_matrix" },
+		{ UniformViewMatrix, "u_view_matrix" },
+		{ UniformViewerPosition, "u_viewer_position" },
+		{ UniformProjectionMatrix, "u_projection_matrix" },
+		{ UniformNormalWorldMatrix, "u_normal_world_matrix" },
+		{ UniformLight0Position, "u_light0.position" },
+		{ UniformLight0Diffuse, "u_light0.diffuse" },
+		{ UniformLight0Specular, "u_light0.specular" },
+		{ UniformLight1Position, "u_light1.position" },
+		{ UniformLight1Diffuse, "u_light1.diffuse" },
+		{ UniformLight1Specular, "u_light1.specular" },
+		{ UniformMaterialEmission, "u_material.emission" },
+		{ UniformMaterialDiffuse, "u_material.diffuse" },
+		{ UniformMaterialSpecular, "u_material.specular" },
+	};
+
+	m_programPhong.init(std::move(program), uniforms, attributes);
 }
 
 void ParticlesScene::initializeLights()

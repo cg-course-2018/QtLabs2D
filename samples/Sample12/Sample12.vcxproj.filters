@@ -37,6 +37,9 @@
     <ClCompile Include="TextureUtils.cpp">
       <Filter>scene</Filter>
     </ClCompile>
+    <ClCompile Include="SolidObject.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IShaderProgram.h">
@@ -86,6 +89,9 @@
     </ClInclude>
     <ClInclude Include="TextureUtils.h">
       <Filter>shading</Filter>
+    </ClInclude>
+    <ClInclude Include="SolidObject.h">
+      <Filter>scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

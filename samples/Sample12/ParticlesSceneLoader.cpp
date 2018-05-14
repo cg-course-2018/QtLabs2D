@@ -108,6 +108,8 @@ private:
 		const std::string texturePath = joinPaths(m_workdir, dict.at("texture").get<std::string>());
 		glcore::TextureObject texture = utils::loadTextureFromImage(texturePath);
 
+		const bool useAdditiveBlending = dict.at("useAdditiveBlending").get<bool>();
+
 		auto pSystem = std::make_shared<ParticleSystem>();
 		pSystem->setParticleTexture(std::move(texture));
 		pSystem->setEmitter(loadParticleEmitter(dict.at("emitter")));
