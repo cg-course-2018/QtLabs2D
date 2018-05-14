@@ -25,9 +25,6 @@
     <ClCompile Include="MeshP3N3T2.cpp">
       <Filter>scene</Filter>
     </ClCompile>
-    <ClCompile Include="SceneNode.cpp">
-      <Filter>scene</Filter>
-    </ClCompile>
     <ClCompile Include="TextureUtils.cpp">
       <Filter>scene</Filter>
     </ClCompile>
@@ -76,9 +73,6 @@
       <Filter>scene</Filter>
     </ClInclude>
     <ClInclude Include="MeshP3N3T2.h">
-      <Filter>scene</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneNode.h">
       <Filter>scene</Filter>
     </ClInclude>
     <ClInclude Include="TextureUtils.h">

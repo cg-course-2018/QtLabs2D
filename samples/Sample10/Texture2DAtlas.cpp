@@ -1,4 +1,4 @@
-#include "stdafx.h"
+п»ї#include "stdafx.h"
 #include "Texture2DAtlas.h"
 #include "TextureUtils.h"
 #include "libplatform/ResourceLoader.h"
@@ -165,18 +165,18 @@ Texture2DAtlas::Texture2DAtlas(const std::string &plistRelativePath)
 
 	CPropertyListParser parser(plistRelativePath);
 	parser.DoOnParsedTextureMeta([&](const std::string &filename, const glm::ivec2 &size) {
-		// Запоминаем коэффициенты для преобразования всех координат
-		//    в атласе текстур к диапазону [0..1].
+		// Р—Р°РїРѕРјРёРЅР°РµРј РєРѕСЌС„С„РёС†РёРµРЅС‚С‹ РґР»СЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ РІСЃРµС… РєРѕРѕСЂРґРёРЅР°С‚
+		//    РІ Р°С‚Р»Р°СЃРµ С‚РµРєСЃС‚СѓСЂ Рє РґРёР°РїР°Р·РѕРЅСѓ [0..1].
 		frameScale = { float(1.f / size.x),
 			float(1.f / size.y) };
 		m_texture = utils::loadTextureFromImage(getParentPath(plistRelativePath) + "/" + filename);
 	});
 	parser.DoOnParsedFrame([&](const std::string &name, const math::FloatRect &rect) {
-		// Преобразуем координаты в атласе текстур к диапазону [0..1]
-		math::FloatRect texRect = rect.getScaled(frameScale);
+		// РџСЂРµРѕР±СЂР°Р·СѓРµРј РєРѕРѕСЂРґРёРЅР°С‚С‹ РІ Р°С‚Р»Р°СЃРµ С‚РµРєСЃС‚СѓСЂ Рє РґРёР°РїР°Р·РѕРЅСѓ [0..1]
+		FloatRect texRect = rect.getScaled(frameScale);
 
-		// Переворачиваем по оси Y, чтобы синхронизировать
-		//    с переворотом текстуры в загузчике текстур.
+		// РџРµСЂРµРІРѕСЂР°С‡РёРІР°РµРј РїРѕ РѕСЃРё Y, С‡С‚РѕР±С‹ СЃРёРЅС…СЂРѕРЅРёР·РёСЂРѕРІР°С‚СЊ
+		//    СЃ РїРµСЂРµРІРѕСЂРѕС‚РѕРј С‚РµРєСЃС‚СѓСЂС‹ РІ Р·Р°РіСѓР·С‡РёРєРµ С‚РµРєСЃС‚СѓСЂ.
 		const float flippedY = 1.f - texRect.getBottomRight().y;
 		texRect.moveTo({ texRect.getTopLeft().x, flippedY });
 
