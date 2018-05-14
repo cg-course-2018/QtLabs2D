@@ -20,7 +20,6 @@ void main(void)
     // Particle should be always oriented to viewer,
     //  but particle system size scale still applies.
     vec4 particle_center = u_world_matrix * u_view_matrix * vec4(a_particle_pos, 1.0);
-    // vec4 particle_center = vec4(a_particle_pos, 1.0) + 0.00001 * u_world_matrix * u_view_matrix * vec4(a_particle_pos, 1.0);
     vec2 offset = a_texture_uv * particle_size_xz;
     vec4 vertex_pos = particle_center + vec4(offset.x, offset.y, 0.0, 0.0);
 
