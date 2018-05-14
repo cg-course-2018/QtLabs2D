@@ -179,6 +179,8 @@
     <None Include="copy_res.bat" />
     <None Include="res\particles.frag" />
     <None Include="res\particles.vert" />
+    <None Include="res\phong_lighting.frag" />
+    <None Include="res\phong_lighting.vert" />
     <None Include="res\scene.json" />
   </ItemGroup>
   <ItemGroup>

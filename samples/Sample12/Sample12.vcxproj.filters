@@ -118,6 +118,12 @@
     <None Include="copy_res.bat">
       <Filter>main</Filter>
     </None>
+    <None Include="res\phong_lighting.frag">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\phong_lighting.vert">
+      <Filter>res</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\BoilingFoam.png">

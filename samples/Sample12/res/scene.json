@@ -1,4 +1,11 @@
 {
+    "solidObjects": [
+        {
+            "geometry": "sphere",
+            "size": [2, 2, 2],
+            "position": [-7, -6, 0]
+        }
+    ],
     "particleSystems": [
         {
             "position": [-2, 2, 0],

@@ -89,11 +89,17 @@ void ParticleSystem::draw(const RenderContext &ctx)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
 	// Отключаем запись в буфер глубины
+	// TODO: раскомментируйте код, отключающий запись в буфер глубины
+#if 0
 	glDepthMask(GL_FALSE);
+#endif
 
 	const IShaderProgram &program = ctx.program.get();
 	const glm::mat4 world = ctx.parentWorldMat4 * getLocalTransform().toMat4();
 	const glm::mat4 worldView = ctx.viewMat4 * world;
+
+	// Выполняем привязку другой шейдерной программы к текущему контексту.
+	program.bind();
 
 	// Обновляем uniform-переменную world transform.
 	if (int location = program.getUniform(UniformWorldMatrix); location != -1)
@@ -166,12 +172,15 @@ void ParticleSystem::updateParticlePositions(const glm::mat4 &worldView)
 			return particle.getPosition();
 		});
 
+	// TODO: раскомментируйте код, выполняющий сортировку частиц
+#if 1
 	// Сортируем частицы в порядке удалённости от камеры
 	std::sort(positions.begin(), positions.end(), [&](const vec3 &a, vec3 &b) {
 		const vec3 viewA = vec3(worldView * vec4(a, 1.0));
 		const vec3 viewB = vec3(worldView * vec4(b, 1.0));
 		return viewA.z < viewB.z;
 	});
+#endif
 
 	// Отправляем данные на видеокарту
 	glcore::setStreamBufferData(m_particlePositions, GL_ARRAY_BUFFER, positions);
