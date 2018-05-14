@@ -26,12 +26,6 @@ const glm::vec3 CAMERA_POSITION = { 0, 5, 12 };
 const glm::vec3 CAMERA_TARGET = { 0, 0, 0 };
 const glm::vec3 CAMERA_UP = { 0, 1, 0 };
 
-// Базовый примитив куба имеет размер 2, поэтому масштаб задаём равным желаемому размеру, делённому на 2
-// Аналогично для сферы.
-constexpr float SPHERE_SIZE = 7.f;
-constexpr float SPHERE_SCALE = SPHERE_SIZE / 2.f;
-const glm::vec3 SPHERE_POSITION = glm::vec3{ 5, 0, 0 };
-
 // Скорость вращения куба, градусов в секунду.
 constexpr float CUBE_ROTATE_SPEED = 20;
 } // namespace
@@ -84,13 +78,7 @@ void GameScene::update(float deltaSeconds)
 		m_shouldSimulateGame = false;
 		ShowGameOverMessage(m_scoreController);
 	}
-	//End test ScoreControl
-	/////////////////////////
-
-	// Вращаем куб вокруг оси Oy (вертикальной оси).
-	const float cubeRotation = glm::radians(CUBE_ROTATE_SPEED * deltaSeconds);
-	m_sphereTransform.rotateBy(glm::angleAxis(cubeRotation, glm::vec3{ 0, 1, 0 }));
-	m_sphere.setTransform(m_sphereTransform);
+	
 
 	m_tile->update(deltaSeconds);
 }
@@ -108,9 +96,6 @@ void GameScene::redraw(unsigned width, unsigned height)
 
 	// Устанавливаем uniform-переменные шейдера в соответствие с состоянием камеры .
 	setCameraUniforms();
-
-	m_sphere.updateUniforms(m_programPhong);
-	m_sphere.draw();
 
 	m_tile->draw(m_programPhong);
 }
@@ -190,17 +175,6 @@ void GameScene::initializeObjects()
 	m_textureAtlas.emplace("res10/spites.plist");
 
 	{
-		auto sphereMaterial = std::make_shared<Material>();
-		sphereMaterial->colorMapId = m_textureAtlas->getTextureId();
-		sphereMaterial->colorMapRect = m_textureAtlas->getFrameRect("mushroomRed.png");
-
-		const MeshDataP3N3T2 data = tesselateSphere(sphereMaterial, 25, 25);
-		m_sphere.init(data);
-		m_sphere.bindAttributes(m_programPhong);
-		m_sphereTransform.scaleBy(SPHERE_SCALE);
-		m_sphereTransform.moveBy(SPHERE_POSITION);
-		m_sphere.setTransform(m_sphereTransform);
-		
 		m_tile = std::make_unique<TileMesh>(m_textureAtlas.value(), "mushroomRed.png", "flyFly2.png");
 		m_tile->initialize(m_programPhong);
 	}

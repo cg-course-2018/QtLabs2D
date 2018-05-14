@@ -44,8 +44,6 @@ private:
 
 	ShaderProgram m_programPhong;
 	std::optional<Texture2DAtlas> m_textureAtlas;
-	MeshP3N3T2 m_sphere;
-	Transform3D m_sphereTransform;
 	LightSource m_sunlight;
 	std::unique_ptr<TileMesh> m_tile;
 	ScoreController m_scoreController;

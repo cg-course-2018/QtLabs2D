@@ -40,6 +40,9 @@
     <ClCompile Include="ScoreController.cpp">
       <Filter>scene</Filter>
     </ClCompile>
+    <ClCompile Include="MemoryTile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraController.h">
@@ -90,6 +93,9 @@
     <ClInclude Include="ScoreController.h">
       <Filter>scene</Filter>
     </ClInclude>
+    <ClInclude Include="MemoryTile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="copy_res.bat">
@@ -117,6 +123,16 @@
     </Filter>
     <Filter Include="res">
       <UniqueIdentifier>{c05dcfdd-4624-42e4-8b16-1c75bc9d191a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+      <ParseFiles>true</ParseFiles>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+      <ParseFiles>true</ParseFiles>
     </Filter>
   </ItemGroup>
 </Project>
