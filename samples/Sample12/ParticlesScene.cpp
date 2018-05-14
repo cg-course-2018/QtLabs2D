@@ -11,8 +11,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <libplatform/ResourceLoader.h>
 
-#include <qmessagebox.h>
-
 // Используем функции из gl32core, экспортированные библиотекой glbinding.
 using namespace gl32core;
 
@@ -23,7 +21,7 @@ namespace
 //  - положение камеры
 //  - положение цели, на которую направлена камера
 //  - направление "вверх" для камеры
-const glm::vec3 CAMERA_POSITION = { 0, 5, 12 };
+const glm::vec3 CAMERA_POSITION = { -15, 0, -15 };
 const glm::vec3 CAMERA_TARGET = { 0, 0, 0 };
 const glm::vec3 CAMERA_UP = { 0, 1, 0 };
 } // namespace

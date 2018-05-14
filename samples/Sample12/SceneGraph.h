@@ -15,7 +15,7 @@ struct RenderContext
 	}
 
 	std::reference_wrapper<const IShaderProgram> program;
-	glm::mat4 worldMat4{ 1 };
+	glm::mat4 parentWorldMat4{ 1 };
 	glm::mat4 viewMat4{ 1 };
 };
 

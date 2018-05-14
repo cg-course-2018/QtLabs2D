@@ -11,12 +11,11 @@ void SceneGraphNode::update(float deltaSeconds)
 
 void SceneGraphNode::draw(const RenderContext &context)
 {
-	RenderContext childrenContext{ context };
-	const glm::mat4 localMat = getLocalTransform().toMat4();
-	childrenContext.worldMat4 = context.worldMat4 * localMat;
 	for (auto &&child : m_children)
 	{
-		child->draw(childrenContext);
+		RenderContext childContext{ context };
+		childContext.parentWorldMat4 = context.parentWorldMat4 * getLocalTransform().toMat4();
+		child->draw(childContext);
 	}
 }
 

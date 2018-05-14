@@ -44,7 +44,7 @@ public:
 	// @param dt - разница во времени с предыдущим вызовом Advance.
 	void advance(float dt);
 	bool isEmitReady() const;
-	Particle Emit();
+	Particle emit();
 
 	// Задаёт центр источника частиц.
 	void setPosition(const glm::vec3 &value);

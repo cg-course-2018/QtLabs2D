@@ -47,7 +47,7 @@ bool ParticleEmitter::isEmitReady() const
 	return m_elapsedSeconds > m_nextEmitTime;
 }
 
-Particle ParticleEmitter::Emit()
+Particle ParticleEmitter::emit()
 {
 	// Увеличиваем время следующего вылета частицы.
 	m_nextEmitTime += m_emitIntervalRange(m_random);

@@ -59,7 +59,7 @@ void ParticleSystem::update(float deltaSeconds)
 	m_pEmitter->advance(deltaSeconds);
 	while (m_pEmitter->isEmitReady())
 	{
-		m_particles.emplace_back(m_pEmitter->Emit());
+		m_particles.emplace_back(m_pEmitter->emit());
 	}
 
 	// Продвигаем время жизни всех частиц.
@@ -92,12 +92,13 @@ void ParticleSystem::draw(const RenderContext &ctx)
 	glDepthMask(GL_FALSE);
 
 	const IShaderProgram &program = ctx.program.get();
-	const glm::mat4 worldView = ctx.viewMat4 * ctx.worldMat4;
+	const glm::mat4 world = ctx.parentWorldMat4 * getLocalTransform().toMat4();
+	const glm::mat4 worldView = ctx.viewMat4 * world;
 
 	// Обновляем uniform-переменную world transform.
 	if (int location = program.getUniform(UniformWorldMatrix); location != -1)
 	{
-		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(ctx.worldMat4));
+		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(world));
 	}
 
 	// Переключаем текстуру ни связываем её с uniform-переменной.
