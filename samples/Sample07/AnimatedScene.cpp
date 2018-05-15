@@ -20,7 +20,7 @@ glm::vec2 animateMoveAlongY(const glm::vec2 &point, float phase)
 }
 } // namespace
 
-// Используем функции из gl32core, экспортированные библиотекой glbinding.
+// РСЃРїРѕР»СЊР·СѓРµРј С„СѓРЅРєС†РёРё РёР· gl32core, СЌРєСЃРїРѕСЂС‚РёСЂРѕРІР°РЅРЅС‹Рµ Р±РёР±Р»РёРѕС‚РµРєРѕР№ glbinding.
 using namespace gl32core;
 
 AnimatedScene::AnimatedScene() = default;
@@ -35,7 +35,7 @@ void AnimatedScene::initialize()
 	m_vao = glcore::createVAO();
 	glBindVertexArray(m_vao);
 
-	// Загружаем данные в вершинный буфер.
+	// Р—Р°РіСЂСѓР¶Р°РµРј РґР°РЅРЅС‹Рµ РІ РІРµСЂС€РёРЅРЅС‹Р№ Р±СѓС„РµСЂ.
 	m_vbo = glcore::createVBO();
 }
 
@@ -50,23 +50,23 @@ void AnimatedScene::redraw(unsigned width, unsigned height)
 	glUseProgram(m_program);
 	glBindVertexArray(m_vao);
 
-	// Генерируем список вершин треугольников, представляющих полярную розу.
+	// Р“РµРЅРµСЂРёСЂСѓРµРј СЃРїРёСЃРѕРє РІРµСЂС€РёРЅ С‚СЂРµСѓРіРѕР»СЊРЅРёРєРѕРІ, РїСЂРµРґСЃС‚Р°РІР»СЏСЋС‰РёС… РїРѕР»СЏСЂРЅСѓСЋ СЂРѕР·Сѓ.
 	std::vector<VertexP2C4> verticies = tesselatePolarRose(100.0f, 7, glm::vec2{ 0, 0 }, glm::vec4{ 0.72, 0.2, 1, 0 });
 	animateShape(verticies);
 
-	// Загружаем вершины на видеокарту
+	// Р—Р°РіСЂСѓР¶Р°РµРј РІРµСЂС€РёРЅС‹ РЅР° РІРёРґРµРѕРєР°СЂС‚Сѓ
 	glcore::setStreamBufferData(m_vbo, GL_ARRAY_BUFFER, verticies);
 
-	// Выполняем привязку вершинных данных в контексте текущего VAO и VBO.
+	// Р’С‹РїРѕР»РЅСЏРµРј РїСЂРёРІСЏР·РєСѓ РІРµСЂС€РёРЅРЅС‹С… РґР°РЅРЅС‹С… РІ РєРѕРЅС‚РµРєСЃС‚Рµ С‚РµРєСѓС‰РµРіРѕ VAO Рё VBO.
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 	bindVertexData(verticies);
 
-	// Запоминаем число вершин.
+	// Р—Р°РїРѕРјРёРЅР°РµРј С‡РёСЃР»Рѕ РІРµСЂС€РёРЅ.
 	m_vertexCount = verticies.size();
 
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	// Устанавливаем матрицу ортографического проецирования.
+	// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РјР°С‚СЂРёС†Сѓ РѕСЂС‚РѕРіСЂР°С„РёС‡РµСЃРєРѕРіРѕ РїСЂРѕРµС†РёСЂРѕРІР°РЅРёСЏ.
 	setProjectionMatrix(width, height);
 
 	glDrawArrays(GL_TRIANGLES, 0, m_vertexCount);
@@ -112,17 +112,17 @@ void AnimatedScene::initializeShaders()
 
 void AnimatedScene::bindVertexData(const std::vector<VertexP2C4> &verticies)
 {
-	// OpenGL должен получить байтовые смещения полей относительно структуры VertexP2C4.
+	// OpenGL РґРѕР»Р¶РµРЅ РїРѕР»СѓС‡РёС‚СЊ Р±Р°Р№С‚РѕРІС‹Рµ СЃРјРµС‰РµРЅРёСЏ РїРѕР»РµР№ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ СЃС‚СЂСѓРєС‚СѓСЂС‹ VertexP2C4.
 	const void *colorOffset = reinterpret_cast<void *>(offsetof(VertexP2C4, rgba));
 	const void *posOffset = reinterpret_cast<void *>(offsetof(VertexP2C4, xy));
 	const size_t stride = sizeof(VertexP2C4);
 
-	// Привязываем атрибут i_color к данным в вершинном буфере.
+	// РџСЂРёРІСЏР·С‹РІР°РµРј Р°С‚СЂРёР±СѓС‚ i_color Рє РґР°РЅРЅС‹Рј РІ РІРµСЂС€РёРЅРЅРѕРј Р±СѓС„РµСЂРµ.
 	const int colorLocation = glGetAttribLocation(m_program, "i_color");
 	glEnableVertexAttribArray(colorLocation);
 	glVertexAttribPointer(colorLocation, glm::vec4().length(), GL_FLOAT, GL_FALSE, stride, colorOffset);
 
-	// Привязываем атрибут i_position к данным в вершинном буфере.
+	// РџСЂРёРІСЏР·С‹РІР°РµРј Р°С‚СЂРёР±СѓС‚ i_position Рє РґР°РЅРЅС‹Рј РІ РІРµСЂС€РёРЅРЅРѕРј Р±СѓС„РµСЂРµ.
 	const int posLocation = glGetAttribLocation(m_program, "i_position");
 	glEnableVertexAttribArray(posLocation);
 	glVertexAttribPointer(posLocation, glm::vec2().length(), GL_FLOAT, GL_FALSE, stride, posOffset);
@@ -130,10 +130,10 @@ void AnimatedScene::bindVertexData(const std::vector<VertexP2C4> &verticies)
 
 void AnimatedScene::setProjectionMatrix(unsigned width, unsigned height)
 {
-	// Вычисляем матрицу ортографического проецирования
+	// Р’С‹С‡РёСЃР»СЏРµРј РјР°С‚СЂРёС†Сѓ РѕСЂС‚РѕРіСЂР°С„РёС‡РµСЃРєРѕРіРѕ РїСЂРѕРµС†РёСЂРѕРІР°РЅРёСЏ
 	const glm::mat4 mat = glm::ortho(-0.5f * float(width), 0.5f * float(width), -0.5f * float(height), 0.5f * float(height));
 
-	// Передаём матрицу как константу в графической программе
+	// РџРµСЂРµРґР°С‘Рј РјР°С‚СЂРёС†Сѓ РєР°Рє РєРѕРЅСЃС‚Р°РЅС‚Сѓ РІ РіСЂР°С„РёС‡РµСЃРєРѕР№ РїСЂРѕРіСЂР°РјРјРµ
 	glUniformMatrix4fv(glGetUniformLocation(m_program, "u_projection_matrix"), 1, GL_FALSE, glm::value_ptr(mat));
 }
 

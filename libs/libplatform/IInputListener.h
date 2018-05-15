@@ -1,9 +1,10 @@
 #pragma once
+#include <utility>
 
 namespace platform
 {
 
-// Коды нажатых клавиш.
+// РљРѕРґС‹ РЅР°Р¶Р°С‚С‹С… РєР»Р°РІРёС€.
 enum class Key
 {
 	Unknown,
@@ -20,6 +21,7 @@ enum class Key
 	LetterD,
 	LetterE,
 	LetterQ,
+	Delete,
 };
 
 enum class MouseButton
@@ -29,13 +31,13 @@ enum class MouseButton
 	Middle,
 };
 
-// Интерфейс для получения доступа к событию клавиатуры
+// РРЅС‚РµСЂС„РµР№СЃ РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ РґРѕСЃС‚СѓРїР° Рє СЃРѕР±С‹С‚РёСЋ РєР»Р°РІРёР°С‚СѓСЂС‹
 class IKeyEvent
 {
 public:
 	virtual ~IKeyEvent() = default;
 
-	// Возвращает код нажатой клавиши.
+	// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕРґ РЅР°Р¶Р°С‚РѕР№ РєР»Р°РІРёС€Рё.
 	virtual Key getKey() const = 0;
 };
 
@@ -48,7 +50,7 @@ public:
 	virtual bool isButtonPressed(MouseButton button) const = 0;
 };
 
-// Интерфейс выполняет обработку событий. Перегруженный обработчик должен вернуть true, если событие обработано.
+// РРЅС‚РµСЂС„РµР№СЃ РІС‹РїРѕР»РЅСЏРµС‚ РѕР±СЂР°Р±РѕС‚РєСѓ СЃРѕР±С‹С‚РёР№. РџРµСЂРµРіСЂСѓР¶РµРЅРЅС‹Р№ РѕР±СЂР°Р±РѕС‚С‡РёРє РґРѕР»Р¶РµРЅ РІРµСЂРЅСѓС‚СЊ true, РµСЃР»Рё СЃРѕР±С‹С‚РёРµ РѕР±СЂР°Р±РѕС‚Р°РЅРѕ.
 class IInputListener
 {
 public:

@@ -44,6 +44,8 @@ public:
 			return Key::LetterE;
 		case Qt::Key_Q:
 			return Key::LetterQ;
+		case Qt::Key_Delete:
+			return Key::Delete;
 		}
 		return Key::Unknown;
 	}

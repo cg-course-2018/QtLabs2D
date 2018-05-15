@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
 
-project(ps-opengl-samples)
+project(QtLabs2D)
 
 find_package(glbinding REQUIRED)
 

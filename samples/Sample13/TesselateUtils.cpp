@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "TesselateUtils.h"
+#include <cmath>
 
 namespace
 {
@@ -9,38 +10,38 @@ constexpr float PI = 3.1415926f;
 glm::vec2 euclidean(float radius, float angleRadians)
 {
 	return {
-		radius * sin(angleRadians),
-		radius * cos(angleRadians)
+        radius * std::sin(angleRadians),
+        radius * std::cos(angleRadians)
 	};
 }
 
 } // namespace
 
-std::vector<VertexP2C4> tesselateConvexByCenter(const glm::vec2 &center, const std::vector<glm::vec2> &hullPoints, const glm::vec4 &fillColor)
+std::vector<glm::vec2> utils::tesselateConvexByCenter(const glm::vec2 &center, const std::vector<glm::vec2> &hullPoints)
 {
 	const size_t size = hullPoints.size();
-	std::vector<VertexP2C4> verticies;
+    std::vector<glm::vec2> verticies;
 	verticies.reserve(3u * size);
 	for (size_t pointIndex = 0; pointIndex < size; ++pointIndex)
 	{
 		// Добавляем три вершины треугольника в список.
 		const size_t nextPointIndex = (pointIndex + 1) % size;
-		verticies.push_back({ hullPoints.at(pointIndex), fillColor });
-		verticies.push_back({ hullPoints.at(nextPointIndex), fillColor });
-		verticies.push_back({ center, fillColor });
+        verticies.push_back(hullPoints.at(pointIndex));
+        verticies.push_back(hullPoints.at(nextPointIndex));
+        verticies.push_back(center);
 	}
 
 	return verticies;
 }
 
-std::vector<VertexP2C4> tesselateConvex(const std::vector<glm::vec2> &verticies, const glm::vec4 &fillColor)
+std::vector<glm::vec2> utils::tesselateConvex(const std::vector<glm::vec2> &verticies)
 {
 	// Центр выпуклого многоугольника - это среднее арифметическое его вершин
 	const glm::vec2 center = std::accumulate(verticies.begin(), verticies.end(), glm::vec2()) / float(verticies.size());
-	return tesselateConvexByCenter(center, verticies, fillColor);
+    return tesselateConvexByCenter(center, verticies);
 }
 
-std::vector<VertexP2C4> tesselateCircle(float radius, const glm::vec2 &center, const glm::vec4 &fillColor)
+std::vector<glm::vec2> utils::tesselateCircle(float radius, const glm::vec2 &center)
 {
 	assert(radius > 0);
 
@@ -58,5 +59,5 @@ std::vector<VertexP2C4> tesselateCircle(float radius, const glm::vec2 &center, c
 		points[pi] = center + euclidean(radius, angleRadians);
 	}
 
-	return tesselateConvexByCenter(center, points, fillColor);
+    return tesselateConvexByCenter(center, points);
 }

@@ -65,3 +65,10 @@ target_link_libraries(Sample12 PRIVATE
     libs::libglcore
     libs::libmath
     libs::libplatform)
+
+custom_add_example(Sample13 "Sample13")
+custom_distribute_assets("Sample13/res" "res13" Sample13)
+target_link_libraries(Sample13 PRIVATE
+    libs::libglcore
+    libs::libmath
+    libs::libplatform)
