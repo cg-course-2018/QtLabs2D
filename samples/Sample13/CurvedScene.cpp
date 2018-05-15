@@ -97,14 +97,14 @@ void CurvedScene::initializeObjects()
 	m_curveView.setPointsColor(red);
 	m_curveView.setLinesColor(yellow);
 	m_curveModel.setPrecision(kTesselatePrecision);
-	m_curveModel.setCurveMode(CurveMode::Lines);
-	m_curveController.initialize({ { -380, -20 }, { -200, 100 }, { 0, -100 }, { 200, 30 }, { 380, 100 } });
+	m_curveModel.setCurveMode(CurveMode::HermiteSplines);
+	m_curveController.initialize({ { 20, 280 }, { 200, 400 }, { 400, 200 }, { 600, 330 }, { 780, 400 } });
 }
 
 void CurvedScene::setProjectionMatrix(unsigned width, unsigned height)
 {
 	// Вычисляем матрицу ортографического проецирования
-	const glm::mat4 mat = glm::ortho(-0.5f * float(width), 0.5f * float(width), -0.5f * float(height), 0.5f * float(height));
+	const glm::mat4 mat = glm::ortho(0.f, float(width), float(height), 0.f);
 
 	// Передаём матрицу как константу в графической программе
 	glUniformMatrix4fv(m_program2d.getUniform(UniformProjectionMatrix), 1, GL_FALSE, glm::value_ptr(mat));

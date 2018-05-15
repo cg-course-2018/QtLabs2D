@@ -28,6 +28,7 @@ void CurveController::initialize(std::initializer_list<glm::vec2> controlPoints)
 
 bool CurveController::keyReleaseEvent(platform::IKeyEvent &event)
 {
+	bool handled = false;
     if (event.getKey() == platform::Key::Delete)
     {
 		// TODO: добавьте обрезание кривой при нажатии Delete
@@ -37,9 +38,19 @@ bool CurveController::keyReleaseEvent(platform::IKeyEvent &event)
         // Уменьшаем число точек кривой до минимально возможного.
 		m_curveModel.truncate(CurveModel::kMinControlPointCount);
 		updateView();
-        return false;
+		handled = true;
     }
-    return true;
+	else if (event.getKey() == platform::Key::Left)
+	{
+		// TODO: добавьте переключение режимов тесселяции кривой (CurveMode) в порядке возрастания.
+		handled = true;
+	}
+	else if (event.getKey() == platform::Key::Right)
+	{
+		// TODO: добавьте переключение режимов тесселяции кривой (CurveMode) в порядке убывания.
+		handled = true;
+	}
+	return handled;
 }
 
 bool CurveController::mousePressEvent(platform::IMouseEvent &event)
@@ -91,7 +102,7 @@ bool CurveController::mouseMoveEvent(platform::IMouseEvent &event)
 bool CurveController::mouseReleaseEvent(platform::IMouseEvent &event)
 {
     bool handled = false;
-    if (event.isButtonPressed(platform::MouseButton::Left))
+	if (!event.isButtonPressed(platform::MouseButton::Left))
     {
         // Если выполнялся drag&drop, завершаем его.
         if (m_draggedPointIndex)

@@ -6,7 +6,7 @@
 enum class CurveMode
 {
     Lines,
-    CubicSplines,
+	HermiteSplines,
     CatmullRomSplines,
 };
 
@@ -38,12 +38,9 @@ public:
     std::vector<glm::vec2> tesselate() const;
 
 private:
-    void tesselateFragment(
-        std::vector<glm::vec2> &points,
-        const glm::vec2 &v1,
-        const glm::vec2 &v2,
-        const glm::vec2 &v3,
-        const glm::vec2 &v4) const;
+	std::vector<glm::vec2> tesselateWithLines() const;
+	std::vector<glm::vec2> tesselateWithCatmulRomSplines() const;
+	std::vector<glm::vec2> tesselateWithHermiteSplines() const;
 
     CurveMode m_curveMode = CurveMode::Lines;
     unsigned m_precision = 1;

@@ -70,6 +70,7 @@ public:
 
 	bool isButtonPressed(MouseButton button) const final
 	{
+		const Qt::MouseButtons buttons = m_event->buttons();
 		Qt::MouseButtons mask = {};
 		switch (button)
 		{
@@ -83,7 +84,7 @@ public:
 			mask = Qt::MiddleButton;
 			break;
 		}
-		return ((mask & m_event->buttons()) != 0);
+		return ((mask & buttons) != 0);
 	}
 
 private:

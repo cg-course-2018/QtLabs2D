@@ -6,17 +6,17 @@
 
 size_t CurveModel::getControlPointCount() const
 {
-    return m_controlPoints.size();
+	return m_controlPoints.size();
 }
 
 glm::vec2 CurveModel::getControlPoint(size_t i) const
 {
-    return m_controlPoints.at(i);
+	return m_controlPoints.at(i);
 }
 
 void CurveModel::setControlPoint(size_t i, const glm::vec2 &value)
 {
-    m_controlPoints.at(i) = value;
+	m_controlPoints.at(i) = value;
 }
 
 void CurveModel::addControlPoint(const glm::vec2 &point)
@@ -31,9 +31,9 @@ std::vector<glm::vec2> CurveModel::getControlPoints() const
 
 void CurveModel::truncate(size_t size)
 {
-    if (m_controlPoints.size() > size)
-    {
-        m_controlPoints.resize(size);
+	if (m_controlPoints.size() > size)
+	{
+		m_controlPoints.resize(size);
 	}
 }
 
@@ -63,62 +63,82 @@ void CurveModel::setPrecision(unsigned precision)
 
 std::vector<glm::vec2> CurveModel::tesselate() const
 {
-    if (m_controlPoints.size() < kMinControlPointCount)
-    {
-		throw std::logic_error("cannot tesselate: number of control points less than 4");
-    }
-
-    // Перебираем четвёрки контрольных точек, для крайних фрагментов используем
-    //  крайнюю точку дважды.
-    std::vector<glm::vec2> points;
-	for (size_t i = 1; i + 2 < m_controlPoints.size(); ++i)
-    {
-		const glm::vec2 v1 = m_controlPoints[i - 1];
-        const glm::vec2 v2 = m_controlPoints[i];
-        const glm::vec2 v3 = m_controlPoints[i + 1];
-		const glm::vec2 v4 = m_controlPoints[i + 2];
-        tesselateFragment(points, v1, v2, v3, v4);
-    }
-    return points;
-}
-
-void CurveModel::tesselateFragment(
-    std::vector<glm::vec2> &points,
-    const glm::vec2 &v1,
-    const glm::vec2 &v2,
-    const glm::vec2 &v3,
-    const glm::vec2 &v4) const
-{
 	// TODO: удалите у класса свойство precision, вместо него добавьте расчёт числа необходимых
 	//  сегментов на основе длины фрагмента кривой
 	//   - длина фрагмента кривой - это distance(v2, v3)
 	//   - число сегментов можно получить, округлив длину до целого
+	//  Сделать это нужно для двух методов
+	//   - tesselateWithCatmulRomSplines
+	//   - tesselateWithHermiteSplines
 
-    // Выбираем функцию генерации вершины
-    std::function<glm::vec2(float)> generatePoint;
-    switch (m_curveMode)
-    {
-    case CurveMode::Lines:
-        generatePoint = [&](float mixFactor) {
-            return glm::mix(v2, v3, mixFactor);
-        };
-        break;
-    case CurveMode::CubicSplines:
-        generatePoint = [&](float mixFactor) {
-            return glm::cubic(v1, v2, v3, v4, mixFactor);
-        };
-        break;
-    case CurveMode::CatmullRomSplines:
-        generatePoint = [&](float mixFactor) {
-            return glm::catmullRom(v1, v2, v3, v4, mixFactor);
-        };
-        break;
-    }
+	if (m_controlPoints.size() < kMinControlPointCount)
+	{
+		throw std::logic_error("cannot tesselate: number of control points less than 4");
+	}
 
-    for (unsigned i = 0; i < m_precision; ++i)
-    {
-		const float mixFactor = 1 * float(i) / float(m_precision);
-        const glm::vec2 point = generatePoint(mixFactor);
-        points.push_back(point);
-    }
+	switch (m_curveMode)
+	{
+	case CurveMode::Lines:
+		return tesselateWithLines();
+	case CurveMode::HermiteSplines:
+		return tesselateWithHermiteSplines();
+	case CurveMode::CatmullRomSplines:
+		return tesselateWithCatmulRomSplines();
+	}
+
+	throw std::logic_error("unknown curve mode");
+}
+
+std::vector<glm::vec2> CurveModel::tesselateWithLines() const
+{
+	return m_controlPoints;
+}
+
+std::vector<glm::vec2> CurveModel::tesselateWithCatmulRomSplines() const
+{
+	// Перебираем четвёрки контрольных точек, для крайних фрагментов используем
+	//  крайнюю точку дважды.
+	std::vector<glm::vec2> points;
+	for (size_t ci = 0; ci + 2 <= m_controlPoints.size(); ++ci)
+	{
+		const glm::vec2 v1 = (ci == 0) ? m_controlPoints[0] : m_controlPoints[ci - 1];
+		const glm::vec2 v2 = m_controlPoints[ci];
+		const glm::vec2 v3 = m_controlPoints[ci + 1];
+		const glm::vec2 v4 = (ci + 2 == m_controlPoints.size()) ? m_controlPoints[ci + 1] : m_controlPoints[ci + 2];
+
+		// Для каждой четвёрки строим серию сегментов линии в зависимости от заданного числа делений.
+		for (unsigned si = 0; si <= m_precision; ++si)
+		{
+			const float mixFactor = float(si) / float(m_precision);
+			const glm::vec2 point = glm::catmullRom(v1, v2, v3, v4, mixFactor);
+			points.push_back(point);
+		}
+	}
+	return points;
+}
+
+std::vector<glm::vec2> CurveModel::tesselateWithHermiteSplines() const
+{
+
+	// Перебираем четвёрки контрольных точек, для крайних фрагментов используем
+	//  крайнюю точку дважды.
+	std::vector<glm::vec2> points;
+	for (size_t ci = 0; ci + 2 <= m_controlPoints.size(); ++ci)
+	{
+		// Ниже t1, t2 - тангенсоиды, т.е. касательные лучи к кривой в точках v1, v2.
+		// Тангенсоиду можно вычислить как разность двух контрольных точек.
+		const glm::vec2 v1 = m_controlPoints[ci];
+		const glm::vec2 v2 = m_controlPoints[ci + 1];
+		const glm::vec2 t1 = (ci == 0) ? (v2 - v1) : (v1 - m_controlPoints[ci - 1]);
+		const glm::vec2 t2 = (ci + 2 == m_controlPoints.size()) ? (v2 - v1) : (v2 - m_controlPoints[ci + 1]);
+
+		// Для каждой четвёрки строим серию сегментов линии в зависимости от заданного числа делений.
+		for (unsigned si = 0; si <= m_precision; ++si)
+		{
+			const float mixFactor = float(si) / float(m_precision);
+			const glm::vec2 point = glm::hermite(v1, t1, v2, t2, mixFactor);
+			points.push_back(point);
+		}
+	}
+	return points;
 }
