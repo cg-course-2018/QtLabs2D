@@ -16,8 +16,18 @@ void CurveView::setControlPoints(const std::vector<glm::vec2> &points)
 	//    каждого из кругов.
 	// 3) Используте метод insert(...) контейнера std::vector<> для конкатенации массивов вершин.
 
-	m_controlPoints = glcore::createStaticVBO(GL_ARRAY_BUFFER, points);
-	m_controlPointsCount = static_cast<gl::GLsizei>(points.size());
+	std::vector<glm::vec2> vertexes; // = utils::tesselateCircle(1, &points);
+	for (auto v : points)
+	{
+		std::vector<glm::vec2> tmp = utils::tesselateCircle(m_pointRadius, v);
+		vertexes.insert(vertexes.end(), tmp.begin(), tmp.end());
+	}
+
+	//m_controlPoints = glcore::createStaticVBO(GL_ARRAY_BUFFER, points);
+	m_controlPoints = glcore::createStaticVBO(GL_ARRAY_BUFFER, vertexes);
+
+	//m_controlPointsCount = static_cast<gl::GLsizei>(points.size());
+	m_controlPointsCount = static_cast<gl::GLsizei>(vertexes.size());
 }
 
 void CurveView::setCurvePoints(const std::vector<glm::vec2> &points)
@@ -77,5 +87,5 @@ void CurveView::draw(IShaderProgram &program)
 	glUniform4fv(colorLocation, 1, glm::value_ptr(m_pointsColor));
 	glEnableVertexAttribArray(positionLocation);
 	glVertexAttribPointer(positionLocation, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), nullptr);
-	glDrawArrays(GL_POINTS, 0, m_controlPointsCount);
+	glDrawArrays(GL_TRIANGLES, 0, m_controlPointsCount);
 }

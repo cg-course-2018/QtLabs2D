@@ -38,9 +38,9 @@ public:
 	std::vector<glm::vec2> tesselate() const;
 
 private:
-	std::vector<glm::vec2> tesselateWithLines() const;
-	std::vector<glm::vec2> tesselateWithCatmulRomSplines() const;
-	std::vector<glm::vec2> tesselateWithHermiteSplines() const;
+	std::vector<glm::vec2> tesselateWithLines(const std::vector<glm::vec2> &points) const;
+	std::vector<glm::vec2> tesselateWithCatmulRomSplines(const std::vector<glm::vec2> &points) const;
+	std::vector<glm::vec2> tesselateWithHermiteSplines(const std::vector<glm::vec2> &points) const;
 
 	CurveMode m_curveMode = CurveMode::Lines;
 	unsigned m_precision = 1;

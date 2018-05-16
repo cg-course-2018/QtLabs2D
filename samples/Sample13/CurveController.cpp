@@ -36,12 +36,17 @@ bool CurveController::keyReleaseEvent(platform::IKeyEvent &event)
 		//  1) для обрезания используйте метод truncate(...) у модели
 		//  2) в качестве нового числа контрольных точек передайте CurveModel::kMinControlPointCount
 
+		m_curveModel.truncate(CurveModel::kMinControlPointCount);
+
 		updateView();
 		handled = true;
 	}
 	else if (event.getKey() == platform::Key::Left)
 	{
 		// TODO: добавьте переключение режимов тесселяции кривой (CurveMode) в порядке возрастания.
+		int mode = static_cast<int>(m_curveModel.getCurveMode());
+		mode = (++mode) % 3;
+		m_curveModel.setCurveMode(static_cast<CurveMode>(mode));
 
 		updateView();
 		handled = true;
@@ -49,6 +54,11 @@ bool CurveController::keyReleaseEvent(platform::IKeyEvent &event)
 	else if (event.getKey() == platform::Key::Right)
 	{
 		// TODO: добавьте переключение режимов тесселяции кривой (CurveMode) в порядке убывания.
+		int mode = static_cast<int>(m_curveModel.getCurveMode());
+
+		mode = (--mode < 0) ? 2 : mode;
+
+		m_curveModel.setCurveMode(static_cast<CurveMode>(mode));
 
 		updateView();
 		handled = true;
