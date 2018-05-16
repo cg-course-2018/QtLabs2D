@@ -32,6 +32,7 @@ void CurvedScene::update(float deltaSeconds)
 
 void CurvedScene::redraw(unsigned width, unsigned height)
 {
+	glClearColor(1, 1, 1, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
@@ -91,14 +92,14 @@ void CurvedScene::initializeShaders()
 void CurvedScene::initializeObjects()
 {
 	constexpr unsigned kTesselatePrecision = 100;
-	const glm::vec4 red{ 1, 0, 0, 1 };
-	const glm::vec4 yellow{ 1, 1, 0, 1 };
+	const glm::vec4 red{ 0.9, 0, 0, 1 };
+	const glm::vec4 blue{ 0.05, 0.05, 0.5, 1 };
 
 	m_curveView.setPointRadius(10);
 	m_curveView.setPointsColor(red);
-	m_curveView.setLinesColor(yellow);
+	m_curveView.setLinesColor(blue);
 	m_curveModel.setPrecision(kTesselatePrecision);
-	m_curveModel.setCurveMode(CurveMode::HermiteSplines);
+	m_curveModel.setCurveMode(CurveMode::CatmullRomSplines);
 	m_curveController.initialize({ { 20, 280 }, { 200, 400 }, { 400, 200 }, { 600, 330 }, { 780, 400 } });
 }
 
