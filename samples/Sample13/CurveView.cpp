@@ -10,18 +10,14 @@ void CurveView::setControlPoints(const std::vector<glm::vec2> &points)
 {
 	// TODO: реализуйте рисование каждой контрольной точки отдельной фигурой - кругом.
 	// Для этого:
-	// 1) Используйте функцию utils::tesselateCircle(...) для получения каждого из кругов.
-	// 2) Используте метод insert(...) контейнера std::vector<> для конкатенации массивов вершин.
+	// 1) создайте новый vector<vec2>, его можно назвать, например, vertexes - он будет хранить
+	//    все вершины всех треугольников. Инициализируйте VBO с помощью этого массива.
+	// 2) Используйте функцию utils::tesselateCircle(...) для получения массива точек
+	//    каждого из кругов.
+	// 3) Используте метод insert(...) контейнера std::vector<> для конкатенации массивов вершин.
 
-	std::vector<glm::vec2> vertexes;
-	for (const glm::vec2 &point : points)
-	{
-		std::vector<glm::vec2> shapeVertexes = utils::tesselateCircle(m_pointRadius, point);
-		vertexes.insert(vertexes.end(), shapeVertexes.begin(), shapeVertexes.end());
-	}
-
-	m_controlPoints = glcore::createStaticVBO(GL_ARRAY_BUFFER, vertexes);
-	m_controlPointsCount = static_cast<gl::GLsizei>(vertexes.size());
+	m_controlPoints = glcore::createStaticVBO(GL_ARRAY_BUFFER, points);
+	m_controlPointsCount = static_cast<gl::GLsizei>(points.size());
 }
 
 void CurveView::setCurvePoints(const std::vector<glm::vec2> &points)
@@ -76,9 +72,10 @@ void CurveView::draw(IShaderProgram &program)
 	// Для этого:
 	//  1) храните m_controlPoints вершины фигур (кругов), а не точки
 	//  2) вызывайте glDrawArrays с примитивом GL_TRIANGLES
+	glPointSize(2 * m_pointRadius);
 	glBindBuffer(GL_ARRAY_BUFFER, m_controlPoints);
 	glUniform4fv(colorLocation, 1, glm::value_ptr(m_pointsColor));
 	glEnableVertexAttribArray(positionLocation);
 	glVertexAttribPointer(positionLocation, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), nullptr);
-	glDrawArrays(GL_TRIANGLES, 0, m_controlPointsCount);
+	glDrawArrays(GL_POINTS, 0, m_controlPointsCount);
 }

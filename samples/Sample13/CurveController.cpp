@@ -36,19 +36,21 @@ bool CurveController::keyReleaseEvent(platform::IKeyEvent &event)
 		//  1) для обрезания используйте метод truncate(...) у модели
 		//  2) в качестве нового числа контрольных точек передайте CurveModel::kMinControlPointCount
 
-		// Уменьшаем число точек кривой до минимально возможного.
-		m_curveModel.truncate(CurveModel::kMinControlPointCount);
 		updateView();
 		handled = true;
 	}
 	else if (event.getKey() == platform::Key::Left)
 	{
 		// TODO: добавьте переключение режимов тесселяции кривой (CurveMode) в порядке возрастания.
+
+		updateView();
 		handled = true;
 	}
 	else if (event.getKey() == platform::Key::Right)
 	{
 		// TODO: добавьте переключение режимов тесселяции кривой (CurveMode) в порядке убывания.
+
+		updateView();
 		handled = true;
 	}
 	return handled;
