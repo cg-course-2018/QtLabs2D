@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "CurvedScene.h"
 #include "libplatform/ResourceLoader.h"
 #include <glbinding/gl32core/gl.h>

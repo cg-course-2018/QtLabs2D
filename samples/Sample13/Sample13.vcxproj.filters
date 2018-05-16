@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="CurveView.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="CurveController.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvedScene.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="CurveModel.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="TesselateUtils.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderProgram.cpp">
+      <Filter>shading</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Enumerations.h">
+      <Filter>shading</Filter>
+    </ClInclude>
+    <ClInclude Include="IShaderProgram.h">
+      <Filter>shading</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderProgram.h">
+      <Filter>shading</Filter>
+    </ClInclude>
+    <ClInclude Include="CurveController.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvedScene.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="CurveModel.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="CurveView.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="TesselateUtils.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>main</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="scene">
+      <UniqueIdentifier>{80468b9f-871c-40a7-a926-fab0f1cc6f69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="main">
+      <UniqueIdentifier>{b3a0d55c-fa09-4fdf-8f32-5dac420d97c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res">
+      <UniqueIdentifier>{95cad7d6-57b0-40ea-be88-dc334d38f355}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shading">
+      <UniqueIdentifier>{2ee0d9b0-7367-4c2b-8784-597e4521d658}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="copy_res.bat">
+      <Filter>main</Filter>
+    </None>
+    <None Include="res\draw2d.frag">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\draw2d.vert">
+      <Filter>res</Filter>
+    </None>
+  </ItemGroup>
+</Project>

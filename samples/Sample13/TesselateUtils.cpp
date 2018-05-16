@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "TesselateUtils.h"
 #include <cmath>
+#include <numeric>
 
 namespace
 {
@@ -10,8 +11,8 @@ constexpr float PI = 3.1415926f;
 glm::vec2 euclidean(float radius, float angleRadians)
 {
 	return {
-        radius * std::sin(angleRadians),
-        radius * std::cos(angleRadians)
+		radius * std::sin(angleRadians),
+		radius * std::cos(angleRadians)
 	};
 }
 
@@ -20,15 +21,15 @@ glm::vec2 euclidean(float radius, float angleRadians)
 std::vector<glm::vec2> utils::tesselateConvexByCenter(const glm::vec2 &center, const std::vector<glm::vec2> &hullPoints)
 {
 	const size_t size = hullPoints.size();
-    std::vector<glm::vec2> verticies;
+	std::vector<glm::vec2> verticies;
 	verticies.reserve(3u * size);
 	for (size_t pointIndex = 0; pointIndex < size; ++pointIndex)
 	{
 		// Добавляем три вершины треугольника в список.
 		const size_t nextPointIndex = (pointIndex + 1) % size;
-        verticies.push_back(hullPoints.at(pointIndex));
-        verticies.push_back(hullPoints.at(nextPointIndex));
-        verticies.push_back(center);
+		verticies.push_back(hullPoints.at(pointIndex));
+		verticies.push_back(hullPoints.at(nextPointIndex));
+		verticies.push_back(center);
 	}
 
 	return verticies;
@@ -38,7 +39,7 @@ std::vector<glm::vec2> utils::tesselateConvex(const std::vector<glm::vec2> &vert
 {
 	// Центр выпуклого многоугольника - это среднее арифметическое его вершин
 	const glm::vec2 center = std::accumulate(verticies.begin(), verticies.end(), glm::vec2()) / float(verticies.size());
-    return tesselateConvexByCenter(center, verticies);
+	return tesselateConvexByCenter(center, verticies);
 }
 
 std::vector<glm::vec2> utils::tesselateCircle(float radius, const glm::vec2 &center)
@@ -59,5 +60,5 @@ std::vector<glm::vec2> utils::tesselateCircle(float radius, const glm::vec2 &cen
 		points[pi] = center + euclidean(radius, angleRadians);
 	}
 
-    return tesselateConvexByCenter(center, points);
+	return tesselateConvexByCenter(center, points);
 }

@@ -16,18 +16,18 @@ public:
 
 	// Устанавливает цвет, используемый при рисовании контрольных точек.
 	glm::vec4 getPointsColor() const;
-	void setPointsColor(const glm::vec4& rgba);
+	void setPointsColor(const glm::vec4 &rgba);
 
 	// Устанавливает цвет, используемый при рисовании линии кривой.
 	glm::vec4 getLinesColor() const;
-	void setLinesColor(const glm::vec4& rgba);
+	void setLinesColor(const glm::vec4 &rgba);
 
 	// PointRadius - радиус, используемый при рисовании точки.
 	float getPointRadius() const;
 	void setPointRadius(float radius);
 
 	// Рисует кривую с текущими параметрами.
-	void draw(IShaderProgram& program);
+	void draw(IShaderProgram &program);
 
 private:
 	glcore::VBO m_controlPoints;

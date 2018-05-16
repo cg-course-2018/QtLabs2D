@@ -3,7 +3,7 @@ echo Copying resources...
 
 set ProjectDir=%1
 set BuildDir=%2
-set OutDir=%BuildDir%res12
+set OutDir=%BuildDir%res13
 
 if not exist "%OutDir%" mkdir "%OutDir%"
 echo D | xcopy /Y "%ProjectDir%res\*.frag" "%OutDir%"

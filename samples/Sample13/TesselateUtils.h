@@ -20,4 +20,4 @@ std::vector<glm::vec2> tesselateConvex(const std::vector<glm::vec2> &verticies);
 //  возвращает массив с вершинами треугольников.
 std::vector<glm::vec2> tesselateCircle(float radius, const glm::vec2 &center);
 
-}
+} // namespace utils

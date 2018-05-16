@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "CurveModel.h"
 #include <algorithm>
 #include <functional>

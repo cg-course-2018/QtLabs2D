@@ -1,11 +1,12 @@
+#include "stdafx.h"
 #include "CurveView.h"
+#include "TesselateUtils.h"
 #include <glbinding/gl33core/gl.h>
 #include <glm/gtc/type_ptr.hpp>
-#include "TesselateUtils.h"
 
 using namespace gl33core;
 
-void CurveView::setControlPoints(const std::vector<glm::vec2>& points)
+void CurveView::setControlPoints(const std::vector<glm::vec2> &points)
 {
 	// TODO: реализуйте рисование каждой контрольной точки отдельной фигурой - кругом.
 	// Для этого:
@@ -13,7 +14,7 @@ void CurveView::setControlPoints(const std::vector<glm::vec2>& points)
 	// 2) Используте метод insert(...) контейнера std::vector<> для конкатенации массивов вершин.
 
 	std::vector<glm::vec2> vertexes;
-	for (const glm::vec2& point : points)
+	for (const glm::vec2 &point : points)
 	{
 		std::vector<glm::vec2> shapeVertexes = utils::tesselateCircle(m_pointRadius, point);
 		vertexes.insert(vertexes.end(), shapeVertexes.begin(), shapeVertexes.end());
@@ -23,7 +24,7 @@ void CurveView::setControlPoints(const std::vector<glm::vec2>& points)
 	m_controlPointsCount = static_cast<gl::GLsizei>(vertexes.size());
 }
 
-void CurveView::setCurvePoints(const std::vector<glm::vec2>& points)
+void CurveView::setCurvePoints(const std::vector<glm::vec2> &points)
 {
 	m_curvePoints = glcore::createStaticVBO(GL_ARRAY_BUFFER, points);
 	m_curvePointsCount = static_cast<gl::GLsizei>(points.size());
@@ -34,7 +35,7 @@ glm::vec4 CurveView::getPointsColor() const
 	return m_pointsColor;
 }
 
-void CurveView::setPointsColor(const glm::vec4& rgba)
+void CurveView::setPointsColor(const glm::vec4 &rgba)
 {
 	m_pointsColor = rgba;
 }
@@ -44,7 +45,7 @@ glm::vec4 CurveView::getLinesColor() const
 	return m_linesColor;
 }
 
-void CurveView::setLinesColor(const glm::vec4& rgba)
+void CurveView::setLinesColor(const glm::vec4 &rgba)
 {
 	m_linesColor = rgba;
 }
@@ -59,7 +60,7 @@ void CurveView::setPointRadius(float radius)
 	m_pointRadius = radius;
 }
 
-void CurveView::draw(IShaderProgram& program)
+void CurveView::draw(IShaderProgram &program)
 {
 	// Рисуем точки.
 	const int colorLocation = program.getUniform(UniformCurrentColor);
