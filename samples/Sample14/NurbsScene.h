@@ -39,7 +39,7 @@ private:
 	glcore::VAO m_vao;
 	SceneGraphNodePtr m_teapotNode;
     ShaderProgram m_particlesProgram;
-    LightSource m_sunlight;
+	LightSource m_sunlight;
 };
 
 void ShowGemeOverMessage();

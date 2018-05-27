@@ -2,9 +2,9 @@
 #include "NurbsScene.h"
 #include "CameraController.h"
 #include "FlyingCamera.h"
-#include "TextureUtils.h"
-#include "TesselateUtils.h"
 #include "MeshP3N3.h"
+#include "TesselateUtils.h"
+#include "TextureUtils.h"
 #include <algorithm>
 #include <glbinding/gl32core/gl.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -22,9 +22,11 @@ namespace
 //  - положение камеры
 //  - положение цели, на которую направлена камера
 //  - направление "вверх" для камеры
-const glm::vec3 CAMERA_POSITION = { -15, 0, -15 };
-const glm::vec3 CAMERA_TARGET = { 0, 0, 0 };
+const glm::vec3 CAMERA_POSITION = { 0, 12, -15 };
+const glm::vec3 CAMERA_TARGET = { 0, 4, 0 };
 const glm::vec3 CAMERA_UP = { 0, 1, 0 };
+const float SPHERE_ROTATE_DEGREES_PER_SECOND = 90.f;
+
 } // namespace
 
 NurbsScene::NurbsScene()
@@ -63,6 +65,10 @@ void NurbsScene::update(float deltaSeconds)
 	{
 		m_teapotNode->update(deltaSeconds);
 	}
+
+	Transform3D transform = m_teapotNode->getLocalTransform();
+	transform.rotateBy(glm::angleAxis(glm::radians(SPHERE_ROTATE_DEGREES_PER_SECOND * deltaSeconds), glm::vec3{0, 0, 1}));
+	m_teapotNode->setLocalTransform(transform);
 }
 
 void NurbsScene::redraw(unsigned width, unsigned height)
@@ -165,18 +171,15 @@ void NurbsScene::initializeObjects()
 
 	// TODO: remove debug code
 
-#if 0
-	const MeshDataP3N3 data = utils::tesselateSphere(sphereMat, 20, 20);
-#else
 	const MeshDataP3N3 data = utils::tesselateTeapot(sphereMat, 20, 20);
-#endif
 
 	auto mesh = std::make_shared<MeshP3N3>();
 	mesh->init(data);
 	m_teapotNode = mesh;
 
 	Transform3D teapotTransform;
-	teapotTransform.scaleBy(6.f);
+	teapotTransform.scaleBy(3.0f);
+	teapotTransform.rotateBy(glm::angleAxis(glm::radians(-90.f), glm::vec3{ 1, 0, 0 }));
 	m_teapotNode->setLocalTransform(teapotTransform);
 }
 
