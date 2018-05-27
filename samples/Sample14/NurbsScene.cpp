@@ -3,6 +3,8 @@
 #include "CameraController.h"
 #include "FlyingCamera.h"
 #include "TextureUtils.h"
+#include "TesselateUtils.h"
+#include "MeshP3N3.h"
 #include <algorithm>
 #include <glbinding/gl32core/gl.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -132,7 +134,7 @@ void NurbsScene::initializePhongProgram()
 		{ UniformWorldMatrix, "u_world_matrix" },
 		{ UniformViewMatrix, "u_view_matrix" },
 		{ UniformProjectionMatrix, "u_projection_matrix" },
-		{ UniformNormalWorldMatrix, "u_viewer_position" },
+		{ UniformNormalWorldMatrix, "u_normal_world_matrix" },
 		{ UniformViewerPosition, "u_viewer_position" },
 		{ UniformLight0Position, "u_light0.position" },
 		{ UniformLight0Diffuse, "u_light0.diffuse" },
@@ -155,6 +157,27 @@ void NurbsScene::initializeLights()
 
 void NurbsScene::initializeObjects()
 {
+	const Material sphereMat{
+		glm::vec4{ 0.4, 0.4, 0.4, 1.0 },
+		glm::vec4{ 0.5, 0.5, 1.0, 1.0 },
+		glm::vec4{ 0.5, 0.5, 1.0, 1.0 }
+	};
+
+	// TODO: remove debug code
+
+#if 0
+	const MeshDataP3N3 data = utils::tesselateSphere(sphereMat, 20, 20);
+#else
+	const MeshDataP3N3 data = utils::tesselateTeapot(sphereMat, 20, 20);
+#endif
+
+	auto mesh = std::make_shared<MeshP3N3>();
+	mesh->init(data);
+	m_teapotNode = mesh;
+
+	Transform3D teapotTransform;
+	teapotTransform.scaleBy(6.f);
+	m_teapotNode->setLocalTransform(teapotTransform);
 }
 
 void NurbsScene::setProjectionMatrix(unsigned width, unsigned height)
@@ -163,7 +186,7 @@ void NurbsScene::setProjectionMatrix(unsigned width, unsigned height)
 	// Затем передаём матрицу как константу в графической программе.
 	const float fieldOfView = glm::radians(70.f);
 	const float aspect = float(width) / float(height);
-	const float zNear = 0.05f;
+	const float zNear = 0.5f;
 	const float zFar = 50.f;
 	const glm::mat4 mat = glm::perspective(fieldOfView, aspect, zNear, zFar);
 

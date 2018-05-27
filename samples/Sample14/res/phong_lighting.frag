@@ -65,6 +65,7 @@ void main()
 
     vec4 diffuse_intensity = u_material.diffuse * (u_light0.diffuse * light0_intensity.diffuse + u_light1.diffuse * light1_intensity.diffuse);
     vec4 specular_intensity = u_material.specular * (u_light0.specular * light0_intensity.specular + u_light1.specular * light1_intensity.specular);
+    vec4 shaded_color = diffuse_intensity + specular_intensity + u_material.emission;
 
-    out_fragColor = diffuse_intensity + specular_intensity + u_material.emission;
+    out_fragColor = vec4(shaded_color.x, shaded_color.y, shaded_color.z, 1);
 }

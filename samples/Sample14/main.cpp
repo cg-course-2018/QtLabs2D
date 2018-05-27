@@ -12,6 +12,7 @@ int main(int argc, char *argv[])
 	platform::CatchAndDisplay([&] {
 		// Окно размером 800x600, используем OpenGL Core Profile и multisampling со значением 8
 		QSurfaceFormat format;
+		format.setDepthBufferSize(16);
 		format.setVersion(3, 3);
 		format.setSamples(8);
 		format.setProfile(QSurfaceFormat::CoreProfile);
