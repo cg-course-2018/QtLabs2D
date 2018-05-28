@@ -102,7 +102,7 @@ void calculateTriangleStripIndicies(MeshDataP3N3 &data, unsigned columnCount, un
 	}
 }
 
-vec3 GetTriangleNormal(vec3 a, vec3 b, vec3 c)
+vec3 getTriangleNormal(vec3 a, vec3 b, vec3 c)
 {
 	vec3 perp = cross(b - a, c - a);
 	// Если длина вектора равна 0, то нормализовать его невозможно - возвращаем
@@ -226,8 +226,8 @@ MeshDataP3N3 utils::tesselateTeapot(const Material &material, unsigned latitudeD
 				//  с заранее расчитанными нормалями целиком.
 
 				// Вычисляем нормали к двум треугольникам ABC и CDA.
-				const vec3 normalABC = GetTriangleNormal(pointA, pointB, pointC);
-				const vec3 normalCDA = GetTriangleNormal(pointC, pointD, pointA);
+				const vec3 normalABC = getTriangleNormal(pointA, pointB, pointC);
+				const vec3 normalCDA = getTriangleNormal(pointC, pointD, pointA);
 
 				// Формируем треугольник ABC
 				result.vertexes.push_back(VertexP3N3{ pointA, normalABC });
