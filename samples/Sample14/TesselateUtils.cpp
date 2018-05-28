@@ -181,10 +181,67 @@ MeshDataP3N3 utils::tesselateTeapot(const Material &material, unsigned latitudeD
 	}
 
 	// TODO: (cg14.3) замените тип возвращаемого значения анонимной функции на "VertexP3N3&".
-	const auto getPoint = [&](unsigned patchIndex, unsigned ru, unsigned rv) -> glm::vec3 & {
+	const auto getPoint = [&](unsigned patchIndex, unsigned ru, unsigned rv) -> VertexP3N3 & {
 		size_t index = patchIndex * latitudeDivisions * longitudeDivisions + ru * longitudeDivisions + rv;
-		return points.at(index).position;
+		return points.at(index);
 	};
+
+	// Normals
+	for (size_t p = 0; p < std::size(kTeapotPatches); p++)
+	{
+		/*vec3 controlPonts[kTeapotPatchOrder + 1][kTeapotPatchOrder + 1];
+		buildControlPoints(p, controlPonts);*/
+		for (size_t ru = 0; ru <= latitudeDivisions - 2; ru++)
+		{
+			//float u = 1.0f * ru / (latitudeDivisions - 1);
+			for (size_t rv = 0; rv <= longitudeDivisions - 2; rv++)
+			{
+				VertexP3N3 &pA = getPoint(p, ru, rv);
+				VertexP3N3 pB = getPoint(p, ru, rv + 1);
+				VertexP3N3 pC = getPoint(p, ru + 1, rv);
+				pA.normal = getTriangleNormal(pA.position, pB.position, pC.position);
+			}
+		}
+		{
+			const size_t ru = latitudeDivisions - 2;
+			for (size_t rv = 0; rv <= longitudeDivisions - 2; rv++)
+			{
+				VertexP3N3 pA = getPoint(p, ru, rv);
+				VertexP3N3 pB = getPoint(p, ru, rv + 1);
+				VertexP3N3 &pC = getPoint(p, ru + 1, rv);
+				pC.normal = getTriangleNormal(pA.position, pB.position, pC.position);
+			}
+		}
+
+		{
+			const size_t rv = longitudeDivisions - 2;
+			for (size_t ru = 0; ru <= latitudeDivisions - 2; ru++)
+			{
+				VertexP3N3 pA = getPoint(p, ru, rv);
+				VertexP3N3 &pB = getPoint(p, ru, rv + 1);
+				VertexP3N3 pC = getPoint(p, ru + 1, rv);
+				pB.normal = getTriangleNormal(pA.position, pB.position, pC.position);
+			}
+		}
+
+		{
+			const size_t ru = latitudeDivisions - 2;
+			const size_t rv = longitudeDivisions - 2;
+
+			VertexP3N3 pA = getPoint(p, ru, rv);
+			VertexP3N3 pB = getPoint(p, ru, rv + 1);
+			VertexP3N3 pC = getPoint(p, ru + 1, rv);
+
+			VertexP3N3 &target = getPoint(p, ru + 1, rv + 1);
+			target.normal = getTriangleNormal(pA.position, pB.position, pC.position);
+		}
+	}
+
+	//// TODO: (cg14.3) замените тип возвращаемого значения анонимной функции на "VertexP3N3&".
+	//const auto getPoint = [&](unsigned patchIndex, unsigned ru, unsigned rv) -> glm::VertexP3N3 & {
+	//	size_t index = patchIndex * latitudeDivisions * longitudeDivisions + ru * longitudeDivisions + rv;
+	//	return points.at(index).position;
+	//};
 
 	// TODO: (cg14.3) добавьте цикл тройной вложенности, подобный циклу ниже, для расчёта нормалей
 	// Добавьте отдельную обработку точек в случаях:
@@ -217,27 +274,37 @@ MeshDataP3N3 utils::tesselateTeapot(const Material &material, unsigned latitudeD
 				// На каждой итерации мы добавляем два треугольника.
 
 				// Выделяем точки фрагмента из массива "points".
-				const vec3 pointA = getPoint(p, ru, rv);
-				const vec3 pointB = getPoint(p, ru, rv + 1);
-				const vec3 pointC = getPoint(p, ru + 1, rv + 1);
-				const vec3 pointD = getPoint(p, ru + 1, rv);
+				const VertexP3N3 pointA = getPoint(p, ru, rv);
+				const VertexP3N3 pointB = getPoint(p, ru, rv + 1);
+				const VertexP3N3 pointC = getPoint(p, ru + 1, rv + 1);
+				const VertexP3N3 pointD = getPoint(p, ru + 1, rv);
 
 				// TODO: (cg14.3) замените расчёт нормалей по треугольнику на копирование вершин
 				//  с заранее расчитанными нормалями целиком.
 
 				// Вычисляем нормали к двум треугольникам ABC и CDA.
-				const vec3 normalABC = getTriangleNormal(pointA, pointB, pointC);
-				const vec3 normalCDA = getTriangleNormal(pointC, pointD, pointA);
+				//const vec3 normalABC = getTriangleNormal(pointA, pointB, pointC);
+				//const vec3 normalCDA = getTriangleNormal(pointC, pointD, pointA);
+
+				//// Формируем треугольник ABC
+				//result.vertexes.push_back(VertexP3N3{ pointA, normalABC });
+				//result.vertexes.push_back(VertexP3N3{ pointB, normalABC });
+				//result.vertexes.push_back(VertexP3N3{ pointC, normalABC });
+
+				//// Формируем треугольник CDA
+				//result.vertexes.push_back(VertexP3N3{ pointC, normalCDA });
+				//result.vertexes.push_back(VertexP3N3{ pointD, normalCDA });
+				//result.vertexes.push_back(VertexP3N3{ pointA, normalCDA });
 
 				// Формируем треугольник ABC
-				result.vertexes.push_back(VertexP3N3{ pointA, normalABC });
-				result.vertexes.push_back(VertexP3N3{ pointB, normalABC });
-				result.vertexes.push_back(VertexP3N3{ pointC, normalABC });
+				result.vertexes.push_back(pointA);
+				result.vertexes.push_back(pointB);
+				result.vertexes.push_back(pointC);
 
 				// Формируем треугольник CDA
-				result.vertexes.push_back(VertexP3N3{ pointC, normalCDA });
-				result.vertexes.push_back(VertexP3N3{ pointD, normalCDA });
-				result.vertexes.push_back(VertexP3N3{ pointA, normalCDA });
+				result.vertexes.push_back(pointC);
+				result.vertexes.push_back(pointD);
+				result.vertexes.push_back(pointA);
 			}
 		}
 	}

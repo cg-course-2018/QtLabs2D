@@ -67,7 +67,7 @@ void NurbsScene::update(float deltaSeconds)
 	}
 
 	Transform3D transform = m_teapotNode->getLocalTransform();
-	transform.rotateBy(glm::angleAxis(glm::radians(SPHERE_ROTATE_DEGREES_PER_SECOND * deltaSeconds), glm::vec3{0, 0, 1}));
+	transform.rotateBy(glm::angleAxis(glm::radians(SPHERE_ROTATE_DEGREES_PER_SECOND * deltaSeconds), glm::vec3{ 0, 0, 1 }));
 	m_teapotNode->setLocalTransform(transform);
 }
 
@@ -78,6 +78,8 @@ void NurbsScene::redraw(unsigned width, unsigned height)
 	glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
 	m_particlesProgram.bind();
 	utils::setLightSource0(m_particlesProgram, m_sunlight);
+
+	utils::setLightSource1(m_particlesProgram, u_light1);
 
 	// Устанавливаем матрицу ортографического проецирования.
 	setProjectionMatrix(width, height);
@@ -91,6 +93,11 @@ void NurbsScene::redraw(unsigned width, unsigned height)
 	if (m_teapotNode)
 	{
 		m_teapotNode->draw(ctx);
+	}
+
+	if (m_sphereNode)
+	{
+		m_sphereNode->draw(ctx);
 	}
 }
 
@@ -145,6 +152,11 @@ void NurbsScene::initializePhongProgram()
 		{ UniformLight0Position, "u_light0.position" },
 		{ UniformLight0Diffuse, "u_light0.diffuse" },
 		{ UniformLight0Specular, "u_light0.specular" },
+
+		{ UniformLight1Position, "u_light1.position" },
+		{ UniformLight1Diffuse, "u_light1.diffuse" },
+		{ UniformLight1Specular, "u_light1.specular" },
+
 		{ UniformMaterialEmission, "u_material.emission" },
 		{ UniformMaterialDiffuse, "u_material.diffuse" },
 		{ UniformMaterialSpecular, "u_material.specular" },
@@ -159,6 +171,11 @@ void NurbsScene::initializeLights()
 	glm::vec4 sunSpecular{ 1, 1, 1, 1 };
 	glm::vec3 sunDirection{ 0, 1, 0 };
 	m_sunlight = utils::makeDirectedLightSource(sunDirection, sunDiffuse, sunSpecular);
+
+	glm::vec4 l1Diffuse{ 1, 0, 0, 1 };
+	glm::vec4 l1Specular{ 1, 1, 1, 1 };
+	glm::vec3 l1Direction{ 10, 10, 0 };
+	u_light1 = utils::makeDirectedLightSource(l1Direction, l1Diffuse, l1Specular);
 }
 
 void NurbsScene::initializeObjects()
@@ -169,8 +186,14 @@ void NurbsScene::initializeObjects()
 		glm::vec4{ 0.5, 0.5, 1.0, 1.0 }
 	};
 
+	const Material sphereMat1{
+		glm::vec4{ 1, 0, 0, 1.0 },
+		glm::vec4{ 1, 0, 0, 1.0 },
+		glm::vec4{ 0.5, 0.5, 1.0, 1.0 }
+	};
+
 	// TODO: (cg14.1) увеличьте точность триангуляции с 5 до 20.
-	const MeshDataP3N3 data = utils::tesselateTeapot(sphereMat, 5, 5);
+	const MeshDataP3N3 data = utils::tesselateTeapot(sphereMat, 20, 20);
 
 	auto mesh = std::make_shared<MeshP3N3>();
 	mesh->init(data);
@@ -180,6 +203,18 @@ void NurbsScene::initializeObjects()
 	teapotTransform.scaleBy(3.0f);
 	teapotTransform.rotateBy(glm::angleAxis(glm::radians(-90.f), glm::vec3{ 1, 0, 0 }));
 	m_teapotNode->setLocalTransform(teapotTransform);
+
+	//Shpere
+	const MeshDataP3N3 dataSphere = utils::tesselateSphere(sphereMat1, 20, 20);
+	auto meshS = std::make_shared<MeshP3N3>();
+	meshS->init(dataSphere);
+	m_sphereNode = meshS;
+
+	Transform3D sphereTransform;
+	sphereTransform.scaleBy(1.0f);
+	sphereTransform.moveBy(glm::vec3{ 10, 10, 0 });
+	// teapotTransform.rotateBy(glm::angleAxis(glm::radians(-90.f), glm::vec3{ 1, 0, 0 }))
+	m_sphereNode->setLocalTransform(sphereTransform);
 }
 
 void NurbsScene::setProjectionMatrix(unsigned width, unsigned height)

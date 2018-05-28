@@ -2,12 +2,12 @@
 #include "ICameraController.h"
 #include "IFlyingCamera.h"
 #include "LightSource.h"
-#include "ShaderProgram.h"
 #include "SceneGraph.h"
+#include "ShaderProgram.h"
 #include <libglcore/libglcore.h>
 #include <libplatform/IRenderScene.h>
-#include <optional>
 #include <memory>
+#include <optional>
 
 class NurbsScene
 	: public platform::IRenderScene
@@ -31,15 +31,17 @@ private:
 	void initializeLights();
 	void initializeObjects();
 	void setProjectionMatrix(unsigned width, unsigned height);
-    void setCameraUniforms();
+	void setCameraUniforms();
 
 	std::unique_ptr<IFlyingCamera> m_camera;
 	std::unique_ptr<ICameraController> m_cameraController;
 
 	glcore::VAO m_vao;
 	SceneGraphNodePtr m_teapotNode;
-    ShaderProgram m_particlesProgram;
+	SceneGraphNodePtr m_sphereNode;
+	ShaderProgram m_particlesProgram;
 	LightSource m_sunlight;
+	LightSource u_light1;
 };
 
 void ShowGemeOverMessage();
