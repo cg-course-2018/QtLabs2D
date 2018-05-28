@@ -169,7 +169,8 @@ void NurbsScene::initializeObjects()
 		glm::vec4{ 0.5, 0.5, 1.0, 1.0 }
 	};
 
-	const MeshDataP3N3 data = utils::tesselateTeapot(sphereMat, 20, 20);
+	// TODO: (cg14.1) увеличьте точность триангуляции с 5 до 20.
+	const MeshDataP3N3 data = utils::tesselateTeapot(sphereMat, 5, 5);
 
 	auto mesh = std::make_shared<MeshP3N3>();
 	mesh->init(data);
