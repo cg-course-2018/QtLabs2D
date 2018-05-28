@@ -102,6 +102,20 @@ void calculateTriangleStripIndicies(MeshDataP3N3 &data, unsigned columnCount, un
 	}
 }
 
+vec3 GetTriangleNormal(vec3 a, vec3 b, vec3 c)
+{
+	vec3 perp = cross(b - a, c - a);
+	// Если длина вектора равна 0, то нормализовать его невозможно - возвращаем
+	//  такой же нулевой вектор.
+	// Это не помешает визуализации, т.к. в любом случае треугольник вырожденный,
+	//  т.е. имеет нулевую площадь.
+	if (length(perp) < std::numeric_limits<float>::epsilon())
+	{
+		return vec3(0);
+	}
+	return normalize(perp);
+}
+
 } // namespace
 
 MeshDataP3N3 utils::tesselateSphere(const Material &material, unsigned latitudeDivisions, unsigned longitudeDivisions)
@@ -146,7 +160,8 @@ MeshDataP3N3 utils::tesselateTeapot(const Material &material, unsigned latitudeD
 	const size_t pointCount = std::size(kTeapotPatches) * (latitudeDivisions + 1) * (longitudeDivisions + 1);
 	const size_t vertexCount = 6 * std::size(kTeapotPatches) * latitudeDivisions * longitudeDivisions;
 
-	std::vector<vec3> points(pointCount);
+	// TODO: (cg14.3) замените тип элемента в массиве на VertexP3N3.
+	std::vector<VertexP3N3> points(pointCount);
 
 	// Veticies
 	for (size_t p = 0; p < std::size(kTeapotPatches); p++)
@@ -160,11 +175,66 @@ MeshDataP3N3 utils::tesselateTeapot(const Material &material, unsigned latitudeD
 			{
 				float v = 1.0f * rv / (longitudeDivisions - 1);
 				size_t index = p * latitudeDivisions * longitudeDivisions + ru * longitudeDivisions + rv;
-				points[index] = computePosition(controlPonts, u, v);
+				points[index].position = computePosition(controlPonts, u, v);
 			}
 		}
 	}
 
+	const auto getPoint = [&](unsigned patchIndex, unsigned ru, unsigned rv) -> VertexP3N3& {
+		size_t index = patchIndex * latitudeDivisions * longitudeDivisions + ru * longitudeDivisions + rv;
+		return points.at(index);
+	};
+
+	// TODO: (cg14.3) добавьте цикл тройной вложенности, подобный циклу ниже, для расчёта нормалей
+	// Добавьте отдельную обработку точек в случаях:
+	//  1) "ru = latitudeDivisions - 1"
+	//  2) "rv = longitudeDivisions - 1"
+	//  3) "ru = latitudeDivisions - 1" и "rv = longitudeDivisions - 1"
+	for (unsigned p = 0; p < std::size(kTeapotPatches); p++)
+	{
+		for (unsigned ru = 0; ru < latitudeDivisions - 1; ru++)
+		{
+			for (unsigned rv = 0; rv < longitudeDivisions - 1; rv++)
+			{
+				const VertexP3N3& pointA = getPoint(p, ru, rv);
+				const VertexP3N3& pointB = getPoint(p, ru, rv + 1);
+				const VertexP3N3& pointC = getPoint(p, ru + 1, rv);
+				VertexP3N3& target = getPoint(p, ru, rv);
+				target.normal = GetTriangleNormal(pointA.position, pointB.position, pointC.position);
+			}
+		}
+		{
+			unsigned ru = latitudeDivisions - 2;
+			for (unsigned rv = 0; rv < longitudeDivisions - 1; rv++)
+			{
+				const VertexP3N3& pointA = getPoint(p, ru - 1, rv);
+				const VertexP3N3& pointB = getPoint(p, ru - 1, rv + 1);
+				const VertexP3N3& pointC = getPoint(p, ru, rv);
+				VertexP3N3& target = getPoint(p, ru + 1, rv);
+				target.normal = GetTriangleNormal(pointA.position, pointB.position, pointC.position);
+			}
+		}
+		{
+			unsigned rv = longitudeDivisions - 2;
+			for (unsigned ru = 0; ru < latitudeDivisions - 1; ru++)
+			{
+				const VertexP3N3& pointA = getPoint(p, ru, rv);
+				const VertexP3N3& pointB = getPoint(p, ru, rv + 1);
+				const VertexP3N3& pointC = getPoint(p, ru + 1, rv);
+				VertexP3N3& target = getPoint(p, ru, rv + 1);
+				target.normal = GetTriangleNormal(pointA.position, pointB.position, pointC.position);
+			}
+		}
+		{
+			unsigned ru = latitudeDivisions - 2;
+			unsigned rv = longitudeDivisions - 2;
+			const VertexP3N3& pointA = getPoint(p, ru, rv);
+			const VertexP3N3& pointB = getPoint(p, ru, rv + 1);
+			const VertexP3N3& pointC = getPoint(p, ru + 1, rv);
+			VertexP3N3& target = getPoint(p, ru + 1, rv + 1);
+			target.normal = GetTriangleNormal(pointA.position, pointB.position, pointC.position);
+		}
+	}
 
 	MeshDataP3N3 result;
 	result.primitive = gl::GL_TRIANGLES;
@@ -187,28 +257,18 @@ MeshDataP3N3 utils::tesselateTeapot(const Material &material, unsigned latitudeD
 				// На каждой итерации мы добавляем два треугольника.
 
 				// Выделяем точки фрагмента из массива "points".
-				const auto getPoint = [&](unsigned ru, unsigned rv) {
-					size_t index = p * latitudeDivisions * longitudeDivisions + ru * longitudeDivisions + rv;
-					return points.at(index);
-				};
-				const vec3 pointA = getPoint(ru, rv);
-				const vec3 pointB = getPoint(ru, rv + 1);
-				const vec3 pointC = getPoint(ru + 1, rv + 1);
-				const vec3 pointD = getPoint(ru + 1, rv);
+				const VertexP3N3 pointA = getPoint(p, ru, rv);
+				const VertexP3N3 pointB = getPoint(p, ru, rv + 1);
+				const VertexP3N3 pointC = getPoint(p, ru + 1, rv + 1);
+				const VertexP3N3 pointD = getPoint(p, ru + 1, rv);
 
 				// Вычисляем нормали к двум треугольникам ABC и CDA.
-				const auto getTriangleNormal = [&](vec3 a, vec3 b, vec3 c) {
-					vec3 perp = cross(b - a, c - a);
-					// Если длина вектора равна 0, то нормализовать его невозможно - возвращаем
-					//  такой же нулевой вектор.
-					if (length(perp) < std::numeric_limits<float>::epsilon())
-					{
-						return vec3(0);
-					}
-					return normalize(perp);
-				};
-				const vec3 normalABC = getTriangleNormal(pointA, pointB, pointC);
-				const vec3 normalCDA = getTriangleNormal(pointC, pointD, pointA);
+#if 0
+				const vec3 normalABC = GetTriangleNormal(pointA, pointB, pointC);
+				const vec3 normalCDA = GetTriangleNormal(pointC, pointD, pointA);
+
+				// TODO: (cg14.3) замените расчёт нормалей по треугольнику на копирование вершин
+				//  с заранее расчитанными нормалями целиком.
 
 				// Формируем треугольник ABC
 				result.vertexes.push_back(VertexP3N3{ pointA, normalABC });
@@ -219,6 +279,17 @@ MeshDataP3N3 utils::tesselateTeapot(const Material &material, unsigned latitudeD
 				result.vertexes.push_back(VertexP3N3{ pointC, normalCDA });
 				result.vertexes.push_back(VertexP3N3{ pointD, normalCDA });
 				result.vertexes.push_back(VertexP3N3{ pointA, normalCDA });
+#endif
+
+				// Формируем треугольник ABC
+				result.vertexes.push_back(pointA);
+				result.vertexes.push_back(pointB);
+				result.vertexes.push_back(pointC);
+
+				// Формируем треугольник CDA
+				result.vertexes.push_back(pointC);
+				result.vertexes.push_back(pointD);
+				result.vertexes.push_back(pointA);
 			}
 		}
 	}
