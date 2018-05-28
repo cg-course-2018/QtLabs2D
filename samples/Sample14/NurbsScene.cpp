@@ -169,8 +169,6 @@ void NurbsScene::initializeObjects()
 		glm::vec4{ 0.5, 0.5, 1.0, 1.0 }
 	};
 
-	// TODO: remove debug code
-
 	const MeshDataP3N3 data = utils::tesselateTeapot(sphereMat, 20, 20);
 
 	auto mesh = std::make_shared<MeshP3N3>();

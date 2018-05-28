@@ -14,46 +14,48 @@ constexpr int factorial(int n)
 {
 	int result = 1;
 	for (int i = n; i > 1; i--)
+	{
 		result *= i;
+	}
 	return result;
 }
 
-constexpr float binomial_coefficient(int i, int n)
+constexpr float binomialCoefficient(int i, int n)
 {
 	return 1.0f * factorial(n) / (factorial(i) * factorial(n - i));
 }
 
-constexpr float bernstein_polynomial(int i, int n, float u)
+constexpr float bernsteinPolynomial(int i, int n, float u)
 {
-	return binomial_coefficient(i, n)
+	return binomialCoefficient(i, n)
 		* static_cast<float>(std::pow(u, i))
 		* static_cast<float>(std::pow(1 - u, n - i));
 }
 
-vec3 compute_position(vec3 control_points_k[][kTeapotPatchOrder + 1], float u, float v)
+vec3 computePosition(vec3 controlPoints[][kTeapotPatchOrder + 1], float u, float v)
 {
 	vec3 result = { 0.0, 0.0, 0.0 };
 	for (int i = 0; i <= static_cast<int>(kTeapotPatchOrder); i++)
 	{
-		float poly_i = bernstein_polynomial(i, kTeapotPatchOrder, u);
+		float polyI = bernsteinPolynomial(i, kTeapotPatchOrder, u);
 		for (int j = 0; j <= static_cast<int>(kTeapotPatchOrder); j++)
 		{
-			float poly_j = bernstein_polynomial(j, kTeapotPatchOrder, v);
-			result.x += poly_i * poly_j * control_points_k[i][j].x;
-			result.y += poly_i * poly_j * control_points_k[i][j].y;
-			result.z += poly_i * poly_j * control_points_k[i][j].z;
+			float polyJ = bernsteinPolynomial(j, kTeapotPatchOrder, v);
+			result.x += polyI * polyJ * controlPoints[i][j].x;
+			result.y += polyI * polyJ * controlPoints[i][j].y;
+			result.z += polyI * polyJ * controlPoints[i][j].z;
 		}
 	}
 	return result;
 }
 
-void build_control_points_k(size_t p, vec3 control_points_k[][kTeapotPatchOrder + 1])
+void buildControlPoints(size_t p, vec3 controlPoints[][kTeapotPatchOrder + 1])
 {
 	for (size_t i = 0; i <= kTeapotPatchOrder; i++)
 	{
 		for (size_t j = 0; j <= kTeapotPatchOrder; j++)
 		{
-			control_points_k[i][j] = kTeapotControlPoints[kTeapotPatches[p][i][j] - 1];
+			controlPoints[i][j] = kTeapotControlPoints[kTeapotPatches[p][i][j] - 1];
 		}
 	}
 }
@@ -149,8 +151,8 @@ MeshDataP3N3 utils::tesselateTeapot(const Material &material, unsigned latitudeD
 	// Veticies
 	for (size_t p = 0; p < std::size(kTeapotPatches); p++)
 	{
-		vec3 control_points_k[kTeapotPatchOrder + 1][kTeapotPatchOrder + 1];
-		build_control_points_k(p, control_points_k);
+		vec3 controlPonts[kTeapotPatchOrder + 1][kTeapotPatchOrder + 1];
+		buildControlPoints(p, controlPonts);
 		for (size_t ru = 0; ru <= latitudeDivisions - 1; ru++)
 		{
 			float u = 1.0f * ru / (latitudeDivisions - 1);
@@ -158,7 +160,7 @@ MeshDataP3N3 utils::tesselateTeapot(const Material &material, unsigned latitudeD
 			{
 				float v = 1.0f * rv / (longitudeDivisions - 1);
 				size_t index = p * latitudeDivisions * longitudeDivisions + ru * longitudeDivisions + rv;
-				points[index] = compute_position(control_points_k, u, v);
+				points[index] = computePosition(controlPonts, u, v);
 			}
 		}
 	}
@@ -197,6 +199,8 @@ MeshDataP3N3 utils::tesselateTeapot(const Material &material, unsigned latitudeD
 				// Вычисляем нормали к двум треугольникам ABC и CDA.
 				const auto getTriangleNormal = [&](vec3 a, vec3 b, vec3 c) {
 					vec3 perp = cross(b - a, c - a);
+					// Если длина вектора равна 0, то нормализовать его невозможно - возвращаем
+					//  такой же нулевой вектор.
 					if (length(perp) < std::numeric_limits<float>::epsilon())
 					{
 						return vec3(0);
