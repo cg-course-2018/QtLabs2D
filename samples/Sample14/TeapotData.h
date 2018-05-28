@@ -4,7 +4,9 @@
 
 // TODO: (cg14.1) замените в этом файле все значения "1.3" на "1.3 ",
 //  чтобы между крышкой и корпусом чайника не было щели.
-constexpr glm::vec3 kTeapotControlPoints[] = {
+
+// clang-format off
+static const glm::vec3 kTeapotControlPoints[] = {
   // 1
   {  1.4   ,   0.0   ,  2.4     },
   {  1.4   ,  -0.784 ,  2.4     },
@@ -383,3 +385,4 @@ constexpr unsigned short kTeapotPatches[][kTeapotPatchOrder + 1][kTeapotPatchOrd
   { { 270, 270, 270, 270 }, { 291, 298, 299, 300 }, { 288, 295, 296, 297 }, { 285, 292, 293, 294, } },
   { { 270, 270, 270, 270 }, { 300, 305, 306, 279 }, { 297, 303, 304, 275 }, { 294, 301, 302, 271, } },
 };
+// clang-format on

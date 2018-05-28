@@ -2,15 +2,15 @@
 #include "TesselateUtils.h"
 #include "TeapotData.h"
 #include <cmath>
-#include <numeric>
 #include <limits>
+#include <numeric>
 
 using namespace glm;
 
 namespace
 {
 
-constexpr int factorial(int n)
+const int factorial(int n)
 {
 	int result = 1;
 	for (int i = n; i > 1; i--)
@@ -20,12 +20,12 @@ constexpr int factorial(int n)
 	return result;
 }
 
-constexpr float binomialCoefficient(int i, int n)
+const float binomialCoefficient(int i, int n)
 {
 	return 1.0f * factorial(n) / (factorial(i) * factorial(n - i));
 }
 
-constexpr float bernsteinPolynomial(int i, int n, float u)
+const float bernsteinPolynomial(int i, int n, float u)
 {
 	return binomialCoefficient(i, n)
 		* static_cast<float>(std::pow(u, i))
@@ -181,7 +181,7 @@ MeshDataP3N3 utils::tesselateTeapot(const Material &material, unsigned latitudeD
 	}
 
 	// TODO: (cg14.3) замените тип возвращаемого значения анонимной функции на "VertexP3N3&".
-	const auto getPoint = [&](unsigned patchIndex, unsigned ru, unsigned rv) -> glm::vec3& {
+	const auto getPoint = [&](unsigned patchIndex, unsigned ru, unsigned rv) -> glm::vec3 & {
 		size_t index = patchIndex * latitudeDivisions * longitudeDivisions + ru * longitudeDivisions + rv;
 		return points.at(index).position;
 	};
@@ -244,7 +244,7 @@ MeshDataP3N3 utils::tesselateTeapot(const Material &material, unsigned latitudeD
 
 #if !defined(NDEBUG)
 	// Проверяем все вершины - значения координат должны действительными числами.
-	for (const VertexP3N3& v : result.vertexes)
+	for (const VertexP3N3 &v : result.vertexes)
 	{
 		assert(std::isfinite(v.position.x));
 		assert(std::isfinite(v.position.y));

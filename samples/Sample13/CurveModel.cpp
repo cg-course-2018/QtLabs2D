@@ -120,7 +120,6 @@ std::vector<glm::vec2> CurveModel::tesselateWithCatmulRomSplines() const
 
 std::vector<glm::vec2> CurveModel::tesselateWithHermiteSplines() const
 {
-
 	// Перебираем четвёрки контрольных точек, для крайних фрагментов используем
 	//  крайнюю точку дважды.
 	std::vector<glm::vec2> points;

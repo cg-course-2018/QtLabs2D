@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{F14475D0-7C57-4866-8056-64E8A2D0A751}</ProjectGuid>
+    <ProjectGuid>{640698D4-A8CC-450E-91D7-E69D7CE273DF}</ProjectGuid>
     <Keyword>Qt4VSv1.0</Keyword>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -145,41 +145,38 @@
     <ClCompile Include="FlyingCamera.cpp" />
     <ClCompile Include="LightSource.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="ParticleEmitter.cpp" />
-    <ClCompile Include="ParticlesScene.cpp" />
-    <ClCompile Include="ParticlesSceneLoader.cpp" />
-    <ClCompile Include="ParticleSystem.cpp" />
+    <ClCompile Include="MeshP3N3.cpp" />
+    <ClCompile Include="NurbsScene.cpp" />
     <ClCompile Include="SceneGraph.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TesselateUtils.cpp" />
     <ClCompile Include="TextureUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraController.h" />
-    <ClInclude Include="ClampedNormalDistribution.h" />
     <ClInclude Include="Enumerations.h" />
     <ClInclude Include="FlyingCamera.h" />
     <ClInclude Include="ICameraController.h" />
     <ClInclude Include="IFlyingCamera.h" />
     <ClInclude Include="IShaderProgram.h" />
     <ClInclude Include="LightSource.h" />
-    <ClInclude Include="ParticleEmitter.h" />
-    <ClInclude Include="ParticlesScene.h" />
-    <ClInclude Include="ParticlesSceneLoader.h" />
-    <ClInclude Include="ParticleSystem.h" />
+    <ClInclude Include="MeshP3N3.h" />
+    <ClInclude Include="NurbsScene.h" />
     <ClInclude Include="SceneGraph.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TeapotData.h" />
+    <ClInclude Include="TesselateUtils.h" />
     <ClInclude Include="TextureUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="copy_res.bat" />
-    <None Include="res\particles.frag" />
-    <None Include="res\particles.vert" />
-    <None Include="res\scene.json" />
+    <None Include="res\phong_lighting.frag" />
+    <None Include="res\phong_lighting.vert" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\libs\libglcore\libglcore.vcxproj">
@@ -194,10 +191,6 @@
     <ProjectReference Include="..\..\libs\tinyxml2\tinyxml2.vcxproj">
       <Project>{85962e8f-162d-4f1d-8aea-5416f101af5a}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="res\BoilingFoam.png" />
-    <Image Include="res\Burst.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

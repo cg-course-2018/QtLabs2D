@@ -39,6 +39,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample12", "samples\Sample1
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample13", "samples\Sample13\Sample13.vcxproj", "{5EF062C3-4571-44E1-BE59-5C509B57D53C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample14", "samples\Sample14\Sample14.vcxproj", "{640698D4-A8CC-450E-91D7-E69D7CE273DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -145,6 +147,12 @@ Global
 		{5EF062C3-4571-44E1-BE59-5C509B57D53C}.Release|x64.ActiveCfg = Release|x64
 		{5EF062C3-4571-44E1-BE59-5C509B57D53C}.Release|x64.Build.0 = Release|x64
 		{5EF062C3-4571-44E1-BE59-5C509B57D53C}.Release|x86.ActiveCfg = Release|x64
+		{640698D4-A8CC-450E-91D7-E69D7CE273DF}.Debug|x64.ActiveCfg = Debug|x64
+		{640698D4-A8CC-450E-91D7-E69D7CE273DF}.Debug|x64.Build.0 = Debug|x64
+		{640698D4-A8CC-450E-91D7-E69D7CE273DF}.Debug|x86.ActiveCfg = Debug|x64
+		{640698D4-A8CC-450E-91D7-E69D7CE273DF}.Release|x64.ActiveCfg = Release|x64
+		{640698D4-A8CC-450E-91D7-E69D7CE273DF}.Release|x64.Build.0 = Release|x64
+		{640698D4-A8CC-450E-91D7-E69D7CE273DF}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -165,6 +173,7 @@ Global
 		{85962E8F-162D-4F1D-8AEA-5416F101AF5A} = {6E1D27C7-BA78-46C4-96BE-B14D026DBB96}
 		{F14475D0-7C57-4866-8056-64E8A2D0A751} = {72074650-711C-4BC6-98B3-AAC4CD17A51A}
 		{5EF062C3-4571-44E1-BE59-5C509B57D53C} = {72074650-711C-4BC6-98B3-AAC4CD17A51A}
+		{640698D4-A8CC-450E-91D7-E69D7CE273DF} = {72074650-711C-4BC6-98B3-AAC4CD17A51A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {91011195-4D0F-4F2F-955A-15AD60D455D1}

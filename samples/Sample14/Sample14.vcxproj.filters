@@ -7,18 +7,6 @@
     <ClCompile Include="CameraController.cpp">
       <Filter>camera</Filter>
     </ClCompile>
-    <ClCompile Include="ParticlesScene.cpp">
-      <Filter>scene</Filter>
-    </ClCompile>
-    <ClCompile Include="ParticlesSceneLoader.cpp">
-      <Filter>scene</Filter>
-    </ClCompile>
-    <ClCompile Include="ParticleSystem.cpp">
-      <Filter>scene</Filter>
-    </ClCompile>
-    <ClCompile Include="ParticleEmitter.cpp">
-      <Filter>scene</Filter>
-    </ClCompile>
     <ClCompile Include="FlyingCamera.cpp">
       <Filter>camera</Filter>
     </ClCompile>
@@ -37,6 +25,15 @@
     <ClCompile Include="TextureUtils.cpp">
       <Filter>scene</Filter>
     </ClCompile>
+    <ClCompile Include="MeshP3N3.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="NurbsScene.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="TesselateUtils.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IShaderProgram.h">
@@ -47,21 +44,6 @@
     </ClInclude>
     <ClInclude Include="CameraController.h">
       <Filter>camera</Filter>
-    </ClInclude>
-    <ClInclude Include="ClampedNormalDistribution.h">
-      <Filter>scene</Filter>
-    </ClInclude>
-    <ClInclude Include="ParticleSystem.h">
-      <Filter>scene</Filter>
-    </ClInclude>
-    <ClInclude Include="ParticleEmitter.h">
-      <Filter>scene</Filter>
-    </ClInclude>
-    <ClInclude Include="ParticlesScene.h">
-      <Filter>scene</Filter>
-    </ClInclude>
-    <ClInclude Include="ParticlesSceneLoader.h">
-      <Filter>scene</Filter>
     </ClInclude>
     <ClInclude Include="Enumerations.h">
       <Filter>shading</Filter>
@@ -87,6 +69,18 @@
     <ClInclude Include="TextureUtils.h">
       <Filter>shading</Filter>
     </ClInclude>
+    <ClInclude Include="MeshP3N3.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="NurbsScene.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="TeapotData.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="TesselateUtils.h">
+      <Filter>scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="scene">
@@ -106,25 +100,14 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\particles.frag">
-      <Filter>res</Filter>
-    </None>
-    <None Include="res\particles.vert">
-      <Filter>res</Filter>
-    </None>
-    <None Include="res\scene.json">
-      <Filter>res</Filter>
-    </None>
     <None Include="copy_res.bat">
       <Filter>main</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="res\BoilingFoam.png">
+    <None Include="res\phong_lighting.frag">
       <Filter>res</Filter>
-    </Image>
-    <Image Include="res\Burst.png">
+    </None>
+    <None Include="res\phong_lighting.vert">
       <Filter>res</Filter>
-    </Image>
+    </None>
   </ItemGroup>
 </Project>

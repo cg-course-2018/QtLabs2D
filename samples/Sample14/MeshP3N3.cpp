@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "MeshP3N3.h"
 #include <glbinding/gl32core/gl.h>
 #include <glm/gtc/type_ptr.hpp>
@@ -13,7 +14,7 @@ glm::mat4 getNormalMatrix(const glm::mat4 &modelView)
 {
 	return glm::transpose(glm::inverse(modelView));
 }
-}
+} // namespace
 
 void MeshP3N3::init(const MeshDataP3N3 &data)
 {
@@ -28,7 +29,7 @@ void MeshP3N3::init(const MeshDataP3N3 &data)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indicies);
 }
 
-void MeshP3N3::draw(const RenderContext& ctx)
+void MeshP3N3::draw(const RenderContext &ctx)
 {
 	updateUniforms(ctx);
 	bindAttributes(ctx.program.get());
@@ -62,9 +63,9 @@ void MeshP3N3::bindAttributes(const IShaderProgram &program)
 	}
 }
 
-void MeshP3N3::updateUniforms(const RenderContext& ctx)
+void MeshP3N3::updateUniforms(const RenderContext &ctx)
 {
-	const auto& program = ctx.program.get();
+	const auto &program = ctx.program.get();
 	const glm::mat4 transformMat = ctx.parentWorldMat4 * getLocalTransform().toMat4();
 	const glm::mat4 normalMat = getNormalMatrix(transformMat);
 
