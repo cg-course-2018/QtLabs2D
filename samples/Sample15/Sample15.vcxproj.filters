@@ -28,10 +28,16 @@
     <ClCompile Include="MeshP3N3.cpp">
       <Filter>scene</Filter>
     </ClCompile>
-    <ClCompile Include="NurbsScene.cpp">
+    <ClCompile Include="TesselateUtils.cpp">
       <Filter>scene</Filter>
     </ClCompile>
-    <ClCompile Include="TesselateUtils.cpp">
+    <ClCompile Include="IsoSurface.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="IsosurfaceScene.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="IsoSurfaceSources.cpp">
       <Filter>scene</Filter>
     </ClCompile>
   </ItemGroup>
@@ -72,13 +78,19 @@
     <ClInclude Include="MeshP3N3.h">
       <Filter>scene</Filter>
     </ClInclude>
-    <ClInclude Include="NurbsScene.h">
-      <Filter>scene</Filter>
-    </ClInclude>
     <ClInclude Include="TeapotData.h">
       <Filter>scene</Filter>
     </ClInclude>
     <ClInclude Include="TesselateUtils.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="IsoSurface.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="IsosurfaceScene.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="IsoSurfaceSources.h">
       <Filter>scene</Filter>
     </ClInclude>
   </ItemGroup>

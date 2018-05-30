@@ -26,7 +26,7 @@ namespace
 const vec3 CAMERA_POSITION = { 0, 10, -25 };
 const vec3 CAMERA_TARGET = { 0, 0, 0 };
 const vec3 CAMERA_UP = { 0, 1, 0 };
-const float SPHERE_ROTATE_DEGREES_PER_SECOND = 90.f;
+const float MESH_ROTATE_DEGREES_PER_SECOND = 30.f;
 
 } // namespace
 
@@ -53,13 +53,10 @@ void IsosurfaceScene::initialize()
 	// Включаем тест глубины.
 	glEnable(GL_DEPTH_TEST);
 
-	// TODO: sergey.shambir убери или включи этот код
-#if 1
 	// Включаем отсечение задних граней
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);
 	glCullFace(GL_BACK);
-#endif
 }
 
 void IsosurfaceScene::update(float deltaSeconds)
@@ -70,12 +67,9 @@ void IsosurfaceScene::update(float deltaSeconds)
 		m_surfaceMesh->update(deltaSeconds);
 	}
 
-	// TODO: sergey.shambir убери или включи этот код
-#if 0
 	Transform3D transform = m_surfaceMesh->getLocalTransform();
-	transform.rotateBy(angleAxis(radians(SPHERE_ROTATE_DEGREES_PER_SECOND * deltaSeconds), vec3{0, 0, 1}));
+	transform.rotateBy(angleAxis(radians(MESH_ROTATE_DEGREES_PER_SECOND * deltaSeconds), vec3{ 0, 0, 1 }));
 	m_surfaceMesh->setLocalTransform(transform);
-#endif
 }
 
 void IsosurfaceScene::redraw(unsigned width, unsigned height)
@@ -135,8 +129,8 @@ void IsosurfaceScene::initializePhongProgram()
 {
 	platform::ResourceLoader loader;
 	std::vector<glcore::ShaderObject> shaders;
-	shaders.emplace_back(glcore::compileShader(GL_VERTEX_SHADER, loader.loadAsString("res14/phong_lighting.vert")));
-	shaders.emplace_back(glcore::compileShader(GL_FRAGMENT_SHADER, loader.loadAsString("res14/phong_lighting.frag")));
+	shaders.emplace_back(glcore::compileShader(GL_VERTEX_SHADER, loader.loadAsString("res15/phong_lighting.vert")));
+	shaders.emplace_back(glcore::compileShader(GL_FRAGMENT_SHADER, loader.loadAsString("res15/phong_lighting.frag")));
 	auto program = glcore::linkProgram(shaders);
 
 	std::vector<AttributeInfo> attributes = {
@@ -171,33 +165,30 @@ void IsosurfaceScene::initializeLights()
 void IsosurfaceScene::initializeObjects()
 {
 	const Material meshMat{
-		vec4{ 0.4, 0.4, 0.4, 1.0 },
-		vec4{ 0.5, 0.5, 1.0, 1.0 },
-		vec4{ 0.5, 0.5, 1.0, 1.0 }
+		vec4{ 0.2, 0.2, 0.1, 1.0 },
+		vec4{ 0.9, 0.9, 0.0, 1.0 },
+		vec4{ 0.5, 0.5, 0.5, 1.0 }
 	};
-	const float cubeSize = 0.2f;
+
+	// TODO: (cg15.1) подберите константу cubeSize под возможности своего компьютера, чтобы расчёт занимал не более 1-2 секунд.
+	const float cubeSize = 0.5f;
 	const vec3 areaSize = { 10.0f, 10.0f, 10.0f };
 	const uvec3 sizeInCubes = uvec3(areaSize / cubeSize);
 
 	std::vector<IIsoSurfaceSourcePtr> sources = {
-		std::make_unique<IsoPointSource>(vec3{-2.5f, 0, 2}, 2.0f ),
-		std::make_unique<IsoPointSource>(vec3{2.5f, 0, 2}, 2.0f ),
-		std::make_unique<IsoPointSource>(vec3{-2.5f, 1, 2}, -1.0f ),
-		std::make_unique<IsoPointSource>(vec3{2.5f, 1, 2}, -1.0f ),
-		std::make_unique<IsoPointSource>(vec3{0, 0, -1}, 6.0f ),
-		std::make_unique<IsoPointSource>(vec3{0, 3.25f, -1}, 1.0f )
+		std::make_unique<IsoPointSource>(vec3{ -2.5f, 0, 2 }, 2.0f),
+		std::make_unique<IsoPointSource>(vec3{ 2.5f, 0, 2 }, 2.0f),
+		std::make_unique<IsoPointSource>(vec3{ -2.5f, 1, 2 }, -1.0f),
+		std::make_unique<IsoPointSource>(vec3{ 2.5f, 1, 2 }, -1.0f),
+		std::make_unique<IsoPointSource>(vec3{ 0, 0, -1 }, 6.0f),
+		std::make_unique<IsoPointSource>(vec3{ 0, 3.25f, -1 }, 1.0f)
 	};
 
 	m_surface.setSize(sizeInCubes);
 	m_surface.setCubeSize(cubeSize);
 	m_surface.setSources(sources);
 
-	// TODO: убрать условную проверку
-#if 1
 	const MeshDataP3N3 data = m_surface.createGeometry(meshMat);
-#else
-	const MeshDataP3N3 data = utils::tesselateTeapot(meshMat, 5, 5);
-#endif
 
 	auto mesh = std::make_shared<MeshP3N3>();
 	mesh->init(data);

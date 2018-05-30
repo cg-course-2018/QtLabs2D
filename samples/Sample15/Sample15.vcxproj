@@ -143,10 +143,12 @@
   <ItemGroup>
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="FlyingCamera.cpp" />
+    <ClCompile Include="IsoSurface.cpp" />
+    <ClCompile Include="IsosurfaceScene.cpp" />
+    <ClCompile Include="IsoSurfaceSources.cpp" />
     <ClCompile Include="LightSource.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MeshP3N3.cpp" />
-    <ClCompile Include="NurbsScene.cpp" />
     <ClCompile Include="SceneGraph.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -163,9 +165,11 @@
     <ClInclude Include="ICameraController.h" />
     <ClInclude Include="IFlyingCamera.h" />
     <ClInclude Include="IShaderProgram.h" />
+    <ClInclude Include="IsoSurface.h" />
+    <ClInclude Include="IsosurfaceScene.h" />
+    <ClInclude Include="IsoSurfaceSources.h" />
     <ClInclude Include="LightSource.h" />
     <ClInclude Include="MeshP3N3.h" />
-    <ClInclude Include="NurbsScene.h" />
     <ClInclude Include="SceneGraph.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="stdafx.h" />

@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "IsoSurface.h"
 #include <algorithm>
 #include <glm/geometric.hpp>
@@ -25,7 +26,7 @@ std::size_t IsoEdge::hash() const
 bool IsoEdge::operator==(const IsoEdge &other) const
 {
 	return (std::tie(vertex1, vertex2) == std::tie(other.vertex1, other.vertex2))
-		||( std::tie(vertex2, vertex1) == std::tie(other.vertex1, other.vertex2));
+		|| (std::tie(vertex2, vertex1) == std::tie(other.vertex1, other.vertex2));
 }
 
 IsoCube::IsoCube(
@@ -296,22 +297,12 @@ std::vector<IsoCube> IsoSurface::createCubes()
 		{
 			for (unsigned indexX = 0; indexX < m_size.x; ++indexX)
 			{
-				// TODO: первый вариант выглядит правильнее, какой выбрать?
-#if 0
-				unsigned xLow = indexX;
-				unsigned xHigh = indexX + 1;
-				unsigned yLow = indexY * (m_size.x + 1);
-				unsigned yHigh = (indexY + 1) * (m_size.x + 1);
-				unsigned zLow = indexZ * (m_size.x + 1) * (m_size.y + 1);
-				unsigned zHigh = (indexZ + 1) * (m_size.x + 1) * (m_size.y + 1);
-#else
 				unsigned xLow = indexX;
 				unsigned xHigh = indexX + 1;
 				unsigned zLow = indexZ * (m_size.x + 1);
 				unsigned zHigh = (indexZ + 1) * (m_size.x + 1);
 				unsigned yLow = indexY * (m_size.x + 1) * (m_size.y + 1);
 				unsigned yHigh = (indexY + 1) * (m_size.x + 1) * (m_size.y + 1);
-#endif
 				cubes.push_back(IsoCube{
 					vertexes[xLow + yLow + zLow],
 					vertexes[xHigh + yLow + zLow],

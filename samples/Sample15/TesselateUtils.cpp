@@ -160,7 +160,6 @@ MeshDataP3N3 utils::tesselateTeapot(const Material &material, unsigned latitudeD
 	const size_t pointCount = std::size(kTeapotPatches) * (latitudeDivisions + 1) * (longitudeDivisions + 1);
 	const size_t vertexCount = 6 * std::size(kTeapotPatches) * latitudeDivisions * longitudeDivisions;
 
-	// TODO: (cg14.3) замените тип элемента в массиве на VertexP3N3.
 	std::vector<VertexP3N3> points(pointCount);
 
 	// Veticies
@@ -180,17 +179,10 @@ MeshDataP3N3 utils::tesselateTeapot(const Material &material, unsigned latitudeD
 		}
 	}
 
-	// TODO: (cg14.3) замените тип возвращаемого значения анонимной функции на "VertexP3N3&".
 	const auto getPoint = [&](unsigned patchIndex, unsigned ru, unsigned rv) -> glm::vec3 & {
 		size_t index = patchIndex * latitudeDivisions * longitudeDivisions + ru * longitudeDivisions + rv;
 		return points.at(index).position;
 	};
-
-	// TODO: (cg14.3) добавьте цикл тройной вложенности, подобный циклу ниже, для расчёта нормалей
-	// Добавьте отдельную обработку точек в случаях:
-	//  1) "ru = latitudeDivisions - 1"
-	//  2) "rv = longitudeDivisions - 1"
-	//  3) "ru = latitudeDivisions - 1" и "rv = longitudeDivisions - 1"
 
 	MeshDataP3N3 result;
 	result.primitive = gl::GL_TRIANGLES;
@@ -198,10 +190,6 @@ MeshDataP3N3 utils::tesselateTeapot(const Material &material, unsigned latitudeD
 
 	// Каждая вершина будет уникальной из-за различных нормалей, поэтому
 	//  индексы будут изменяться последовательно от 0 до vertexCount-1
-	//
-	// TODO: (cg14.4) замените инициализацию массива "indicies" последовательными значениями
-	//  и копирование вершин в массив "vertexes" на переиспользование вершин.
-	//  - для этого вам потребуется выделить из функции getPoint функцию getIndex
 	result.indicies.resize(vertexCount);
 	std::iota(result.indicies.begin(), result.indicies.end(), 0);
 
@@ -221,9 +209,6 @@ MeshDataP3N3 utils::tesselateTeapot(const Material &material, unsigned latitudeD
 				const vec3 pointB = getPoint(p, ru, rv + 1);
 				const vec3 pointC = getPoint(p, ru + 1, rv + 1);
 				const vec3 pointD = getPoint(p, ru + 1, rv);
-
-				// TODO: (cg14.3) замените расчёт нормалей по треугольнику на копирование вершин
-				//  с заранее расчитанными нормалями целиком.
 
 				// Вычисляем нормали к двум треугольникам ABC и CDA.
 				const vec3 normalABC = getTriangleNormal(pointA, pointB, pointC);
