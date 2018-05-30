@@ -119,7 +119,7 @@ private:
 	// Для нахождения точки используется дихотомия (бинарный поиск).
 	glm::vec3 getPointAtThresholdBetween(const glm::vec3 &lowPoint, const glm::vec3 &highPoint) const;
 
-	float m_accuracy{ 0.01f };
+	float m_accuracy{ 0.0001f };
 	float m_threshold{ 0.5f };
 	std::vector<IIsoSurfaceSourcePtr> m_sources;
 	float m_cubeSize{ 0 };

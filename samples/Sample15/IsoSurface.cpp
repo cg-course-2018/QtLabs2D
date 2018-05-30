@@ -255,8 +255,8 @@ MeshDataP3N3 IsoSurface::createGeometry(const Material &material)
 		{
 			combinedNormal += normal;
 		}
-		const vec3 averagedNormal = combinedNormal / static_cast<float>(p.normals.size());
-		return VertexP3N3{ p.position, averagedNormal };
+		const vec3 averageNormal = glm::normalize(combinedNormal);
+		return VertexP3N3{ p.position, averageNormal };
 	});
 
 	MeshDataP3N3 result;
@@ -296,12 +296,22 @@ std::vector<IsoCube> IsoSurface::createCubes()
 		{
 			for (unsigned indexX = 0; indexX < m_size.x; ++indexX)
 			{
+				// TODO: первый вариант выглядит правильнее, какой выбрать?
+#if 0
+				unsigned xLow = indexX;
+				unsigned xHigh = indexX + 1;
+				unsigned yLow = indexY * (m_size.x + 1);
+				unsigned yHigh = (indexY + 1) * (m_size.x + 1);
+				unsigned zLow = indexZ * (m_size.x + 1) * (m_size.y + 1);
+				unsigned zHigh = (indexZ + 1) * (m_size.x + 1) * (m_size.y + 1);
+#else
 				unsigned xLow = indexX;
 				unsigned xHigh = indexX + 1;
 				unsigned zLow = indexZ * (m_size.x + 1);
 				unsigned zHigh = (indexZ + 1) * (m_size.x + 1);
 				unsigned yLow = indexY * (m_size.x + 1) * (m_size.y + 1);
 				unsigned yHigh = (indexY + 1) * (m_size.x + 1) * (m_size.y + 1);
+#endif
 				cubes.push_back(IsoCube{
 					vertexes[xLow + yLow + zLow],
 					vertexes[xHigh + yLow + zLow],
@@ -320,9 +330,9 @@ std::vector<IsoCube> IsoSurface::createCubes()
 
 void IsoSurface::addPolygonForIntersection(const IsoIntersection &intersection)
 {
-	unsigned index1 = calculatePointForIntersectedEdge(intersection.edge1);
+	unsigned index1 = calculatePointForIntersectedEdge(intersection.edge3);
 	unsigned index2 = calculatePointForIntersectedEdge(intersection.edge2);
-	unsigned index3 = calculatePointForIntersectedEdge(intersection.edge3);
+	unsigned index3 = calculatePointForIntersectedEdge(intersection.edge1);
 	m_indexes.push_back(index1);
 	m_indexes.push_back(index2);
 	m_indexes.push_back(index3);
@@ -361,8 +371,8 @@ unsigned IsoSurface::calculatePointForIntersectedEdge(const IsoEdge &edge)
 	{
 		// Если точка для этого ребра ещё не была вычислена, то вычисляем её..
 		vec3 pointForEdge = getPointAtThresholdOnEdge(edge);
+		const unsigned index = static_cast<unsigned>(m_points.size());
 		m_points.push_back(IsoPoint{ pointForEdge, {} });
-		unsigned index = static_cast<unsigned>(m_points.size() - 1);
 		m_pointIndexByEdge[edge] = index;
 
 		return index;
@@ -378,7 +388,7 @@ vec3 IsoSurface::getPointAtThresholdOnEdge(const IsoEdge &edge) const
 	if (edge.vertex1.fieldStrength < edge.vertex2.fieldStrength)
 	{
 		lowPoint = edge.vertex1.position;
-		highPoint = edge.vertex1.position;
+		highPoint = edge.vertex2.position;
 	}
 	else
 	{

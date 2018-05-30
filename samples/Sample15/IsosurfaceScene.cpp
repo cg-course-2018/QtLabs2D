@@ -54,7 +54,7 @@ void IsosurfaceScene::initialize()
 	glEnable(GL_DEPTH_TEST);
 
 	// TODO: sergey.shambir убери или включи этот код
-#if 0
+#if 1
 	// Включаем отсечение задних граней
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);
