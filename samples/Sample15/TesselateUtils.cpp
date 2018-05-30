@@ -10,7 +10,7 @@ using namespace glm;
 namespace
 {
 
-const int factorial(int n)
+int factorial(int n)
 {
 	int result = 1;
 	for (int i = n; i > 1; i--)
@@ -20,12 +20,12 @@ const int factorial(int n)
 	return result;
 }
 
-const float binomialCoefficient(int i, int n)
+float binomialCoefficient(int i, int n)
 {
 	return 1.0f * factorial(n) / (factorial(i) * factorial(n - i));
 }
 
-const float bernsteinPolynomial(int i, int n, float u)
+float bernsteinPolynomial(int i, int n, float u)
 {
 	return binomialCoefficient(i, n)
 		* static_cast<float>(std::pow(u, i))

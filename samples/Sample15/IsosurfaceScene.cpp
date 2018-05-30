@@ -14,6 +14,7 @@
 
 // Используем функции из gl32core, экспортированные библиотекой glbinding.
 using namespace gl32core;
+using namespace glm;
 
 namespace
 {
@@ -22,9 +23,9 @@ namespace
 //  - положение камеры
 //  - положение цели, на которую направлена камера
 //  - направление "вверх" для камеры
-const glm::vec3 CAMERA_POSITION = { 0, 12, -15 };
-const glm::vec3 CAMERA_TARGET = { 0, 4, 0 };
-const glm::vec3 CAMERA_UP = { 0, 1, 0 };
+const vec3 CAMERA_POSITION = { 0, 10, -25 };
+const vec3 CAMERA_TARGET = { 0, 0, 0 };
+const vec3 CAMERA_UP = { 0, 1, 0 };
 const float SPHERE_ROTATE_DEGREES_PER_SECOND = 90.f;
 
 } // namespace
@@ -52,23 +53,29 @@ void IsosurfaceScene::initialize()
 	// Включаем тест глубины.
 	glEnable(GL_DEPTH_TEST);
 
+	// TODO: sergey.shambir убери или включи этот код
+#if 0
 	// Включаем отсечение задних граней
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);
 	glCullFace(GL_BACK);
+#endif
 }
 
 void IsosurfaceScene::update(float deltaSeconds)
 {
 	m_cameraController->update(deltaSeconds);
-	if (m_teapotNode)
+	if (m_surfaceMesh)
 	{
-		m_teapotNode->update(deltaSeconds);
+		m_surfaceMesh->update(deltaSeconds);
 	}
 
-	Transform3D transform = m_teapotNode->getLocalTransform();
-	transform.rotateBy(glm::angleAxis(glm::radians(SPHERE_ROTATE_DEGREES_PER_SECOND * deltaSeconds), glm::vec3{0, 0, 1}));
-	m_teapotNode->setLocalTransform(transform);
+	// TODO: sergey.shambir убери или включи этот код
+#if 0
+	Transform3D transform = m_surfaceMesh->getLocalTransform();
+	transform.rotateBy(angleAxis(radians(SPHERE_ROTATE_DEGREES_PER_SECOND * deltaSeconds), vec3{0, 0, 1}));
+	m_surfaceMesh->setLocalTransform(transform);
+#endif
 }
 
 void IsosurfaceScene::redraw(unsigned width, unsigned height)
@@ -76,8 +83,8 @@ void IsosurfaceScene::redraw(unsigned width, unsigned height)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
-	m_particlesProgram.bind();
-	utils::setLightSource0(m_particlesProgram, m_sunlight);
+	m_phongProgram.bind();
+	utils::setLightSource0(m_phongProgram, m_sunlight);
 
 	// Устанавливаем матрицу ортографического проецирования.
 	setProjectionMatrix(width, height);
@@ -85,12 +92,12 @@ void IsosurfaceScene::redraw(unsigned width, unsigned height)
 	// Устанавливаем uniform-переменные шейдера в соответствие с состоянием камеры .
 	setCameraUniforms();
 
-	RenderContext ctx{ m_particlesProgram };
+	RenderContext ctx{ m_phongProgram };
 	ctx.viewMat4 = m_camera->getViewTransform();
 
-	if (m_teapotNode)
+	if (m_surfaceMesh)
 	{
-		m_teapotNode->draw(ctx);
+		m_surfaceMesh->draw(ctx);
 	}
 }
 
@@ -150,65 +157,85 @@ void IsosurfaceScene::initializePhongProgram()
 		{ UniformMaterialSpecular, "u_material.specular" },
 	};
 
-	m_particlesProgram.init(std::move(program), uniforms, attributes);
+	m_phongProgram.init(std::move(program), uniforms, attributes);
 }
 
 void IsosurfaceScene::initializeLights()
 {
-	glm::vec4 sunDiffuse{ 1, 1, 1, 1 };
-	glm::vec4 sunSpecular{ 1, 1, 1, 1 };
-	glm::vec3 sunDirection{ 0, 1, 0 };
+	vec4 sunDiffuse{ 1, 1, 1, 1 };
+	vec4 sunSpecular{ 1, 1, 1, 1 };
+	vec3 sunDirection{ 0, 1, 0 };
 	m_sunlight = utils::makeDirectedLightSource(sunDirection, sunDiffuse, sunSpecular);
 }
 
 void IsosurfaceScene::initializeObjects()
 {
-	const Material sphereMat{
-		glm::vec4{ 0.4, 0.4, 0.4, 1.0 },
-		glm::vec4{ 0.5, 0.5, 1.0, 1.0 },
-		glm::vec4{ 0.5, 0.5, 1.0, 1.0 }
+	const Material meshMat{
+		vec4{ 0.4, 0.4, 0.4, 1.0 },
+		vec4{ 0.5, 0.5, 1.0, 1.0 },
+		vec4{ 0.5, 0.5, 1.0, 1.0 }
+	};
+	const float cubeSize = 0.5f;
+	const vec3 areaSize = { 10.0f, 10.0f, 10.0f };
+	const uvec3 sizeInCubes = uvec3(areaSize / cubeSize);
+
+	std::vector<IIsoSurfaceSourcePtr> sources = {
+		std::make_unique<IsoPointSource>(vec3{-2.5f, 0, 2}, 2.0f ),
+		std::make_unique<IsoPointSource>(vec3{2.5f, 0, 2}, 2.0f ),
+		std::make_unique<IsoPointSource>(vec3{-2.5f, 1, 2}, -1.0f ),
+		std::make_unique<IsoPointSource>(vec3{2.5f, 1, 2}, -1.0f ),
+		std::make_unique<IsoPointSource>(vec3{0, 0, -1}, 6.0f ),
+		std::make_unique<IsoPointSource>(vec3{0, 3.25f, -1}, 1.0f )
 	};
 
-	// TODO: (cg14.1) увеличьте точность триангуляции с 5 до 20.
-	const MeshDataP3N3 data = utils::tesselateTeapot(sphereMat, 5, 5);
+	m_surface.setSize(sizeInCubes);
+	m_surface.setCubeSize(cubeSize);
+	m_surface.setSources(sources);
+
+	// TODO: убрать условную проверку
+#if 1
+	const MeshDataP3N3 data = m_surface.createGeometry(meshMat);
+#else
+	const MeshDataP3N3 data = utils::tesselateTeapot(meshMat, 5, 5);
+#endif
 
 	auto mesh = std::make_shared<MeshP3N3>();
 	mesh->init(data);
-	m_teapotNode = mesh;
+	m_surfaceMesh = mesh;
 
 	Transform3D teapotTransform;
 	teapotTransform.scaleBy(3.0f);
-	teapotTransform.rotateBy(glm::angleAxis(glm::radians(-90.f), glm::vec3{ 1, 0, 0 }));
-	m_teapotNode->setLocalTransform(teapotTransform);
+	teapotTransform.rotateBy(angleAxis(radians(-90.f), vec3{ 1, 0, 0 }));
+	m_surfaceMesh->setLocalTransform(teapotTransform);
 }
 
 void IsosurfaceScene::setProjectionMatrix(unsigned width, unsigned height)
 {
 	// Вычисляем матрицу перспективного проецирования.
 	// Затем передаём матрицу как константу в графической программе.
-	const float fieldOfView = glm::radians(70.f);
+	const float fieldOfView = radians(70.f);
 	const float aspect = float(width) / float(height);
 	const float zNear = 0.5f;
 	const float zFar = 50.f;
-	const glm::mat4 mat = glm::perspective(fieldOfView, aspect, zNear, zFar);
+	const mat4 mat = perspective(fieldOfView, aspect, zNear, zFar);
 
-	if (int location = m_particlesProgram.getUniform(UniformProjectionMatrix); location != -1)
+	if (int location = m_phongProgram.getUniform(UniformProjectionMatrix); location != -1)
 	{
-		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat));
+		glUniformMatrix4fv(location, 1, GL_FALSE, value_ptr(mat));
 	}
 }
 
 void IsosurfaceScene::setCameraUniforms()
 {
-	const glm::mat4 mat = m_camera->getViewTransform();
-	if (int location = m_particlesProgram.getUniform(UniformViewMatrix); location != -1)
+	const mat4 mat = m_camera->getViewTransform();
+	if (int location = m_phongProgram.getUniform(UniformViewMatrix); location != -1)
 	{
-		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat));
+		glUniformMatrix4fv(location, 1, GL_FALSE, value_ptr(mat));
 	}
 
-	const glm::vec3 pos = m_camera->getViewPosition();
-	if (int location = m_particlesProgram.getUniform(UniformViewerPosition); location != -1)
+	const vec3 pos = m_camera->getViewPosition();
+	if (int location = m_phongProgram.getUniform(UniformViewerPosition); location != -1)
 	{
-		glUniform3fv(location, 1, glm::value_ptr(pos));
+		glUniform3fv(location, 1, value_ptr(pos));
 	}
 }
