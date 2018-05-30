@@ -175,7 +175,7 @@ void IsosurfaceScene::initializeObjects()
 		vec4{ 0.5, 0.5, 1.0, 1.0 },
 		vec4{ 0.5, 0.5, 1.0, 1.0 }
 	};
-	const float cubeSize = 0.5f;
+	const float cubeSize = 0.2f;
 	const vec3 areaSize = { 10.0f, 10.0f, 10.0f };
 	const uvec3 sizeInCubes = uvec3(areaSize / cubeSize);
 

@@ -405,10 +405,7 @@ vec3 IsoSurface::getPointAtThresholdBetween(const vec3 &lowPoint, const vec3 &hi
 	const float strength = getFieldStrengthAtPosition(midpoint);
 	const float delta = strength - m_threshold;
 
-	// TODO: sergey.shambir - jumpedOver добавлено для отладки, убрать или оставить?
-	const bool found = std::abs(delta) < m_accuracy;
-	const bool jumpOver = glm::distance(lowPoint, highPoint) < m_accuracy * m_cubeSize;
-	if (found || jumpOver)
+	if (std::abs(delta) < m_accuracy)
 	{
 		return midpoint;
 	}
