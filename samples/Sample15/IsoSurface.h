@@ -69,7 +69,12 @@ public:
 		const IsoVertex &v1, const IsoVertex &v2, const IsoVertex &v3, const IsoVertex &v4,
 		const IsoVertex &v5, const IsoVertex &v6, const IsoVertex &v7, const IsoVertex &v8);
 
+	// Возвращает true, если метасфера пересекает куб.
+	// Это происходит, если потенциал поля больше treshold во всех вершинах куба
+	//  либо меньше treshold во всех вершинах куба.
 	bool isIntersected(float threshold) const;
+
+	// Разделяет куб на тетраэдры.
 	std::vector<IsoTetrahedron> subdivide();
 
 private:

@@ -24,7 +24,8 @@ std::size_t IsoEdge::hash() const
 
 bool IsoEdge::operator==(const IsoEdge &other) const
 {
-	return std::tie(vertex1, vertex2) == std::tie(other.vertex1, other.vertex2);
+	return (std::tie(vertex1, vertex2) == std::tie(other.vertex1, other.vertex2))
+		||( std::tie(vertex2, vertex1) == std::tie(other.vertex1, other.vertex2));
 }
 
 IsoCube::IsoCube(
@@ -84,10 +85,14 @@ std::vector<IsoIntersection> IsoTetrahedron::getIntersectionsWithThreshold(float
 	}
 	switch (intersectionType)
 	{
+	default:
+		// При правильной реализации алгоритма данная ситуация невозможна.
+		assert(false);
+		break;
 	case 0:
 		// Тетраэдр полностью снаружи поля, нет пересечений с метасферой.
 		break;
-	case 16:
+	case 15:
 		// Тетраэдр полностью внутри поля, нет пересечений с метасферой.
 		break;
 	case 1:
@@ -199,6 +204,9 @@ std::vector<IsoIntersection> IsoTetrahedron::getIntersectionsWithThreshold(float
 			IsoEdge{ m_vertexes[0], m_vertexes[1] } });
 		break;
 	}
+
+	// Постусловие: имеем 0, 1 или 2 пересечения метасферы с тетраэдром.
+	assert(intersections.size() >= 0 && intersections.size() <= 2);
 
 	return intersections;
 }
@@ -329,7 +337,7 @@ void IsoSurface::calculateNormalsForPoints()
 		IsoPoint &p3 = m_points[m_indexes[i + 2]];
 		const vec3 edge1 = p1.position - p2.position;
 		const vec3 edge2 = p1.position - p3.position;
-		const vec3 normal = -normalize(cross(edge1, edge2));
+		const vec3 normal = normalize(cross(edge1, edge2));
 		p1.normals.push_back(normal);
 		p2.normals.push_back(normal);
 		p3.normals.push_back(normal);
