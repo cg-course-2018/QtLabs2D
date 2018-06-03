@@ -16,6 +16,10 @@ public:
 	// Загружает ресурс из файла в виде изображения.
 	// @param relativePath - путь относительно каталога, где лежит исполняемый файл программы.
 	static QImage loadImage(const std::string &relativePath);
+
+	// Возвращает абсолютный путь к ресурсу в кодировке UTF-8.
+	// @param relativePath - путь относительно каталога, где лежит исполняемый файл программы.
+	static std::string getAbsolutePath(const std::string &relativePath);
 };
 
 } // namespace platform

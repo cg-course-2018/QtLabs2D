@@ -53,4 +53,10 @@ QImage ResourceLoader::loadImage(const std::string &relativePath)
 	}
 	return image;
 }
+
+std::string ResourceLoader::getAbsolutePath(const std::string& relativePath)
+{
+	const QByteArray data = findResource(relativePath).toUtf8();
+	return std::string(data.data(), static_cast<size_t>(data.size()));
+}
 } // namespace platform
