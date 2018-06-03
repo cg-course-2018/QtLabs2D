@@ -4,6 +4,7 @@
 #include "FlyingCamera.h"
 #include "MeshP3C3N3.h"
 #include "TesselateUtils.h"
+#include "PointCloudUtils.h"
 #include <algorithm>
 #include <glbinding/gl32core/gl.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -22,10 +23,12 @@ namespace
 //  - положение камеры
 //  - положение цели, на которую направлена камера
 //  - направление "вверх" для камеры
-const vec3 CAMERA_POSITION = { 0, 10, -25 };
+const vec3 CAMERA_POSITION = { 0, 2, -4 };
 const vec3 CAMERA_TARGET = { 0, 0, 0 };
 const vec3 CAMERA_UP = { 0, 1, 0 };
 const float MESH_ROTATE_DEGREES_PER_SECOND = 30.f;
+
+constexpr float DEBUG_POINT_SIZE = 10.f;
 
 } // namespace
 
@@ -49,13 +52,19 @@ void PointCloudScene::initialize()
 	initializeLights();
 	initializeObjects();
 
+	// Увеличиваем размер точек, нарисованных через примитив GL_POINTS.
+	glPointSize(DEBUG_POINT_SIZE);
+
 	// Включаем тест глубины.
 	glEnable(GL_DEPTH_TEST);
 
+	// TODO: sergey.shambir update this code or remove it
+#if 0
 	// Включаем отсечение задних граней
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);
 	glCullFace(GL_BACK);
+#endif
 }
 
 void PointCloudScene::update(float deltaSeconds)
@@ -66,9 +75,12 @@ void PointCloudScene::update(float deltaSeconds)
 		m_surfaceMesh->update(deltaSeconds);
 	}
 
+	// TODO: sergey.shambir update this code or remove it
+#if 0
 	Transform3D transform = m_surfaceMesh->getLocalTransform();
 	transform.rotateBy(angleAxis(radians(MESH_ROTATE_DEGREES_PER_SECOND * deltaSeconds), vec3{ 0, 0, 1 }));
 	m_surfaceMesh->setLocalTransform(transform);
+#endif
 }
 
 void PointCloudScene::redraw(unsigned width, unsigned height)
@@ -169,6 +181,8 @@ void PointCloudScene::initializeObjects()
 		vec4{ 0.5, 0.5, 0.5, 1.0 }
 	};
 
+#if 0
+
 	// TODO: (cg15.1) подберите константу cubeSize под возможности своего компьютера, чтобы расчёт занимал не более 1-2 секунд.
 	const float cubeSize = 0.5f;
 	const vec3 areaSize = { 10.0f, 10.0f, 10.0f };
@@ -193,10 +207,26 @@ void PointCloudScene::initializeObjects()
 	mesh->init(data);
 	m_surfaceMesh = mesh;
 
-	Transform3D teapotTransform;
-	teapotTransform.scaleBy(3.0f);
-	teapotTransform.rotateBy(angleAxis(radians(-90.f), vec3{ 1, 0, 0 }));
-	m_surfaceMesh->setLocalTransform(teapotTransform);
+#else
+	pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud = utils::loadPointCloud("res16/bunny.pcd");
+	pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr cloudWithNormals = utils::calculatePointCloudNormals(cloud);
+
+#if 1
+	const MeshDataP3C3N3 data = utils::makeGreedyProjectionTriangulation(meshMat, cloudWithNormals);
+#else
+	const MeshDataP3C3N3 data = utils::makeMeshFromPoints(meshMat, cloudWithNormals);
+#endif
+
+	auto mesh = std::make_shared<MeshP3C3N3>();
+	mesh->init(data);
+	m_surfaceMesh = mesh;
+
+#endif
+
+	Transform3D meshTransform;
+	meshTransform.scaleBy(15.0f);
+	meshTransform.moveBy(vec3{0, -2, 0});
+	m_surfaceMesh->setLocalTransform(meshTransform);
 }
 
 void PointCloudScene::setProjectionMatrix(unsigned width, unsigned height)

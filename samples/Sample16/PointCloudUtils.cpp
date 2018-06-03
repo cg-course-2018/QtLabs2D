@@ -14,7 +14,10 @@ pcl::PointCloud<pcl::PointXYZRGB>::Ptr loadPointCloud(const std::string &relativ
 	const std::string absolutePath = platform::ResourceLoader::getAbsolutePath(relativePath);
 
 	pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
-	pcl::io::loadPCDFile(absolutePath, *cloud);
+	if (pcl::io::loadPCDFile(absolutePath, *cloud) == -1)
+	{
+		throw std::runtime_error("cannot read point cloud from " + relativePath);
+	}
 
 	return cloud;
 }
@@ -72,14 +75,6 @@ MeshDataP3C3N3 makeGreedyProjectionTriangulation(const Material &mat, const pcl:
 	//  точек предполагаются чётко выделенные углы.
 	constexpr float kMaxSurfaceAngle = static_cast<float>(M_PI / 4);
 
-	// Составяем KD-дерево, используемое для поиска ближайших соседей каждой точки
-	//  в процессе расчёта нормалей.
-	pcl::search::KdTree<pcl::PointXYZRGBNormal>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZRGBNormal>);
-	tree->setInputCloud(cloud);
-
-	// Класс PolygonMesh хранит индексы точек для каждого треугольника полигональной сетки.
-	pcl::PolygonMesh triangles;
-
 	// Алгоритм GreedyProjectionTriangulation использует нормаль к точке для выбора точек соединения
 	//  среди ближайших соседей. Ближайшие соседи (nearest neighbours) проецируются на нормаль,
 	//  а затем проекция используеся для выбора соседа, к которому надо провести ребро треугольника.
@@ -91,6 +86,14 @@ MeshDataP3C3N3 makeGreedyProjectionTriangulation(const Material &mat, const pcl:
 	gp3.setMaximumAngle(kMaxTriangleAngle);
 	gp3.setMaximumSurfaceAngle(kMaxSurfaceAngle);
 	gp3.setNormalConsistency(false);
+
+	// Составяем KD-дерево, используемое для поиска ближайших соседей каждой точки
+	//  в процессе расчёта нормалей.
+	pcl::search::KdTree<pcl::PointXYZRGBNormal>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZRGBNormal>);
+	tree->setInputCloud(cloud);
+
+	// Класс PolygonMesh хранит индексы точек для каждого треугольника полигональной сетки.
+	pcl::PolygonMesh triangles;
 
 	// Запускаем алгоритм реконструирования поверхности.
 	gp3.setInputCloud(cloud);
@@ -122,6 +125,29 @@ MeshDataP3C3N3 makeGreedyProjectionTriangulation(const Material &mat, const pcl:
 			{ p.r, p.g, p.b },
 			{ p.normal_x, p.normal_y, p.normal_z } });
 	}
+
+	return data;
+}
+
+MeshDataP3C3N3 makeMeshFromPoints(const Material &mat, const pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr &cloud)
+{
+	MeshDataP3C3N3 data;
+	data.primitive = gl::GL_POINTS;
+	data.material = mat;
+
+	// Копируем данные вершин в выходной массив вершин.
+	data.vertexes.reserve(cloud->points.size());
+	for (const pcl::PointXYZRGBNormal &p : cloud->points)
+	{
+		data.vertexes.emplace_back(VertexP3C3N3{
+			{ p.x, p.y, p.z },
+			{ p.r, p.g, p.b },
+			{ p.normal_x, p.normal_y, p.normal_z } });
+	}
+
+	// Массив индексов будет просто перечислять вершины.
+	data.indicies.resize(data.vertexes.size());
+	std::iota(data.indicies.begin(), data.indicies.end(), 0);
 
 	return data;
 }
