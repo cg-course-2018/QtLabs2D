@@ -1,6 +1,8 @@
 
 find_package(Qt5Widgets REQUIRED)
 find_package(glbinding REQUIRED)
+find_package(PCL REQUIRED)
+find_package(Eigen3 REQUIRED)
 
 # Функция добавляет пример из курса OpenGL
 function(custom_add_example TARGET MAIN_DIR)
@@ -86,3 +88,13 @@ target_link_libraries(Sample15 PRIVATE
     libs::libglcore
     libs::libmath
     libs::libplatform)
+
+custom_add_example(Sample16 "Sample16")
+custom_distribute_assets("Sample16/res" "res16" Sample16)
+target_include_directories(Sample16 PRIVATE ${PCL_INCLUDE_DIRS})
+target_link_libraries(Sample16 PRIVATE
+    libs::libglcore
+    libs::libmath
+    libs::libplatform
+    Eigen3::Eigen
+    ${PCL_LIBRARIES})
