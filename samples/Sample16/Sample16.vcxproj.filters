@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="ShaderProgram.cpp">
+      <Filter>shading</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraController.cpp">
+      <Filter>camera</Filter>
+    </ClCompile>
+    <ClCompile Include="FlyingCamera.cpp">
+      <Filter>camera</Filter>
+    </ClCompile>
+    <ClCompile Include="LightSource.cpp">
+      <Filter>shading</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGraph.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureUtils.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshP3N3.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="TesselateUtils.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="IsoSurface.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="IsosurfaceScene.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="IsoSurfaceSources.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="IShaderProgram.h">
+      <Filter>shading</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderProgram.h">
+      <Filter>shading</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraController.h">
+      <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Enumerations.h">
+      <Filter>shading</Filter>
+    </ClInclude>
+    <ClInclude Include="FlyingCamera.h">
+      <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="ICameraController.h">
+      <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="IFlyingCamera.h">
+      <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="LightSource.h">
+      <Filter>shading</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraph.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureUtils.h">
+      <Filter>shading</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshP3N3.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="TeapotData.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="TesselateUtils.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="IsoSurface.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="IsosurfaceScene.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="IsoSurfaceSources.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="scene">
+      <UniqueIdentifier>{0d077479-9ad1-4a6a-8ac7-fe43e92d15a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="main">
+      <UniqueIdentifier>{c3bcbf08-e462-4884-96bb-ae0facdb890c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res">
+      <UniqueIdentifier>{445c49dc-ee63-4dee-9dcd-7b85490a5937}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="camera">
+      <UniqueIdentifier>{8b7a1fb6-a308-499c-8842-5dea69b686cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shading">
+      <UniqueIdentifier>{37ff8468-73ef-4658-9799-fe108593625b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="copy_res.bat">
+      <Filter>main</Filter>
+    </None>
+    <None Include="res\phong_lighting.frag">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\phong_lighting.vert">
+      <Filter>res</Filter>
+    </None>
+  </ItemGroup>
+</Project>
