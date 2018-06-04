@@ -33,8 +33,9 @@ void MeshP3C3N3::draw(const RenderContext &ctx)
 {
 	updateUniforms(ctx);
 	bindAttributes(ctx.program.get());
-
 	drawGeometry();
+
+	SceneGraphNode::draw(ctx);
 }
 
 void MeshP3C3N3::bindAttributes(const IShaderProgram &program)

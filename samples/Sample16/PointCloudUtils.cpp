@@ -1,9 +1,12 @@
 #include "stdafx.h"
 #include "PointCloudUtils.h"
 #include "libplatform/ResourceLoader.h"
+#include <glm/gtc/type_ptr.hpp>
+#include <pcl/common/transforms.h>
 #include <pcl/features/normal_3d.h>
 #include <pcl/io/io.h>
 #include <pcl/io/pcd_io.h>
+#include <pcl/surface/concave_hull.h>
 #include <pcl/surface/gp3.h>
 
 namespace utils
@@ -20,6 +23,38 @@ pcl::PointCloud<pcl::PointXYZRGB>::Ptr loadPointCloud(const std::string &relativ
 	}
 
 	return cloud;
+}
+
+pcl::PointCloud<pcl::PointXYZRGB>::Ptr applyTransform(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud, const glm::mat4 &transform)
+{
+	/*
+	 * Основано на статье "Using a matrix to transform a point cloud"
+	 * http://pointclouds.org/documentation/tutorials/matrix_transform.php#matrix-transform
+	 */
+
+	float values[16] = { 0 };
+	memcpy(values, glm::value_ptr(transform), sizeof(values));
+	Eigen::Matrix4f eigenTransform = Eigen::Matrix4f(values);
+
+	pcl::PointCloud<pcl::PointXYZRGB>::Ptr transformedCloud(new pcl::PointCloud<pcl::PointXYZRGB>());
+	pcl::transformPointCloud(*cloud, *transformedCloud, eigenTransform);
+
+	return transformedCloud;
+}
+
+pcl::PointCloud<pcl::PointXYZRGB>::Ptr makeConcaveHull(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud)
+{
+	// Параметр alpha ограничивает размер сегментов невыпуклой оболочки.
+	// Чем меньше alpha, тем детальнее будет выпуклая оболочка.
+	constexpr float alpha = 0.1f;
+
+	pcl::PointCloud<pcl::PointXYZRGB>::Ptr result(new pcl::PointCloud<pcl::PointXYZRGB>);
+	pcl::ConcaveHull<pcl::PointXYZRGB> concaveHull;
+	concaveHull.setInputCloud(cloud);
+	concaveHull.setAlpha(alpha);
+	concaveHull.reconstruct(*result);
+
+	return result;
 }
 
 pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr calculatePointCloudNormals(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud)

@@ -60,6 +60,11 @@ void PointCloudScene::initialize()
 
 	// TODO: sergey.shambir update this code or remove it
 #if 0
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+#endif
+
+	// TODO: sergey.shambir update this code or remove it
+#if 0
 	// Включаем отсечение задних граней
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);
@@ -70,9 +75,13 @@ void PointCloudScene::initialize()
 void PointCloudScene::update(float deltaSeconds)
 {
 	m_cameraController->update(deltaSeconds);
-	if (m_surfaceMesh)
+	if (m_leftSurfaceMesh)
 	{
-		m_surfaceMesh->update(deltaSeconds);
+		m_leftSurfaceMesh->update(deltaSeconds);
+	}
+	if (m_rightSurfaceMesh)
+	{
+		m_rightSurfaceMesh->update(deltaSeconds);
 	}
 
 	// TODO: sergey.shambir update this code or remove it
@@ -100,9 +109,13 @@ void PointCloudScene::redraw(unsigned width, unsigned height)
 	RenderContext ctx{ m_phongProgram };
 	ctx.viewMat4 = m_camera->getViewTransform();
 
-	if (m_surfaceMesh)
+	if (m_leftSurfaceMesh)
 	{
-		m_surfaceMesh->draw(ctx);
+		m_leftSurfaceMesh->draw(ctx);
+	}
+	if (m_rightSurfaceMesh)
+	{
+		m_rightSurfaceMesh->draw(ctx);
 	}
 }
 
@@ -181,52 +194,39 @@ void PointCloudScene::initializeObjects()
 		vec4{ 0.5, 0.5, 0.5, 1.0 }
 	};
 
-#if 0
-
-	// TODO: (cg15.1) подберите константу cubeSize под возможности своего компьютера, чтобы расчёт занимал не более 1-2 секунд.
-	const float cubeSize = 0.5f;
-	const vec3 areaSize = { 10.0f, 10.0f, 10.0f };
-	const uvec3 sizeInCubes = uvec3(areaSize / cubeSize);
-
-	std::vector<IIsoSurfaceSourcePtr> sources = {
-		std::make_unique<IsoPointSource>(vec3{ -2.5f, 0, 2 }, 2.0f),
-		std::make_unique<IsoPointSource>(vec3{ 2.5f, 0, 2 }, 2.0f),
-		std::make_unique<IsoPointSource>(vec3{ -2.5f, 1, 2 }, -1.0f),
-		std::make_unique<IsoPointSource>(vec3{ 2.5f, 1, 2 }, -1.0f),
-		std::make_unique<IsoPointSource>(vec3{ 0, 0, -1 }, 6.0f),
-		std::make_unique<IsoPointSource>(vec3{ 0, 3.25f, -1 }, 1.0f)
-	};
-
-	m_surface.setSize(sizeInCubes);
-	m_surface.setCubeSize(cubeSize);
-	m_surface.setSources(sources);
-
-	const MeshDataP3C3N3 data = m_surface.createGeometry(meshMat);
-
-	auto mesh = std::make_shared<MeshP3C3N3>();
-	mesh->init(data);
-	m_surfaceMesh = mesh;
-
-#else
-	pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud = utils::loadPointCloud("res16/bunny.pcd");
-	pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr cloudWithNormals = utils::calculatePointCloudNormals(cloud);
+	pcl::PointCloud<pcl::PointXYZRGB>::Ptr leftCloud = utils::loadPointCloud("res16/table_scene_lms400.pcd");
+	pcl::PointCloud<pcl::PointXYZRGB>::Ptr rightCloud = utils::makeConcaveHull(leftCloud);
+	pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr leftCloudWithNormals = utils::calculatePointCloudNormals(leftCloud);
+	pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr rightCloudWithNormals = utils::calculatePointCloudNormals(rightCloud);
 
 #if 1
-	const MeshDataP3C3N3 data = utils::makeGreedyProjectionTriangulation(meshMat, cloudWithNormals);
 #else
 	const MeshDataP3C3N3 data = utils::makeMeshFromPoints(meshMat, cloudWithNormals);
 #endif
 
-	auto mesh = std::make_shared<MeshP3C3N3>();
-	mesh->init(data);
-	m_surfaceMesh = mesh;
+	{
+		const MeshDataP3C3N3 data = utils::makeGreedyProjectionTriangulation(meshMat, leftCloudWithNormals);
+		auto mesh = std::make_shared<MeshP3C3N3>();
+		mesh->init(data);
+		m_leftSurfaceMesh = mesh;
 
-#endif
+		Transform3D meshTransform;
+		meshTransform.scaleBy(1.0f);
+		meshTransform.moveBy(vec3{-1, 0, 0});
+		m_leftSurfaceMesh->setLocalTransform(meshTransform);
+	}
 
-	Transform3D meshTransform;
-	meshTransform.scaleBy(15.0f);
-	meshTransform.moveBy(vec3{0, -2, 0});
-	m_surfaceMesh->setLocalTransform(meshTransform);
+	{
+		const MeshDataP3C3N3 data = utils::makeGreedyProjectionTriangulation(meshMat, rightCloudWithNormals);
+		auto mesh = std::make_shared<MeshP3C3N3>();
+		mesh->init(data);
+		m_rightSurfaceMesh = mesh;
+
+		Transform3D meshTransform;
+		meshTransform.scaleBy(1.0f);
+		meshTransform.moveBy(vec3{1, 0, 0});
+		m_rightSurfaceMesh->setLocalTransform(meshTransform);
+	}
 }
 
 void PointCloudScene::setProjectionMatrix(unsigned width, unsigned height)

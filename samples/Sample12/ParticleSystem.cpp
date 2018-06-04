@@ -116,11 +116,11 @@ void ParticleSystem::draw(const RenderContext &ctx)
 	const GLsizei instanceCount = GLsizei(m_particles.size());
 	glDrawArraysInstanced(GL_TRIANGLES, 0, vertexCount, instanceCount);
 
-	SceneGraphNode::draw(ctx);
-
 	// Отключаем запись в буфер глубины и смешивание.
 	glDepthMask(GL_TRUE);
 	glEnable(GL_BLEND);
+
+	SceneGraphNode::draw(ctx);
 }
 
 void ParticleSystem::bindSpriteAttributes(const IShaderProgram &program)
