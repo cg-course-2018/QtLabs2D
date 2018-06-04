@@ -3,8 +3,8 @@
 #include "CameraController.h"
 #include "FlyingCamera.h"
 #include "MeshP3C3N3.h"
-#include "TesselateUtils.h"
 #include "PointCloudUtils.h"
+#include "TesselateUtils.h"
 #include <algorithm>
 #include <glbinding/gl32core/gl.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -153,8 +153,8 @@ void PointCloudScene::initializePhongProgram()
 {
 	platform::ResourceLoader loader;
 	std::vector<glcore::ShaderObject> shaders;
-    shaders.emplace_back(glcore::compileShader(GL_VERTEX_SHADER, loader.loadAsString("res16/phong_lighting.vert")));
-    shaders.emplace_back(glcore::compileShader(GL_FRAGMENT_SHADER, loader.loadAsString("res16/phong_lighting.frag")));
+	shaders.emplace_back(glcore::compileShader(GL_VERTEX_SHADER, loader.loadAsString("res16/phong_lighting.vert")));
+	shaders.emplace_back(glcore::compileShader(GL_FRAGMENT_SHADER, loader.loadAsString("res16/phong_lighting.frag")));
 	auto program = glcore::linkProgram(shaders);
 
 	std::vector<AttributeInfo> attributes = {
@@ -194,39 +194,45 @@ void PointCloudScene::initializeObjects()
 		vec4{ 0.5, 0.5, 0.5, 1.0 }
 	};
 
-	pcl::PointCloud<pcl::PointXYZRGB>::Ptr leftCloud = utils::loadPointCloud("res16/table_scene_lms400.pcd");
-	pcl::PointCloud<pcl::PointXYZRGB>::Ptr rightCloud = utils::makeConcaveHull(leftCloud);
-	pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr leftCloudWithNormals = utils::calculatePointCloudNormals(leftCloud);
-	pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr rightCloudWithNormals = utils::calculatePointCloudNormals(rightCloud);
-
-#if 1
-#else
-	const MeshDataP3C3N3 data = utils::makeMeshFromPoints(meshMat, cloudWithNormals);
-#endif
+	pcl::PointCloud<pcl::PointXYZRGB>::Ptr sourceCloud = utils::loadPointCloud("res16/bunny.pcd");
 
 	{
+		pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr leftCloudWithNormals = utils::calculatePointCloudNormals(sourceCloud);
+
+		// TODO: (cg16.1) раскомментировать инициализацию через makeGreedyProjectionTriangulation
+#if 0
 		const MeshDataP3C3N3 data = utils::makeGreedyProjectionTriangulation(meshMat, leftCloudWithNormals);
+#else
+		const MeshDataP3C3N3 data = utils::makeMeshFromPoints(meshMat, leftCloudWithNormals);
+#endif
+
 		auto mesh = std::make_shared<MeshP3C3N3>();
 		mesh->init(data);
 		m_leftSurfaceMesh = mesh;
 
 		Transform3D meshTransform;
-		meshTransform.scaleBy(1.0f);
-		meshTransform.moveBy(vec3{-1, 0, 0});
+		meshTransform.scaleBy(10.0f);
+		meshTransform.moveBy(vec3{ 1, 0, 0 });
+		meshTransform.rotateBy(angleAxis(radians(180.f), vec3{ 0, 1, 0 }));
 		m_leftSurfaceMesh->setLocalTransform(meshTransform);
 	}
 
+	// TODO: (cg16.2) раскомментировать инициализацию
+#if 0
 	{
+		pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr rightCloudWithNormals = utils::calculatePointCloudNormals2(utils::makeVoxelGrid(sourceCloud));
 		const MeshDataP3C3N3 data = utils::makeGreedyProjectionTriangulation(meshMat, rightCloudWithNormals);
 		auto mesh = std::make_shared<MeshP3C3N3>();
 		mesh->init(data);
 		m_rightSurfaceMesh = mesh;
 
 		Transform3D meshTransform;
-		meshTransform.scaleBy(1.0f);
-		meshTransform.moveBy(vec3{1, 0, 0});
+		meshTransform.scaleBy(10.0f);
+		meshTransform.moveBy(vec3{ -1, 0, 0 });
+		meshTransform.rotateBy(angleAxis(radians(180.f), vec3{ 0, 1, 0 }));
 		m_rightSurfaceMesh->setLocalTransform(meshTransform);
 	}
+#endif
 }
 
 void PointCloudScene::setProjectionMatrix(unsigned width, unsigned height)
