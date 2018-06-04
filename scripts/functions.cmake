@@ -78,6 +78,7 @@ function(custom_distribute_assets SOURCE_DIRNAME DESTINATION_DIRNAME TARGET)
     set(SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE_DIRNAME}")
     set(DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/${DESTINATION_DIRNAME}")
     file(GLOB_RECURSE SRC_FILES
+        "${SOURCE}/*.pcd"
         "${SOURCE}/*.png"
         "${SOURCE}/*.jpg"
         "${SOURCE}/*.xml"

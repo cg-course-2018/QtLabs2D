@@ -15,7 +15,7 @@ function(custom_add_example TARGET MAIN_DIR)
         glbinding::glbinding
     )
 
-    custom_add_sanitizers(${TARGET})
+    # custom_add_sanitizers(${TARGET})
 endfunction()
 
 custom_add_example(Sample05 "Sample05")

@@ -1,9 +1,12 @@
 #include "stdafx.h"
 #include "PointCloudUtils.h"
 #include "libplatform/ResourceLoader.h"
+#include <glm/gtc/type_ptr.hpp>
+#include <pcl/common/transforms.h>
 #include <pcl/features/normal_3d.h>
 #include <pcl/io/io.h>
 #include <pcl/io/pcd_io.h>
+#include <pcl/surface/concave_hull.h>
 #include <pcl/surface/gp3.h>
 
 namespace utils
@@ -14,9 +17,44 @@ pcl::PointCloud<pcl::PointXYZRGB>::Ptr loadPointCloud(const std::string &relativ
 	const std::string absolutePath = platform::ResourceLoader::getAbsolutePath(relativePath);
 
 	pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
-	pcl::io::loadPCDFile(absolutePath, *cloud);
+	if (pcl::io::loadPCDFile(absolutePath, *cloud) == -1)
+	{
+		throw std::runtime_error("cannot read point cloud from " + relativePath);
+	}
 
 	return cloud;
+}
+
+pcl::PointCloud<pcl::PointXYZRGB>::Ptr applyTransform(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud, const glm::mat4 &transform)
+{
+	/*
+	 * Основано на статье "Using a matrix to transform a point cloud"
+	 * http://pointclouds.org/documentation/tutorials/matrix_transform.php#matrix-transform
+	 */
+
+	float values[16] = { 0 };
+	memcpy(values, glm::value_ptr(transform), sizeof(values));
+	Eigen::Matrix4f eigenTransform = Eigen::Matrix4f(values);
+
+	pcl::PointCloud<pcl::PointXYZRGB>::Ptr transformedCloud(new pcl::PointCloud<pcl::PointXYZRGB>());
+	pcl::transformPointCloud(*cloud, *transformedCloud, eigenTransform);
+
+	return transformedCloud;
+}
+
+pcl::PointCloud<pcl::PointXYZRGB>::Ptr makeConcaveHull(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud)
+{
+	// Параметр alpha ограничивает размер сегментов невыпуклой оболочки.
+	// Чем меньше alpha, тем детальнее будет выпуклая оболочка.
+	constexpr float alpha = 0.1f;
+
+	pcl::PointCloud<pcl::PointXYZRGB>::Ptr result(new pcl::PointCloud<pcl::PointXYZRGB>);
+	pcl::ConcaveHull<pcl::PointXYZRGB> concaveHull;
+	concaveHull.setInputCloud(cloud);
+	concaveHull.setAlpha(alpha);
+	concaveHull.reconstruct(*result);
+
+	return result;
 }
 
 pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr calculatePointCloudNormals(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud)
@@ -72,14 +110,6 @@ MeshDataP3C3N3 makeGreedyProjectionTriangulation(const Material &mat, const pcl:
 	//  точек предполагаются чётко выделенные углы.
 	constexpr float kMaxSurfaceAngle = static_cast<float>(M_PI / 4);
 
-	// Составяем KD-дерево, используемое для поиска ближайших соседей каждой точки
-	//  в процессе расчёта нормалей.
-	pcl::search::KdTree<pcl::PointXYZRGBNormal>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZRGBNormal>);
-	tree->setInputCloud(cloud);
-
-	// Класс PolygonMesh хранит индексы точек для каждого треугольника полигональной сетки.
-	pcl::PolygonMesh triangles;
-
 	// Алгоритм GreedyProjectionTriangulation использует нормаль к точке для выбора точек соединения
 	//  среди ближайших соседей. Ближайшие соседи (nearest neighbours) проецируются на нормаль,
 	//  а затем проекция используеся для выбора соседа, к которому надо провести ребро треугольника.
@@ -91,6 +121,14 @@ MeshDataP3C3N3 makeGreedyProjectionTriangulation(const Material &mat, const pcl:
 	gp3.setMaximumAngle(kMaxTriangleAngle);
 	gp3.setMaximumSurfaceAngle(kMaxSurfaceAngle);
 	gp3.setNormalConsistency(false);
+
+	// Составяем KD-дерево, используемое для поиска ближайших соседей каждой точки
+	//  в процессе расчёта нормалей.
+	pcl::search::KdTree<pcl::PointXYZRGBNormal>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZRGBNormal>);
+	tree->setInputCloud(cloud);
+
+	// Класс PolygonMesh хранит индексы точек для каждого треугольника полигональной сетки.
+	pcl::PolygonMesh triangles;
 
 	// Запускаем алгоритм реконструирования поверхности.
 	gp3.setInputCloud(cloud);
@@ -122,6 +160,29 @@ MeshDataP3C3N3 makeGreedyProjectionTriangulation(const Material &mat, const pcl:
 			{ p.r, p.g, p.b },
 			{ p.normal_x, p.normal_y, p.normal_z } });
 	}
+
+	return data;
+}
+
+MeshDataP3C3N3 makeMeshFromPoints(const Material &mat, const pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr &cloud)
+{
+	MeshDataP3C3N3 data;
+	data.primitive = gl::GL_POINTS;
+	data.material = mat;
+
+	// Копируем данные вершин в выходной массив вершин.
+	data.vertexes.reserve(cloud->points.size());
+	for (const pcl::PointXYZRGBNormal &p : cloud->points)
+	{
+		data.vertexes.emplace_back(VertexP3C3N3{
+			{ p.x, p.y, p.z },
+			{ p.r, p.g, p.b },
+			{ p.normal_x, p.normal_y, p.normal_z } });
+	}
+
+	// Массив индексов будет просто перечислять вершины.
+	data.indicies.resize(data.vertexes.size());
+	std::iota(data.indicies.begin(), data.indicies.end(), 0);
 
 	return data;
 }

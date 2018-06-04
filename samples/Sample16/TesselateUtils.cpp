@@ -231,7 +231,7 @@ MeshDataP3C3N3 utils::tesselateTeapot(const Material &material, unsigned latitud
 
 #if !defined(NDEBUG)
 	// Проверяем все вершины - значения координат должны действительными числами.
-	for (const VertexP3N3 &v : result.vertexes)
+	for (const VertexP3C3N3 &v : result.vertexes)
 	{
 		assert(std::isfinite(v.position.x));
 		assert(std::isfinite(v.position.y));

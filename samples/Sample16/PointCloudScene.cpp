@@ -4,6 +4,7 @@
 #include "FlyingCamera.h"
 #include "MeshP3C3N3.h"
 #include "TesselateUtils.h"
+#include "PointCloudUtils.h"
 #include <algorithm>
 #include <glbinding/gl32core/gl.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -22,10 +23,12 @@ namespace
 //  - положение камеры
 //  - положение цели, на которую направлена камера
 //  - направление "вверх" для камеры
-const vec3 CAMERA_POSITION = { 0, 10, -25 };
+const vec3 CAMERA_POSITION = { 0, 2, -4 };
 const vec3 CAMERA_TARGET = { 0, 0, 0 };
 const vec3 CAMERA_UP = { 0, 1, 0 };
 const float MESH_ROTATE_DEGREES_PER_SECOND = 30.f;
+
+constexpr float DEBUG_POINT_SIZE = 10.f;
 
 } // namespace
 
@@ -49,26 +52,44 @@ void PointCloudScene::initialize()
 	initializeLights();
 	initializeObjects();
 
+	// Увеличиваем размер точек, нарисованных через примитив GL_POINTS.
+	glPointSize(DEBUG_POINT_SIZE);
+
 	// Включаем тест глубины.
 	glEnable(GL_DEPTH_TEST);
 
+	// TODO: sergey.shambir update this code or remove it
+#if 0
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+#endif
+
+	// TODO: sergey.shambir update this code or remove it
+#if 0
 	// Включаем отсечение задних граней
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);
 	glCullFace(GL_BACK);
+#endif
 }
 
 void PointCloudScene::update(float deltaSeconds)
 {
 	m_cameraController->update(deltaSeconds);
-	if (m_surfaceMesh)
+	if (m_leftSurfaceMesh)
 	{
-		m_surfaceMesh->update(deltaSeconds);
+		m_leftSurfaceMesh->update(deltaSeconds);
+	}
+	if (m_rightSurfaceMesh)
+	{
+		m_rightSurfaceMesh->update(deltaSeconds);
 	}
 
+	// TODO: sergey.shambir update this code or remove it
+#if 0
 	Transform3D transform = m_surfaceMesh->getLocalTransform();
 	transform.rotateBy(angleAxis(radians(MESH_ROTATE_DEGREES_PER_SECOND * deltaSeconds), vec3{ 0, 0, 1 }));
 	m_surfaceMesh->setLocalTransform(transform);
+#endif
 }
 
 void PointCloudScene::redraw(unsigned width, unsigned height)
@@ -88,9 +109,13 @@ void PointCloudScene::redraw(unsigned width, unsigned height)
 	RenderContext ctx{ m_phongProgram };
 	ctx.viewMat4 = m_camera->getViewTransform();
 
-	if (m_surfaceMesh)
+	if (m_leftSurfaceMesh)
 	{
-		m_surfaceMesh->draw(ctx);
+		m_leftSurfaceMesh->draw(ctx);
+	}
+	if (m_rightSurfaceMesh)
+	{
+		m_rightSurfaceMesh->draw(ctx);
 	}
 }
 
@@ -169,34 +194,39 @@ void PointCloudScene::initializeObjects()
 		vec4{ 0.5, 0.5, 0.5, 1.0 }
 	};
 
-	// TODO: (cg15.1) подберите константу cubeSize под возможности своего компьютера, чтобы расчёт занимал не более 1-2 секунд.
-	const float cubeSize = 0.5f;
-	const vec3 areaSize = { 10.0f, 10.0f, 10.0f };
-	const uvec3 sizeInCubes = uvec3(areaSize / cubeSize);
+	pcl::PointCloud<pcl::PointXYZRGB>::Ptr leftCloud = utils::loadPointCloud("res16/table_scene_lms400.pcd");
+	pcl::PointCloud<pcl::PointXYZRGB>::Ptr rightCloud = utils::makeConcaveHull(leftCloud);
+	pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr leftCloudWithNormals = utils::calculatePointCloudNormals(leftCloud);
+	pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr rightCloudWithNormals = utils::calculatePointCloudNormals(rightCloud);
 
-	std::vector<IIsoSurfaceSourcePtr> sources = {
-		std::make_unique<IsoPointSource>(vec3{ -2.5f, 0, 2 }, 2.0f),
-		std::make_unique<IsoPointSource>(vec3{ 2.5f, 0, 2 }, 2.0f),
-		std::make_unique<IsoPointSource>(vec3{ -2.5f, 1, 2 }, -1.0f),
-		std::make_unique<IsoPointSource>(vec3{ 2.5f, 1, 2 }, -1.0f),
-		std::make_unique<IsoPointSource>(vec3{ 0, 0, -1 }, 6.0f),
-		std::make_unique<IsoPointSource>(vec3{ 0, 3.25f, -1 }, 1.0f)
-	};
+#if 1
+#else
+	const MeshDataP3C3N3 data = utils::makeMeshFromPoints(meshMat, cloudWithNormals);
+#endif
 
-	m_surface.setSize(sizeInCubes);
-	m_surface.setCubeSize(cubeSize);
-	m_surface.setSources(sources);
+	{
+		const MeshDataP3C3N3 data = utils::makeGreedyProjectionTriangulation(meshMat, leftCloudWithNormals);
+		auto mesh = std::make_shared<MeshP3C3N3>();
+		mesh->init(data);
+		m_leftSurfaceMesh = mesh;
 
-	const MeshDataP3C3N3 data = m_surface.createGeometry(meshMat);
+		Transform3D meshTransform;
+		meshTransform.scaleBy(1.0f);
+		meshTransform.moveBy(vec3{-1, 0, 0});
+		m_leftSurfaceMesh->setLocalTransform(meshTransform);
+	}
 
-	auto mesh = std::make_shared<MeshP3C3N3>();
-	mesh->init(data);
-	m_surfaceMesh = mesh;
+	{
+		const MeshDataP3C3N3 data = utils::makeGreedyProjectionTriangulation(meshMat, rightCloudWithNormals);
+		auto mesh = std::make_shared<MeshP3C3N3>();
+		mesh->init(data);
+		m_rightSurfaceMesh = mesh;
 
-	Transform3D teapotTransform;
-	teapotTransform.scaleBy(3.0f);
-	teapotTransform.rotateBy(angleAxis(radians(-90.f), vec3{ 1, 0, 0 }));
-	m_surfaceMesh->setLocalTransform(teapotTransform);
+		Transform3D meshTransform;
+		meshTransform.scaleBy(1.0f);
+		meshTransform.moveBy(vec3{1, 0, 0});
+		m_rightSurfaceMesh->setLocalTransform(meshTransform);
+	}
 }
 
 void PointCloudScene::setProjectionMatrix(unsigned width, unsigned height)
