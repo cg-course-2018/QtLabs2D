@@ -35,13 +35,16 @@ MeshDataP3C3N3 makeMeshDataWithTriangles(const Material &mat, const pcl::PointCl
 		data.indicies.insert(data.indicies.end(), v.vertices.begin(), v.vertices.end());
 	}
 
+	glm::vec3 color = { 1.0, 1.0, 1.0 };
+
 	// Копируем данные вершин в выходной массив вершин.
 	data.vertexes.reserve(cloud->points.size());
 	for (const pcl::PointXYZRGBNormal &p : cloud->points)
 	{
+
 		data.vertexes.emplace_back(VertexP3C3N3{
 			{ p.x, p.y, p.z },
-			{ p.r, p.g, p.b },
+			color,
 			{ p.normal_x, p.normal_y, p.normal_z } });
 	}
 

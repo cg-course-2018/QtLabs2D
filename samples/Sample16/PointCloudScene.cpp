@@ -159,6 +159,7 @@ void PointCloudScene::initializePhongProgram()
 
 	std::vector<AttributeInfo> attributes = {
 		{ AttributePosition, "i_position" },
+		{ AttributeColor, "i_color" },
 		{ AttributeNormal, "i_normal" },
 	};
 	std::vector<UniformInfo> uniforms = {
@@ -200,7 +201,7 @@ void PointCloudScene::initializeObjects()
 		pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr leftCloudWithNormals = utils::calculatePointCloudNormals(sourceCloud);
 
 		// TODO: (cg16.1) раскомментировать инициализацию через makeGreedyProjectionTriangulation
-#if 0
+#if 1
 		const MeshDataP3C3N3 data = utils::makeGreedyProjectionTriangulation(meshMat, leftCloudWithNormals);
 #else
 		const MeshDataP3C3N3 data = utils::makeMeshFromPoints(meshMat, leftCloudWithNormals);
@@ -218,7 +219,7 @@ void PointCloudScene::initializeObjects()
 	}
 
 	// TODO: (cg16.2) раскомментировать инициализацию
-#if 0
+#if 1
 	{
 		pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr rightCloudWithNormals = utils::calculatePointCloudNormals2(utils::makeVoxelGrid(sourceCloud));
 		const MeshDataP3C3N3 data = utils::makeGreedyProjectionTriangulation(meshMat, rightCloudWithNormals);

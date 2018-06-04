@@ -1,9 +1,12 @@
 #version 130
 
 in vec3 i_position;
+in vec3 i_color;
 in vec3 i_normal;
+
 out vec3 v_normal;
 out vec3 v_pos_in_world_space;
+out vec3 v_color;
 
 // NOTE: we can pass single mat4 uniform variable to optimize calculations.
 uniform mat4 u_projection_matrix;
@@ -19,4 +22,5 @@ void main()
 	v_pos_in_world_space = vec3(pos_in_world_space);
 	v_normal = normalize(vec3(u_normal_world_matrix * vec4(i_normal, 0.0)));
 	gl_Position = u_projection_matrix * u_view_matrix * pos_in_world_space;
+	v_color = i_color;
 }

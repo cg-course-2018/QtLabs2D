@@ -30,6 +30,7 @@ const float kShininess = 30.0;
 
 in vec3 v_normal;
 in vec3 v_pos_in_world_space;
+in vec3 v_color;
 
 uniform Material u_material;
 uniform LightSource u_light0;
@@ -63,9 +64,9 @@ void main()
 	LightIntensity light0_intensity = calculateIntensity(u_light0);
 	LightIntensity light1_intensity = calculateIntensity(u_light1);
 
-    vec4 diffuse_intensity = u_material.diffuse * (u_light0.diffuse * light0_intensity.diffuse + u_light1.diffuse * light1_intensity.diffuse);
-    vec4 specular_intensity = u_material.specular * (u_light0.specular * light0_intensity.specular + u_light1.specular * light1_intensity.specular);
-    vec4 shaded_color = diffuse_intensity + specular_intensity + u_material.emission;
+    vec4 diffuse_intensity = vec4(v_color, 1.0) * u_material.diffuse * (u_light0.diffuse * light0_intensity.diffuse + u_light1.diffuse * light1_intensity.diffuse);
+    vec4 specular_intensity = vec4(v_color, 1.0) * u_material.specular * (u_light0.specular * light0_intensity.specular + u_light1.specular * light1_intensity.specular);
+    vec4 shaded_color = diffuse_intensity + specular_intensity + u_material.emission * vec4(v_color, 1.0);
 
     out_fragColor = vec4(shaded_color.x, shaded_color.y, shaded_color.z, 1);
 }
