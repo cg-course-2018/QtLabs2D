@@ -1,6 +1,7 @@
 
 #define _USE_MATH_DEFINES
+#define _HAS_AUTO_PTR_ETC 1
 
 #include <memory>
-#include <vector>
 #include <string>
+#include <vector>

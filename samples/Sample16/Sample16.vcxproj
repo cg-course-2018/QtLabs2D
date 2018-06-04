@@ -144,11 +144,12 @@
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="FlyingCamera.cpp" />
     <ClCompile Include="IsoSurface.cpp" />
-    <ClCompile Include="IsosurfaceScene.cpp" />
     <ClCompile Include="IsoSurfaceSources.cpp" />
     <ClCompile Include="LightSource.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MeshP3N3.cpp" />
+    <ClCompile Include="MeshP3C3N3.cpp" />
+    <ClCompile Include="PointCloudScene.cpp" />
+    <ClCompile Include="PointCloudUtils.cpp" />
     <ClCompile Include="SceneGraph.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -156,7 +157,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="TesselateUtils.cpp" />
-    <ClCompile Include="TextureUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraController.h" />
@@ -166,16 +166,16 @@
     <ClInclude Include="IFlyingCamera.h" />
     <ClInclude Include="IShaderProgram.h" />
     <ClInclude Include="IsoSurface.h" />
-    <ClInclude Include="IsosurfaceScene.h" />
     <ClInclude Include="IsoSurfaceSources.h" />
     <ClInclude Include="LightSource.h" />
-    <ClInclude Include="MeshP3N3.h" />
+    <ClInclude Include="MeshP3C3N3.h" />
+    <ClInclude Include="PointCloudScene.h" />
+    <ClInclude Include="PointCloudUtils.h" />
     <ClInclude Include="SceneGraph.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TeapotData.h" />
     <ClInclude Include="TesselateUtils.h" />
-    <ClInclude Include="TextureUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="copy_res.bat" />
